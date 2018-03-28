@@ -1,0 +1,6 @@
+language: go
+  go:
+    - "1.10"
+before_script: cd test
+script:
+  - go test
