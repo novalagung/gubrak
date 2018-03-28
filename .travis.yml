@@ -1,6 +1,10 @@
 language: go
-  go:
-    - "1.10"
-before_script: cd test
+os:
+  - linux
+  - osx
+go:
+  - "go1.9"
+  - "go1.10"
+go_import_path: github.com/novalagung/gubrak
 script:
-  - go test
+  - cd test && go test -v -cover ./...
