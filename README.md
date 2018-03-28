@@ -1,6 +1,6 @@
 # GUBRAK
 
-> Golang utility library with syntactic sugar.
+Golang utility library with syntactic sugar.
 
 Gubrak is yet another utility library for Golang, inspired from lodash. Currently we have around 46 reusable functions available, and it'll keep increasing.
 
