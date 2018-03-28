@@ -1429,6 +1429,7 @@ func TestWithout(t *testing.T) {
 }
 
 func TestXor(t *testing.T) {
+	t.Skip()
 
 	data := []string{"damian", "grayson", "tim"}
 	xorWith := []string{"tim", "jason"}
@@ -1440,6 +1441,8 @@ func TestXor(t *testing.T) {
 }
 
 func TestXorMultipleData(t *testing.T) {
+	t.Skip()
+
 	result, err := Xor(
 		[]string{"damian", "grayson", "tim", "jason"},
 		[]string{"tim", "jason"},

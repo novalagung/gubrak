@@ -36,7 +36,7 @@ func TimeBenchmarker(t *testing.T, start time.Time) {
 }
 
 func TestLoadData(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 
 	defer TimeBenchmarker(t, time.Now())
 
