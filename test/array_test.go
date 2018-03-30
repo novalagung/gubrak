@@ -283,7 +283,7 @@ func TestConcatIntData(t *testing.T) {
 	data1 := []int{4, 6, 7}
 	data2 := []int{8, 9}
 	result, err := Concat(data, data1, data2)
-	// ===> []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	// ===> []int{1, 2, 3, 4, 4, 6, 7, 8, 9}
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 6, 7, 8, 9}, result)
