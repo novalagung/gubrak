@@ -89,7 +89,7 @@ func validateFuncInputForSliceLoop(err *error, funcType reflect.Type, data refle
 		*err = errors.New("callback must only have one or two parameters")
 		return funcTypeNumIn
 	} else {
-		if funcType.In(0).Kind() != data.Index(0).Kind() {
+		if funcType.In(0).Kind() != data.Type().Elem().Kind() {
 			*err = errors.New("callback 1st parameter's data type should be same with slice element data type")
 			return funcTypeNumIn
 		}
@@ -110,7 +110,7 @@ func validateFuncInputForSliceLoopWithoutIndex(err *error, funcType reflect.Type
 		*err = errors.New("callback must only have one parameters")
 		return
 	} else {
-		if funcType.In(0).Kind() != data.Index(0).Kind() {
+		if funcType.In(0).Kind() != data.Type().Elem().Kind() {
 			*err = errors.New("callback parameter's data type should be same with slice data type")
 			return
 		}
