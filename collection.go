@@ -943,7 +943,11 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 						s := strings.TrimSpace(fmt.Sprintf("%v", rightValue.Interface()))
 						v := float64(0)
 						if s != "" {
-							v, _ = strconv.ParseFloat(s, bitSize)
+							var errConvertion error
+							v, errConvertion = strconv.ParseFloat(s, bitSize)
+							if errConvertion != nil {
+								v = 0
+							}
 						}
 						isLeftLowerThanRight = leftValue.Float() <= v
 
