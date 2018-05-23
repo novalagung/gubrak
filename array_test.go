@@ -1,7 +1,6 @@
-package test
+package gubrak
 
 import (
-	. "github.com/novalagung/gubrak"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"strings"

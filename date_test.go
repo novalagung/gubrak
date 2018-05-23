@@ -1,8 +1,7 @@
-package test
+package gubrak
 
 import (
 	"errors"
-	. "github.com/novalagung/gubrak"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

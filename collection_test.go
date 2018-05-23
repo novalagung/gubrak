@@ -1,9 +1,8 @@
-package test
+package gubrak
 
 import (
 	"errors"
 	"fmt"
-	. "github.com/novalagung/gubrak"
 	"github.com/stretchr/testify/assert"
 	"strings"
 	"testing"

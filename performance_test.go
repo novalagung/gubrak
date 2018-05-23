@@ -1,8 +1,7 @@
-package test
+package gubrak
 
 import (
 	"github.com/gocarina/gocsv"
-	. "github.com/novalagung/gubrak"
 	// "github.com/stretchr/testify/assert"
 	"os"
 	"path/filepath"

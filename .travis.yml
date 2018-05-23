@@ -9,7 +9,7 @@ go_import_path: github.com/novalagung/gubrak
 before_install:
 - go get github.com/mattn/goveralls
 script:
-- cd test && go test -cover -race -v ./...
+- go test -cover -race -v ./...
 after_success:
 - $GOPATH/bin/goveralls -service=travis-ci
 env:
