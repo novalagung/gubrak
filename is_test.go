@@ -66,25 +66,25 @@ func TestIsDateFail(t *testing.T) {
 
 // =========== IsEmpty
 
-func TestIsEmptyString(t *testing.T) {
+func TestIsEmptyTypeString(t *testing.T) {
 	assert.True(t, IsEmpty(
 		"",
 	))
 }
 
-func TestIsEmptyInt(t *testing.T) {
+func TestIsEmptyTypeInt(t *testing.T) {
 	assert.True(t, IsEmpty(
 		0,
 	))
 }
 
-func TestIsEmptyUint(t *testing.T) {
+func TestIsEmptyTypeUint(t *testing.T) {
 	assert.True(t, IsEmpty(
 		uint(0),
 	))
 }
 
-func TestIsEmptyFloat(t *testing.T) {
+func TestIsEmptyTypeFloat(t *testing.T) {
 	assert.True(t, IsEmpty(
 		float32(0),
 	))
@@ -111,6 +111,20 @@ func TestIsEmptyMapEmptyElements(t *testing.T) {
 
 	assert.True(t, IsEmpty(
 		data,
+	))
+}
+
+// =========== IsEmptyString
+
+func TestIsEmptyString(t *testing.T) {
+	assert.True(t, IsEmptyString(
+		"",
+	))
+}
+
+func TestIsEmptyStringFail(t *testing.T) {
+	assert.False(t, IsEmptyString(
+		"hello",
 	))
 }
 
@@ -314,6 +328,20 @@ func TestIsPointerFail(t *testing.T) {
 	))
 }
 
+// =========== IsTrue
+
+func TestIsTrue(t *testing.T) {
+	assert.True(t, IsTrue(
+		true,
+	))
+}
+
+func TestIsTrueFail(t *testing.T) {
+	assert.False(t, IsTrue(
+		false,
+	))
+}
+
 // =========== IsStructObject
 
 func TestIsStructObject(t *testing.T) {
@@ -339,5 +367,25 @@ func TestIsStructObjectAnonymous(t *testing.T) {
 func TestIsStructObjectFail(t *testing.T) {
 	assert.False(t, IsStructObject(
 		"hello",
+	))
+}
+
+// =========== IsEmptyString
+
+func TestIsZeroNumber(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		0,
+	))
+}
+
+func TestIsZeroNumberFloat32(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		float32(0),
+	))
+}
+
+func TestIsZeroNumberFail(t *testing.T) {
+	assert.False(t, IsZeroNumber(
+		24,
 	))
 }
