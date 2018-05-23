@@ -137,6 +137,7 @@ func IsEmpty(data interface{}) bool {
 	return false
 }
 
+// IsEmptyString will return true when type of the data is string and it's emtpy
 func IsEmptyString(data interface{}) bool {
 	if data == nil {
 		return true
@@ -144,53 +145,6 @@ func IsEmptyString(data interface{}) bool {
 
 	if value, ok := data.(string); ok {
 		return value == ""
-	}
-
-	return false
-}
-
-func IsZeroNumber(data interface{}) bool {
-	if data == nil {
-		return true
-	}
-
-	if value, ok := data.(float32); ok {
-		return value == 0
-	}
-	if value, ok := data.(float64); ok {
-		return value == 0
-	}
-
-	if value, ok := data.(int); ok {
-		return value == 0
-	}
-	if value, ok := data.(int8); ok {
-		return value == 0
-	}
-	if value, ok := data.(int16); ok {
-		return value == 0
-	}
-	if value, ok := data.(int32); ok {
-		return value == 0
-	}
-	if value, ok := data.(int64); ok {
-		return value == 0
-	}
-
-	if value, ok := data.(uint); ok {
-		return value == 0
-	}
-	if value, ok := data.(uint8); ok {
-		return value == 0
-	}
-	if value, ok := data.(uint16); ok {
-		return value == 0
-	}
-	if value, ok := data.(uint32); ok {
-		return value == 0
-	}
-	if value, ok := data.(uint64); ok {
-		return value == 0
 	}
 
 	return false
@@ -283,6 +237,14 @@ func IsStructObject(data interface{}) bool {
 	)
 }
 
+// IsString will return true when type of the data is string
+func IsString(data interface{}) bool {
+	return _typeIs(data,
+		reflect.String,
+	)
+}
+
+// IsTrue will return true when type of the data is bool, and the value is true
 func IsTrue(data interface{}) bool {
 	if data == nil {
 		return true
@@ -295,13 +257,6 @@ func IsTrue(data interface{}) bool {
 	return false
 }
 
-// IsString will return true when type of the data is string
-func IsString(data interface{}) bool {
-	return _typeIs(data,
-		reflect.String,
-	)
-}
-
 // IsUint will return true when type of the data is uint
 func IsUint(data interface{}) bool {
 	return _typeIs(data,
@@ -311,4 +266,52 @@ func IsUint(data interface{}) bool {
 		reflect.Uint32,
 		reflect.Uint64,
 	)
+}
+
+// IsZeroNumber will return true when type of the data is numeric and it's has 0 value
+func IsZeroNumber(data interface{}) bool {
+	if data == nil {
+		return true
+	}
+
+	if value, ok := data.(float32); ok {
+		return value == 0
+	}
+	if value, ok := data.(float64); ok {
+		return value == 0
+	}
+
+	if value, ok := data.(int); ok {
+		return value == 0
+	}
+	if value, ok := data.(int8); ok {
+		return value == 0
+	}
+	if value, ok := data.(int16); ok {
+		return value == 0
+	}
+	if value, ok := data.(int32); ok {
+		return value == 0
+	}
+	if value, ok := data.(int64); ok {
+		return value == 0
+	}
+
+	if value, ok := data.(uint); ok {
+		return value == 0
+	}
+	if value, ok := data.(uint8); ok {
+		return value == 0
+	}
+	if value, ok := data.(uint16); ok {
+		return value == 0
+	}
+	if value, ok := data.(uint32); ok {
+		return value == 0
+	}
+	if value, ok := data.(uint64); ok {
+		return value == 0
+	}
+
+	return false
 }
