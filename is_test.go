@@ -314,30 +314,30 @@ func TestIsPointerFail(t *testing.T) {
 	))
 }
 
-// =========== IsObject
+// =========== IsStructObject
 
-func TestIsObject(t *testing.T) {
+func TestIsStructObject(t *testing.T) {
 	type SomeStruct struct {
 		Name string
 	}
 
-	assert.True(t, IsObject(
+	assert.True(t, IsStructObject(
 		SomeStruct{},
 	))
 }
 
-func TestIsObjectAnonymous(t *testing.T) {
+func TestIsStructObjectAnonymous(t *testing.T) {
 	data := struct {
 		Name string
 	}{}
 
-	assert.True(t, IsObject(
+	assert.True(t, IsStructObject(
 		data,
 	))
 }
 
-func TestIsObjectFail(t *testing.T) {
-	assert.False(t, IsObject(
+func TestIsStructObjectFail(t *testing.T) {
+	assert.False(t, IsStructObject(
 		"hello",
 	))
 }
