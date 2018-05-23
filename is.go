@@ -5,6 +5,15 @@ import (
 )
 
 func _typeIs(data interface{}, types ...reflect.Kind) bool {
+
+	if dataKind, ok := data.(reflect.Kind); ok {
+		for _, each := range types {
+			if dataKind == each {
+				return true
+			}
+		}
+	}
+
 	var err error
 
 	result := func(err *error) bool {
@@ -45,10 +54,22 @@ func IsBool(data interface{}) bool {
 	)
 }
 
+func IsChannel(data interface{}) bool {
+	return _typeIs(data,
+		reflect.Chan,
+	)
+}
+
 func IsFloat(data interface{}) bool {
 	return _typeIs(data,
 		reflect.Float32,
 		reflect.Float64,
+	)
+}
+
+func IsFunction(data interface{}) bool {
+	return _typeIs(data,
+		reflect.Func,
 	)
 }
 
@@ -69,7 +90,24 @@ func IsMap(data interface{}) bool {
 }
 
 func IsNil(data interface{}) bool {
-	return data == nil
+	if data == nil {
+		return true
+	}
+
+	isNillable := _typeIs(data,
+		reflect.Chan,
+		reflect.Func,
+		reflect.Interface,
+		reflect.Map,
+		reflect.Ptr,
+		reflect.Slice,
+		reflect.Array,
+	)
+	if isNillable {
+		return valueOf(data).IsNil()
+	}
+
+	return false
 }
 
 func IsNumeric(data interface{}) bool {

@@ -29,6 +29,20 @@ func TestIsBoolFail(t *testing.T) {
 	))
 }
 
+func TestIsChannel(t *testing.T) {
+	data := make(chan string)
+
+	assert.True(t, IsChannel(
+		data,
+	))
+}
+
+func TestIsChannelFail(t *testing.T) {
+	assert.False(t, IsChannel(
+		"hello",
+	))
+}
+
 func TestIsFloat32(t *testing.T) {
 	assert.True(t, IsFloat(
 		float32(24),
@@ -43,6 +57,22 @@ func TestIsFloat64(t *testing.T) {
 
 func TestIsFloatFail(t *testing.T) {
 	assert.False(t, IsFloat(
+		"hello",
+	))
+}
+
+func TestIsFunction(t *testing.T) {
+	closure := func() string {
+		return "hello"
+	}
+
+	assert.True(t, IsFunction(
+		closure,
+	))
+}
+
+func TestIsFunctionFail(t *testing.T) {
+	assert.False(t, IsFunction(
 		"hello",
 	))
 }
@@ -83,6 +113,14 @@ func TestIsNil(t *testing.T) {
 	))
 }
 
+func TestIsNilEmptyFunction(t *testing.T) {
+	var closure func(string) bool
+
+	assert.True(t, IsNil(
+		closure,
+	))
+}
+
 func TestIsNilEmptyInterface(t *testing.T) {
 	var data interface{}
 
@@ -92,12 +130,32 @@ func TestIsNilEmptyInterface(t *testing.T) {
 }
 
 func TestIsNilEmptyPointer(t *testing.T) {
-	t.Skip()
-
 	var data *string
 
 	assert.True(t, IsNil(
 		data,
+	))
+}
+
+func TestIsNilEmptySlice(t *testing.T) {
+	var data []string
+
+	assert.True(t, IsNil(
+		data,
+	))
+}
+
+func TestIsNilEmptyMap(t *testing.T) {
+	var data map[string]interface{}
+
+	assert.True(t, IsNil(
+		data,
+	))
+}
+
+func TestIsNilFailString(t *testing.T) {
+	assert.False(t, IsNil(
+		"hello",
 	))
 }
 
