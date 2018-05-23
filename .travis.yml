@@ -12,6 +12,3 @@ script:
 - go test -cover -race -v ./...
 after_success:
 - $GOPATH/bin/goveralls -service=travis-ci
-env:
-  global:
-    secure: O6h/g+eCHa0HtofLDaJmMOO+7K+iLAqWIE7lySNnLOKaXq01SkfbKzqFrVcghjjKO9RedQNRCZ5Ix+XWq49X52xuNr+4J12aZvHpnfefmewJea/7MfCwM++2fYjQUzmepB0yNzoHDpMmkYXBDLKU9ACgSZvVdCVvtXyXIblFPFgMMtN/8P1E4gqv7limGI3V3Ylzu3c9erompo+e6SCWXgo24UGk9/aAskc6JEWrNVCy2RkQj7vq/yLcTiu6kxUGnZcQz7aHA0kx0WVT/wnF0hkBD9z0xHZhXyZ1WnxAdZsFGyOIoufiKt+oQZ+cIA5CnBz2jvrWB7xjPNKdULm+F/1Q04xdfNQTqxZ8D00pIU6o+irGYDY8VZ/+HDFHTfgo+gizvB3PdSPPDNjL5UMPAzcHBzDKKyW+oAJaSntsYhIuMV5xpaVHwDtM8hchexA9UbMqjVjyqkoGVBVugv4WnuqmmZTNgvCUtFXNvDhbPvWbnkqVPxMbtkU0wNi/ybDwQ6vKBdlbMX2sPHahc3sxo8fgvVKAjidYmm8XBbqo/rIc6ncUlqBQ8oBamYbZ0xiOXEcYCqv+1vQeBxs3oqLuBtlBhhANjuHIHFzZeCYeWgC4zUMvADM+Zp5pWSS19b0Q1ZLkiKr+gpdFkLsUbUhwzLEOrfGNE0gNBNFq2C5YWlY=

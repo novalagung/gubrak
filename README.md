@@ -68,8 +68,6 @@ func main() {
 
 Fork ➜ Create branch ➜ Commit ➜ Push ➜ Pull Requests
 
-Test files are available inside `/test` folder.
-
 ### License
 
 MIT License
