@@ -167,10 +167,10 @@ func TestChunkMapData(t *testing.T) {
 }
 
 func TestCompactFewData(t *testing.T) {
-	var dataInterfaceNil interface{} = nil
+	var dataInterfaceNil interface{}
 	var dataInterface interface{} = "damian"
-	var dataPointerStringNil *string = nil
-	var dataPointerString *string = (func(s string) *string { return &s })("damian")
+	var dataPointerStringNil *string
+	var dataPointerString = (func(s string) *string { return &s })("damian")
 	dataSliceIntEmpty := make([]int, 0)
 	dataSliceInt := []int{1, 2, 3}
 	dataMapEmpty := make(map[string]string, 0)

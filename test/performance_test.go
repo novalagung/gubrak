@@ -22,8 +22,8 @@ type Data struct {
 	TLD            string `csv:"TLD"`
 	RefSubNets     string `csv:"RefSubNets"`
 	RefIPs         string `csv:"RefIPs"`
-	IDN_Domain     string `csv:"IDN_Domain"`
-	IDN_TLD        string `csv:"IDN_TLD"`
+	IDNDomain      string `csv:"IDN_Domain"`
+	IDNTLD         string `csv:"IDN_TLD"`
 	PrevGlobalRank string `csv:"PrevGlobalRank"`
 	PrevTldRank    string `csv:"PrevTldRank"`
 	PrevRefSubNets string `csv:"PrevRefSubNets"`
