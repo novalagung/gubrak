@@ -996,7 +996,11 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 						isLeftLowerThanRight = leftValue.Float() <= rightValue.Float()
 
 					case reflect.String:
-						v, _ := strconv.ParseFloat(fmt.Sprintf("%v", rightValue.Interface()), bitSize)
+						s := strings.TrimSpace(fmt.Sprintf("%v", rightValue.Interface()))
+						v := float64(0)
+						if s != "" {
+							v, _ = strconv.ParseFloat(s, bitSize)
+						}
 						isLeftLowerThanRight = leftValue.Float() <= v
 
 					default:
