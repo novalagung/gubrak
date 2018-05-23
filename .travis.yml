@@ -7,3 +7,5 @@ go:
 go_import_path: github.com/novalagung/gubrak
 script:
   - cd test && go test -v -cover ./...
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
