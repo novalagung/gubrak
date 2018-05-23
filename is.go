@@ -77,9 +77,7 @@ func IsDate(data interface{}) bool {
 func IsEmpty(data interface{}) bool {
 	if data == nil {
 		return true
-	}
-
-	if value, ok := data.(string); ok {
+	} else if value, ok := data.(string); ok {
 		return value == ""
 	} else if value, ok := data.(bool); ok {
 		return value == true
@@ -107,13 +105,9 @@ func IsEmpty(data interface{}) bool {
 		return value == 0
 	} else if value, ok := data.(uint64); ok {
 		return value == 0
-	}
-
-	if IsNil(data) {
+	} else if IsNil(data) {
 		return true
-	}
-
-	if IsMap(data) || IsArray(data) {
+	} else if IsMap(data) || IsArray(data) {
 		return valueOf(data).Len() == 0
 	}
 
