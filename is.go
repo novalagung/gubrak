@@ -130,8 +130,8 @@ func IsEmpty(data interface{}) bool {
 		return true
 	}
 
-	if size, _ := Size(data); size == 0 {
-		return true
+	if IsMap(data) || IsArray(data) {
+		return valueOf(data).Len() == 0
 	}
 
 	return false
@@ -228,6 +228,11 @@ func IsPointer(data interface{}) bool {
 	return _typeIs(data,
 		reflect.Ptr,
 	)
+}
+
+// IsSlice is alias of IsArray()
+func IsSlice(data interface{}) bool {
+	return IsArray(data)
 }
 
 // IsStructObject will return true when type of the data is object from struct
