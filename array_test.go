@@ -2,7 +2,6 @@ package gubrak
 
 import (
 	"github.com/stretchr/testify/assert"
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -1425,31 +1424,4 @@ func TestWithout(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []string{"damian", "jason"}, result)
-}
-
-func TestXor(t *testing.T) {
-	t.Skip()
-
-	data := []string{"damian", "grayson", "tim"}
-	xorWith := []string{"tim", "jason"}
-	result, err := Xor(data, xorWith)
-	// ===> []string{"damian", "grayson", "jason"}
-
-	assert.Nil(t, err)
-	assert.Equal(t, true, reflect.DeepEqual([]string{"damian", "grayson", "jason"}, result))
-}
-
-func TestXorMultipleData(t *testing.T) {
-	t.Skip()
-
-	result, err := Xor(
-		[]string{"damian", "grayson", "tim", "jason"},
-		[]string{"tim", "jason"},
-		[]string{"jason"},
-	)
-	// ===> []string{"damian", "grayson"}
-	t.Logf("%#v \n", result)
-
-	assert.Nil(t, err)
-	assert.Equal(t, true, reflect.DeepEqual([]string{"damian", "grayson"}, result))
 }

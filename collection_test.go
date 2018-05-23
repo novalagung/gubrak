@@ -868,8 +868,6 @@ func TestReduceSlice(t *testing.T) {
 }
 
 func TestReduceCollection(t *testing.T) {
-	t.Skip()
-
 	type HashMap map[string]interface{}
 
 	data := HashMap{
@@ -889,7 +887,11 @@ func TestReduceCollection(t *testing.T) {
 	}, "")
 
 	assert.Nil(t, err)
-	assert.EqualValues(t, "name: grayson, age: 21, isMale: true", result)
+	assert.True(t,
+		assert.Contains(t, result, "name: grayson"),
+		assert.Contains(t, result, "age: 21"),
+		assert.Contains(t, result, "isMale: true"),
+	)
 }
 
 func TestReject(t *testing.T) {
