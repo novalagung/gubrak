@@ -18,7 +18,7 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -28,7 +28,7 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 			return nil
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "size", size) {
+		if !isZeroOrPositiveNumber(err, "size", size) {
 			return nil
 		}
 
@@ -71,7 +71,7 @@ func Compact(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -158,7 +158,7 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -216,7 +216,7 @@ func Difference(data interface{}, compareData ...interface{}) (interface{}, erro
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -287,7 +287,7 @@ func Drop(data interface{}, size int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -297,7 +297,7 @@ func Drop(data interface{}, size int) (interface{}, error) {
 			return nil
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "size", size) {
+		if !isZeroOrPositiveNumber(err, "size", size) {
 			return data
 		}
 
@@ -335,7 +335,7 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -345,7 +345,7 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 			return nil
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "size", size) {
+		if !isZeroOrPositiveNumber(err, "size", size) {
 			return data
 		}
 
@@ -381,7 +381,7 @@ func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -402,11 +402,11 @@ func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 			}
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "start index", startIndex) {
+		if !isZeroOrPositiveNumber(err, "start index", startIndex) {
 			return data
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "last index", lastIndex) {
+		if !isZeroOrPositiveNumber(err, "last index", lastIndex) {
 			return data
 		}
 
@@ -452,7 +452,7 @@ func FindIndex(data, callback interface{}, args ...int) (int, error) {
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return -1
 		}
 
@@ -518,7 +518,7 @@ func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return -1
 		}
 
@@ -587,7 +587,7 @@ func First(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -617,7 +617,7 @@ func FromPairs(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -690,7 +690,7 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return -1
 		}
 
@@ -758,7 +758,7 @@ func Initial(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -790,7 +790,7 @@ func Intersection(data interface{}, compareData ...interface{}) (interface{}, er
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -877,7 +877,7 @@ func Join(data interface{}, separator string) (string, error) {
 	result := func(err *error) string {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return ""
 		}
 
@@ -934,7 +934,7 @@ func Last(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -964,7 +964,7 @@ func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error)
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return -1
 		}
 
@@ -1029,7 +1029,7 @@ func Nth(data interface{}, i int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1067,7 +1067,7 @@ func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1118,7 +1118,7 @@ func PullAll(data interface{}, items interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1175,7 +1175,7 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1186,7 +1186,7 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 		}
 
 		for _, index := range indexes {
-			if !isOnlyAllowZeroOrPositiveNumber(err, "index", index) {
+			if !isZeroOrPositiveNumber(err, "index", index) {
 				return data
 			}
 		}
@@ -1236,7 +1236,7 @@ func Remove(data interface{}, callback interface{}) (interface{}, interface{}, e
 
 		result, removed = data, nil
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return
 		}
 
@@ -1298,7 +1298,7 @@ func Reverse(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1334,7 +1334,7 @@ func Tail(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1365,7 +1365,7 @@ func Take(data interface{}, size int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1375,7 +1375,7 @@ func Take(data interface{}, size int) (interface{}, error) {
 			return nil
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "size", size) {
+		if !isZeroOrPositiveNumber(err, "size", size) {
 			return data
 		}
 
@@ -1407,7 +1407,7 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1417,7 +1417,7 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 			return nil
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "size", size) {
+		if !isZeroOrPositiveNumber(err, "size", size) {
 			return data
 		}
 
@@ -1456,7 +1456,7 @@ func Union(data interface{}, target ...interface{}) (interface{}, error) {
 			return errorMessage
 		})
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1543,7 +1543,7 @@ func Xor(data interface{}, compareData ...interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 

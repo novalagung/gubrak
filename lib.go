@@ -267,7 +267,7 @@ func isSlice(err *error, label string, dataValue ...reflect.Value) bool {
 	}
 }
 
-func isOnlyAllowNonNilData(err *error, label string, data interface{}) bool {
+func isNonNilData(err *error, label string, data interface{}) bool {
 	if data == nil {
 		*err = errors.New(fmt.Sprintf("%s cannot be nil", label))
 		return false
@@ -276,7 +276,7 @@ func isOnlyAllowNonNilData(err *error, label string, data interface{}) bool {
 	return true
 }
 
-func isOnlyAllowZeroOrPositiveNumber(err *error, label string, size int) bool {
+func isZeroOrPositiveNumber(err *error, label string, size int) bool {
 	if size < 0 {
 		*err = errors.New(fmt.Sprintf("%s must not be negative number", label))
 		return false
@@ -287,7 +287,7 @@ func isOnlyAllowZeroOrPositiveNumber(err *error, label string, size int) bool {
 	return true
 }
 
-func isOnlyAllowPositiveNumber(err *error, label string, size int) bool {
+func isPositiveNumber(err *error, label string, size int) bool {
 	if size < 0 {
 		*err = errors.New(fmt.Sprintf("%s must be positive number", label))
 		return false

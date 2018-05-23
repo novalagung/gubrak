@@ -16,7 +16,7 @@ func Count(data interface{}, args ...interface{}) (int, error) {
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return 0
 		}
 
@@ -141,7 +141,7 @@ func Each(data, callback interface{}) error {
 	func(err *error) {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return
 		}
 
@@ -250,7 +250,7 @@ func EachRight(data, callback interface{}) error {
 	func(err *error) {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return
 		}
 
@@ -283,7 +283,7 @@ func Filter(data, callback interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -381,7 +381,7 @@ func Find(data, callback interface{}, args ...int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -411,7 +411,7 @@ func Find(data, callback interface{}, args ...int) (interface{}, error) {
 			fromIndex = args[0]
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "from index", fromIndex) {
+		if !isZeroOrPositiveNumber(err, "from index", fromIndex) {
 			return nil
 		}
 
@@ -457,7 +457,7 @@ func FindLast(data, callback interface{}, args ...int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -487,7 +487,7 @@ func FindLast(data, callback interface{}, args ...int) (interface{}, error) {
 			lastIndex = args[0]
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "last index", lastIndex) {
+		if !isZeroOrPositiveNumber(err, "last index", lastIndex) {
 			return nil
 		}
 
@@ -555,7 +555,7 @@ func GroupBy(data, callback interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -619,7 +619,7 @@ func Map(data, callback interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -681,7 +681,7 @@ func Includes(data, search interface{}, args ...int) (bool, error) {
 			}
 		}
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return false
 		}
 
@@ -692,7 +692,7 @@ func Includes(data, search interface{}, args ...int) (bool, error) {
 			startIndex = args[0]
 		}
 
-		if !isOnlyAllowZeroOrPositiveNumber(err, "start index", startIndex) {
+		if !isZeroOrPositiveNumber(err, "start index", startIndex) {
 			return false
 		}
 
@@ -777,7 +777,7 @@ func KeyBy(data, callback interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -835,7 +835,7 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1070,7 +1070,7 @@ func Partition(data, callback interface{}) (interface{}, interface{}, error) {
 	truhty, falsey = func(err *error) (interface{}, interface{}) {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil, nil
 		}
 
@@ -1129,7 +1129,7 @@ func Reduce(data, callback, initial interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1261,7 +1261,7 @@ func Reject(data, callback interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1315,7 +1315,7 @@ func Sample(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1329,7 +1329,7 @@ func Sample(data interface{}) (interface{}, error) {
 			return makeSlice(dataType).Interface()
 		}
 
-		return dataValue.Index(randomInt(0, dataValueLen-1)).Interface()
+		return dataValue.Index(RandomInt(0, dataValueLen-1)).Interface()
 	}(&err)
 
 	return result, err
@@ -1345,7 +1345,7 @@ func SampleSize(data interface{}, take int) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1355,7 +1355,7 @@ func SampleSize(data interface{}, take int) (interface{}, error) {
 			return nil
 		}
 
-		if !isOnlyAllowPositiveNumber(err, "size", take) {
+		if !isPositiveNumber(err, "size", take) {
 			return nil
 		}
 
@@ -1371,7 +1371,7 @@ func SampleSize(data interface{}, take int) (interface{}, error) {
 		}
 
 		for result.Len() < take {
-			n := randomInt(0, dataValueLen-1)
+			n := RandomInt(0, dataValueLen-1)
 			if _, ok := cache[n]; ok {
 				continue
 			}
@@ -1396,7 +1396,7 @@ func Shuffle(data interface{}) (interface{}, error) {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return nil
 		}
 
@@ -1433,7 +1433,7 @@ func Size(data interface{}) (int, error) {
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isOnlyAllowNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", data) {
 			return 0
 		}
 
