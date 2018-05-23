@@ -12,7 +12,9 @@ go get -u github.com/novalagung/gubrak
 
 ### Documentation
 
-See [documentation page](https://gubrak.github.io/#/documentation).
+See [official documentation page](https://gubrak.github.io/#/documentation).
+
+[Godoc documentation page](http://godoc.org/github.com/novalagung/gubrak) is still in progress.
 
 ### Hello World Example
 
