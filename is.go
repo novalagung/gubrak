@@ -81,48 +81,31 @@ func IsEmpty(data interface{}) bool {
 
 	if value, ok := data.(string); ok {
 		return value == ""
-	}
-
-	if value, ok := data.(bool); ok {
+	} else if value, ok := data.(bool); ok {
 		return value == true
-	}
-
-	if value, ok := data.(float32); ok {
+	} else if value, ok := data.(float32); ok {
 		return value == 0
-	}
-	if value, ok := data.(float64); ok {
+	} else if value, ok := data.(float64); ok {
 		return value == 0
-	}
-
-	if value, ok := data.(int); ok {
+	} else if value, ok := data.(int); ok {
 		return value == 0
-	}
-	if value, ok := data.(int8); ok {
+	} else if value, ok := data.(int8); ok {
 		return value == 0
-	}
-	if value, ok := data.(int16); ok {
+	} else if value, ok := data.(int16); ok {
 		return value == 0
-	}
-	if value, ok := data.(int32); ok {
+	} else if value, ok := data.(int32); ok {
 		return value == 0
-	}
-	if value, ok := data.(int64); ok {
+	} else if value, ok := data.(int64); ok {
 		return value == 0
-	}
-
-	if value, ok := data.(uint); ok {
+	} else if value, ok := data.(uint); ok {
 		return value == 0
-	}
-	if value, ok := data.(uint8); ok {
+	} else if value, ok := data.(uint8); ok {
 		return value == 0
-	}
-	if value, ok := data.(uint16); ok {
+	} else if value, ok := data.(uint16); ok {
 		return value == 0
-	}
-	if value, ok := data.(uint32); ok {
+	} else if value, ok := data.(uint32); ok {
 		return value == 0
-	}
-	if value, ok := data.(uint64); ok {
+	} else if value, ok := data.(uint64); ok {
 		return value == 0
 	}
 
