@@ -78,15 +78,68 @@ func TestIsEmptyTypeInt(t *testing.T) {
 	))
 }
 
+func TestIsEmptyTypeInt8(t *testing.T) {
+	assert.True(t, IsEmpty(
+		int8(0),
+	))
+}
+
+func TestIsEmptyTypeInt16(t *testing.T) {
+	assert.True(t, IsEmpty(
+		int16(0),
+	))
+}
+
+func TestIsEmptyTypeInt32(t *testing.T) {
+	assert.True(t, IsEmpty(
+		int32(0),
+	))
+}
+
+func TestIsEmptyTypeInt64(t *testing.T) {
+	assert.True(t, IsEmpty(
+		int64(0),
+	))
+}
+
 func TestIsEmptyTypeUint(t *testing.T) {
 	assert.True(t, IsEmpty(
 		uint(0),
 	))
 }
 
-func TestIsEmptyTypeFloat(t *testing.T) {
+func TestIsEmptyTypeUint8(t *testing.T) {
+	assert.True(t, IsEmpty(
+		uint8(0),
+	))
+}
+
+func TestIsEmptyTypeUint16(t *testing.T) {
+	assert.True(t, IsEmpty(
+		uint16(0),
+	))
+}
+
+func TestIsEmptyTypeUint32(t *testing.T) {
+	assert.True(t, IsEmpty(
+		uint32(0),
+	))
+}
+
+func TestIsEmptyTypeUint64(t *testing.T) {
+	assert.True(t, IsEmpty(
+		uint64(0),
+	))
+}
+
+func TestIsEmptyTypeFloat32(t *testing.T) {
 	assert.True(t, IsEmpty(
 		float32(0),
+	))
+}
+func TestIsEmptyTypeFloat64(t *testing.T) {
+	assert.True(t, IsEmpty(
+		float64(0),
 	))
 }
 
@@ -342,6 +395,20 @@ func TestIsTrueFail(t *testing.T) {
 	))
 }
 
+// =========== IsSlice
+
+func TestIsSlice(t *testing.T) {
+	assert.True(t, IsSlice(
+		[]string{"a", "b", "c", "d"},
+	))
+}
+
+func TestIsSliceFail(t *testing.T) {
+	assert.False(t, IsSlice(
+		make(map[string]interface{}),
+	))
+}
+
 // =========== IsStructObject
 
 func TestIsStructObject(t *testing.T) {
@@ -370,11 +437,59 @@ func TestIsStructObjectFail(t *testing.T) {
 	))
 }
 
-// =========== IsEmptyString
+// =========== IsZeroNumber
 
 func TestIsZeroNumber(t *testing.T) {
 	assert.True(t, IsZeroNumber(
 		0,
+	))
+}
+
+func TestIsZeroNumberInt8(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		int8(0),
+	))
+}
+
+func TestIsZeroNumberInt16(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		int16(0),
+	))
+}
+
+func TestIsZeroNumberInt32(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		int32(0),
+	))
+}
+
+func TestIsZeroNumberInt64(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		int64(0),
+	))
+}
+
+func TestIsZeroNumberUint8(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		uint8(0),
+	))
+}
+
+func TestIsZeroNumberUint16(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		uint16(0),
+	))
+}
+
+func TestIsZeroNumberUint32(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		uint32(0),
+	))
+}
+
+func TestIsZeroNumberUint64(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		uint64(0),
 	))
 }
 
@@ -384,8 +499,8 @@ func TestIsZeroNumberFloat32(t *testing.T) {
 	))
 }
 
-func TestIsZeroNumberFail(t *testing.T) {
-	assert.False(t, IsZeroNumber(
-		24,
+func TestIsZeroNumberFloat64(t *testing.T) {
+	assert.True(t, IsZeroNumber(
+		float64(0),
 	))
 }
