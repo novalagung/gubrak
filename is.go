@@ -137,7 +137,7 @@ func IsEmpty(data interface{}) bool {
 	return false
 }
 
-// IsEmptyString will return true when type of the data is string and it's emtpy
+// IsEmptyString will return true when type of the data is string and it's empty
 func IsEmptyString(data interface{}) bool {
 	if data == nil {
 		return true
