@@ -4,6 +4,7 @@ Golang utility library with syntactic sugar.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/novalagung/gubrak)](https://goreportcard.com/report/github.com/novalagung/gubrak)
 [![Build Status](https://travis-ci.org/novalagung/gubrak.svg?branch=master)](https://travis-ci.org/novalagung/gubrak)
+[![codecov](https://codecov.io/gh/novalagung/gubrak/branch/master/graph/badge.svg)](https://codecov.io/gh/novalagung/gubrak)
 
 Gubrak is yet another utility library for Golang, inspired from lodash. Currently we have around 46 reusable functions available, and it'll keep increasing.
 
