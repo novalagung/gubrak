@@ -3,7 +3,10 @@ package gubrak
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
+
+// =========== IsArray
 
 func TestIsArray(t *testing.T) {
 	assert.True(t, IsArray(
@@ -17,6 +20,8 @@ func TestIsArrayFail(t *testing.T) {
 	))
 }
 
+// =========== IsBool
+
 func TestIsBool(t *testing.T) {
 	assert.True(t, IsBool(
 		true,
@@ -28,6 +33,8 @@ func TestIsBoolFail(t *testing.T) {
 		"hello",
 	))
 }
+
+// =========== IsChannel
 
 func TestIsChannel(t *testing.T) {
 	data := make(chan string)
@@ -42,6 +49,72 @@ func TestIsChannelFail(t *testing.T) {
 		"hello",
 	))
 }
+
+// =========== IsDate
+
+func TestIsDate(t *testing.T) {
+	assert.True(t, IsDate(
+		time.Now(),
+	))
+}
+
+func TestIsDateFail(t *testing.T) {
+	assert.False(t, IsDate(
+		"hello",
+	))
+}
+
+// =========== IsEmpty
+
+func TestIsEmptyString(t *testing.T) {
+	assert.True(t, IsEmpty(
+		"",
+	))
+}
+
+func TestIsEmptyInt(t *testing.T) {
+	assert.True(t, IsEmpty(
+		0,
+	))
+}
+
+func TestIsEmptyUint(t *testing.T) {
+	assert.True(t, IsEmpty(
+		uint(0),
+	))
+}
+
+func TestIsEmptyFloat(t *testing.T) {
+	assert.True(t, IsEmpty(
+		float32(0),
+	))
+}
+
+func TestIsEmptyNilSlice(t *testing.T) {
+	var data []string
+
+	assert.True(t, IsEmpty(
+		data,
+	))
+}
+
+func TestIsEmptySliceEmptyElements(t *testing.T) {
+	data := make([]string, 0)
+
+	assert.True(t, IsEmpty(
+		data,
+	))
+}
+
+func TestIsEmptyMapEmptyElements(t *testing.T) {
+	data := make(map[string]int)
+
+	assert.True(t, IsEmpty(
+		data,
+	))
+}
+
+// =========== IsFloat32
 
 func TestIsFloat32(t *testing.T) {
 	assert.True(t, IsFloat(
@@ -61,6 +134,8 @@ func TestIsFloatFail(t *testing.T) {
 	))
 }
 
+// =========== IsFunction
+
 func TestIsFunction(t *testing.T) {
 	closure := func() string {
 		return "hello"
@@ -76,6 +151,8 @@ func TestIsFunctionFail(t *testing.T) {
 		"hello",
 	))
 }
+
+// =========== IsInt
 
 func TestIsInt(t *testing.T) {
 	assert.True(t, IsInt(
@@ -95,6 +172,8 @@ func TestIsIntFailFloat32(t *testing.T) {
 	))
 }
 
+// =========== IsMap
+
 func TestIsMap(t *testing.T) {
 	assert.True(t, IsMap(
 		make(map[string]interface{}),
@@ -106,6 +185,8 @@ func TestIsMapFail(t *testing.T) {
 		make([]string, 0),
 	))
 }
+
+// =========== IsNil
 
 func TestIsNil(t *testing.T) {
 	assert.True(t, IsNil(
@@ -159,6 +240,8 @@ func TestIsNilFailString(t *testing.T) {
 	))
 }
 
+// =========== IsNumeric
+
 func TestIsNumericInt(t *testing.T) {
 	assert.True(t, IsNumeric(
 		12,
@@ -177,6 +260,8 @@ func TestIsNumericFail(t *testing.T) {
 	))
 }
 
+// =========== IsString
+
 func TestIsString(t *testing.T) {
 	assert.True(t, IsString(
 		"hello",
@@ -188,6 +273,8 @@ func TestIsStringFail(t *testing.T) {
 		float64(24),
 	))
 }
+
+// =========== IsUint
 
 func TestIsUint(t *testing.T) {
 	assert.True(t, IsUint(
@@ -213,6 +300,8 @@ func TestIsUintFailFloat32(t *testing.T) {
 	))
 }
 
+// =========== IsPointer
+
 func TestIsPointer(t *testing.T) {
 	data := "hello"
 
@@ -224,6 +313,8 @@ func TestIsPointerFail(t *testing.T) {
 		"hello",
 	))
 }
+
+// =========== IsObject
 
 func TestIsObject(t *testing.T) {
 	type SomeStruct struct {
