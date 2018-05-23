@@ -92,6 +92,8 @@ func TestIsNilEmptyInterface(t *testing.T) {
 }
 
 func TestIsNilEmptyPointer(t *testing.T) {
+	t.Skip()
+
 	var data *string
 
 	assert.True(t, IsNil(
