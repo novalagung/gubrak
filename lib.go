@@ -88,17 +88,17 @@ func validateFuncInputForSliceLoop(err *error, funcType reflect.Type, data refle
 	if funcTypeNumIn == 0 || funcTypeNumIn >= 3 {
 		*err = errors.New("callback must only have one or two parameters")
 		return funcTypeNumIn
-	} else {
-		if funcType.In(0).Kind() != data.Type().Elem().Kind() {
-			*err = errors.New("callback 1st parameter's data type should be same with slice element data type")
-			return funcTypeNumIn
-		}
+	}
 
-		if funcTypeNumIn == 2 {
-			if funcType.In(1).Kind() != reflect.Int {
-				*err = errors.New("callback 2nd parameter's data type should be int")
-				return funcTypeNumIn
-			}
+	if funcType.In(0).Kind() != data.Type().Elem().Kind() {
+		*err = errors.New("callback 1st parameter's data type should be same with slice element data type")
+		return funcTypeNumIn
+	}
+
+	if funcTypeNumIn == 2 {
+		if funcType.In(1).Kind() != reflect.Int {
+			*err = errors.New("callback 2nd parameter's data type should be int")
+			return funcTypeNumIn
 		}
 	}
 
@@ -109,14 +109,11 @@ func validateFuncInputForSliceLoopWithoutIndex(err *error, funcType reflect.Type
 	if funcType.NumIn() != 1 {
 		*err = errors.New("callback must only have one parameters")
 		return
-	} else {
-		if funcType.In(0).Kind() != data.Type().Elem().Kind() {
-			*err = errors.New("callback parameter's data type should be same with slice data type")
-			return
-		}
 	}
 
-	return
+	if funcType.In(0).Kind() != data.Type().Elem().Kind() {
+		*err = errors.New("callback parameter's data type should be same with slice data type")
+	}
 }
 
 func validateFuncInputForCollectionLoop(err *error, funcType reflect.Type, data reflect.Value) int {
@@ -125,17 +122,17 @@ func validateFuncInputForCollectionLoop(err *error, funcType reflect.Type, data 
 	if funcTypeNumIn == 0 || funcTypeNumIn >= 3 {
 		*err = errors.New("callback must only have one or two parameters")
 		return funcTypeNumIn
-	} else {
-		if funcType.In(0).Kind() != data.Type().Elem().Kind() {
-			*err = errors.New("callback 1st parameter's data type should be same with map value data type")
-			return funcTypeNumIn
-		}
+	}
 
-		if funcTypeNumIn == 2 {
-			if funcType.In(1).Kind() != data.Type().Key().Kind() {
-				*err = errors.New("callback 2nd parameter's data type should be same with map key type")
-				return funcTypeNumIn
-			}
+	if funcType.In(0).Kind() != data.Type().Elem().Kind() {
+		*err = errors.New("callback 1st parameter's data type should be same with map value data type")
+		return funcTypeNumIn
+	}
+
+	if funcTypeNumIn == 2 {
+		if funcType.In(1).Kind() != data.Type().Key().Kind() {
+			*err = errors.New("callback 2nd parameter's data type should be same with map key type")
+			return funcTypeNumIn
 		}
 	}
 
@@ -228,32 +225,31 @@ func forEachCollectionStoppable(collection reflect.Value, keys []reflect.Value, 
 func callFuncSliceLoop(funcToCall, param reflect.Value, i int, numIn int) []reflect.Value {
 	if numIn == 1 {
 		return funcToCall.Call([]reflect.Value{param})
-	} else {
-		return funcToCall.Call([]reflect.Value{param, reflect.ValueOf(i)})
 	}
+
+	return funcToCall.Call([]reflect.Value{param, reflect.ValueOf(i)})
 }
 
 func callFuncCollectionLoop(funcToCall, value, key reflect.Value, numIn int) []reflect.Value {
 	if numIn == 1 {
 		return funcToCall.Call([]reflect.Value{value})
-	} else {
-		return funcToCall.Call([]reflect.Value{value, key})
 	}
+
+	return funcToCall.Call([]reflect.Value{value, key})
 }
 
 func isSlice(err *error, label string, dataValue ...reflect.Value) bool {
 	if len(dataValue) == 0 {
-		*err = errors.New(fmt.Sprintf("%s cannot be empty", label))
+		*err = fmt.Errorf("%s cannot be empty", label)
 		return false
 
 	} else if len(dataValue) == 1 {
 		if dataValue[0].Kind() == reflect.Slice {
 			return true
-		} else {
-			*err = errors.New(fmt.Sprintf("%s must be slice", label))
-			return false
 		}
 
+		*err = fmt.Errorf("%s must be slice", label)
+		return false
 	} else {
 		res := dataValue[0].Kind() == reflect.Slice
 
@@ -269,7 +265,7 @@ func isSlice(err *error, label string, dataValue ...reflect.Value) bool {
 
 func isNonNilData(err *error, label string, data interface{}) bool {
 	if data == nil {
-		*err = errors.New(fmt.Sprintf("%s cannot be nil", label))
+		*err = fmt.Errorf("%s cannot be nil", label)
 		return false
 	}
 
@@ -278,7 +274,7 @@ func isNonNilData(err *error, label string, data interface{}) bool {
 
 func isZeroOrPositiveNumber(err *error, label string, size int) bool {
 	if size < 0 {
-		*err = errors.New(fmt.Sprintf("%s must not be negative number", label))
+		*err = fmt.Errorf("%s must not be negative number", label)
 		return false
 	} else if size == 0 {
 		return true
@@ -289,10 +285,10 @@ func isZeroOrPositiveNumber(err *error, label string, size int) bool {
 
 func isPositiveNumber(err *error, label string, size int) bool {
 	if size < 0 {
-		*err = errors.New(fmt.Sprintf("%s must be positive number", label))
+		*err = fmt.Errorf("%s must be positive number", label)
 		return false
 	} else if size == 0 {
-		*err = errors.New(fmt.Sprintf("%s must be positive number", label))
+		*err = fmt.Errorf("%s must be positive number", label)
 		return false
 	}
 
@@ -301,7 +297,7 @@ func isPositiveNumber(err *error, label string, size int) bool {
 
 func isLeftShouldBeGreaterOrEqualThanRight(err *error, labelLeft string, valueLeft int, labelRight string, valueRight int) bool {
 	if valueLeft < valueRight {
-		*err = errors.New(fmt.Sprintf("%s should be greater than %s", labelLeft, labelRight))
+		*err = fmt.Errorf("%s should be greater than %s", labelLeft, labelRight)
 		return false
 	}
 
@@ -310,7 +306,7 @@ func isLeftShouldBeGreaterOrEqualThanRight(err *error, labelLeft string, valueLe
 
 func isTypeEqual(err *error, labelLeft string, typeLeft reflect.Type, labelRight string, typeRight reflect.Type) bool {
 	if typeLeft != typeRight {
-		*err = errors.New(fmt.Sprintf("data type of %s should be same with %s", labelLeft, labelRight))
+		*err = fmt.Errorf("data type of %s should be same with %s", labelLeft, labelRight)
 		return false
 	}
 
@@ -319,7 +315,7 @@ func isTypeEqual(err *error, labelLeft string, typeLeft reflect.Type, labelRight
 
 func catch(err *error) {
 	if r := recover(); r != nil {
-		*err = errors.New(fmt.Sprintf("%v", r))
+		*err = fmt.Errorf("%v", r)
 	}
 }
 

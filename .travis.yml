@@ -11,7 +11,7 @@ go:
 go_import_path: github.com/novalagung/gubrak
 
 script:
-  - cd test && go test -coverprofile=coverage.txt -covermode=atomic -race -v -cover ./...
+  - cd test && go test -coverprofile=coverage.txt -covermode=atomic -race -v ./...
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -t "70c1f0d2-24bc-4612-9fee-a365a734ec05"

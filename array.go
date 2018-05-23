@@ -7,11 +7,7 @@ import (
 	"strings"
 )
 
-/*
- * Creates an array of elements split into groups the length of size.
- * If array can't be split evenly, the final chunk will be the remaining elements.
- */
-
+// Chunk function creates an array of elements split into groups the length of size. If array can't be split evenly, the final chunk will be the remaining elements.
 func Chunk(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -60,11 +56,7 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates an array with all falsey values removed.
- * The values false, nil, 0, "", (*string)(nil), and other nil values are falsey.
- */
-
+// Compact function creates an array with all falsey values removed. The values false, nil, 0, "", (*string)(nil), and other nil values are falsey.
 func Compact(data interface{}) (interface{}, error) {
 	var err error
 
@@ -148,10 +140,7 @@ func Compact(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates a new array concatenating array with any additional arrays and/or values.
- */
-
+// Concat function creates a new array concatenating array with any additional arrays and/or values.
 func Concat(data interface{}, concatenableData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -205,11 +194,7 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 	return result, err
 }
 
-/*
- * Creates an array of array values not included in the other given arrays.
- * The order and references of result values are determined by the first array.
- */
-
+// Difference function creates an array of array values not included in the other given arrays. The order and references of result values are determined by the first array.
 func Difference(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -277,10 +262,7 @@ func Difference(data interface{}, compareData ...interface{}) (interface{}, erro
 	return result, err
 }
 
-/*
- * Creates a slice of array with n elements dropped from the beginning.
- */
-
+// Drop function creates a slice of array with n elements dropped from the beginning.
 func Drop(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -325,10 +307,7 @@ func Drop(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates a slice of array with n elements dropped from the last.
- */
-
+// DropRight function creates a slice of array with n elements dropped from the last.
 func DropRight(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -371,10 +350,7 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Fills elements of array with value from start up to, but not including, end.
- */
-
+// Fill function fills elements of array with value from start up to, but not including, end.
 func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 	var err error
 
@@ -441,11 +417,7 @@ func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * This method is like _.find except that it returns
- * the index of the first element predicate returns truthy for instead of the element itself.
- */
-
+// FindIndex function is like Find() except that it returns the index of the first element predicate returns truthy for instead of the element itself.
 func FindIndex(data, callback interface{}, args ...int) (int, error) {
 	var err error
 
@@ -508,10 +480,7 @@ func FindIndex(data, callback interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-/*
- * This method is like FindIndex except that it iterates over elements of collection from right to left.
- */
-
+// FindLastIndex function is like FindIndex() except that it iterates over elements of collection from right to left.
 func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 	var err error
 
@@ -577,10 +546,7 @@ func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-/*
- * Gets the first element of array.
- */
-
+// First function gets the first element of array.
 func First(data interface{}) (interface{}, error) {
 	var err error
 
@@ -607,10 +573,7 @@ func First(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * The inverse of _.toPairs; this method returns an object composed from key-value pairs
- */
-
+// FromPairs returns an object composed from key-value pairs
 func FromPairs(data interface{}) (interface{}, error) {
 	var err error
 
@@ -670,20 +633,12 @@ func FromPairs(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Alias of First()
- */
-
+// Head is alias of First() function
 func Head(data interface{}) (interface{}, error) {
 	return First(data)
 }
 
-/*
- * Gets the index at which the first occurrence of value is found in array using SameValueZero
- * for equality comparisons.
- * If fromIndex is negative, it's used as the offset from the end of array.
- */
-
+// IndexOf function gets the index at which the first occurrence of value is found in array using SameValueZero for equality comparisons. If FromIndex() is negative, it's used as the offset from the end of array.
 func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	var err error
 
@@ -748,10 +703,7 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-/*
- * Gets all but the last element of array.
- */
-
+// Initial function gets all but the last element of array.
 func Initial(data interface{}) (interface{}, error) {
 	var err error
 
@@ -778,12 +730,7 @@ func Initial(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates an array of unique values that are included in all given arrays
- * using SameValueZero for equality comparisons.
- * The order and references of result values are determined by the first array.
- */
-
+// Intersection function creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
 func Intersection(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -867,10 +814,7 @@ func Intersection(data interface{}, compareData ...interface{}) (interface{}, er
 	return result, err
 }
 
-/*
- * Converts all elements in array into a string separated by separator.
- */
-
+// Join function converts all elements in array into a string separated by separator.
 func Join(data interface{}, separator string) (string, error) {
 	var err error
 
@@ -924,10 +868,7 @@ func Join(data interface{}, separator string) (string, error) {
 	return result, err
 }
 
-/*
- * Gets the last element of array.
- */
-
+// Last function gets the last element of array.
 func Last(data interface{}) (interface{}, error) {
 	var err error
 
@@ -954,10 +895,7 @@ func Last(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * This method is like _.indexOf except that it iterates over elements of array from right to left.
- */
-
+// LastIndexOf function is like IndexOf() except that it iterates over elements of array from right to left.
 func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	var err error
 
@@ -1019,10 +957,7 @@ func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error)
 	return result, err
 }
 
-/*
- * Gets the element at index n of array. If n is negative, the nth element from the end is returned.
- */
-
+// Nth function gets the element at index n of array. If n is negative, the nth element from the end is returned.
 func Nth(data interface{}, i int) (interface{}, error) {
 	var err error
 
@@ -1057,10 +992,7 @@ func Nth(data interface{}, i int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Removes all given values from array using SameValueZero for equality comparisons.
- */
-
+// Pull function removes all given values from array using SameValueZero for equality comparisons.
 func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 	var err error
 
@@ -1108,10 +1040,7 @@ func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * This method is like _.pull except that it accepts an array of values to remove.
- */
-
+// PullAll function is like Pull() except that it accepts an array of values to remove.
 func PullAll(data interface{}, items interface{}) (interface{}, error) {
 	var err error
 
@@ -1165,10 +1094,7 @@ func PullAll(data interface{}, items interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Removes elements from array corresponding to indexes and returns an array of removed elements.
- */
-
+// PullAt function removes elements from array corresponding to indexes and returns an array of removed elements.
 func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 	var err error
 
@@ -1221,12 +1147,7 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Removes all elements from array that predicate returns truthy for
- * and returns an array of the removed elements.
- * The predicate is invoked with three arguments: (value, index, array).
- */
-
+// Remove function removes all elements from array that predicate returns truthy for and returns an array of the removed elements. The predicate is invoked with three arguments: (value, index, array).
 func Remove(data interface{}, callback interface{}) (interface{}, interface{}, error) {
 	var result, removed interface{}
 	var err error
@@ -1287,11 +1208,7 @@ func Remove(data interface{}, callback interface{}) (interface{}, interface{}, e
 	return result, removed, err
 }
 
-/*
- * Reverses array so that the first element becomes the last,
- * the second element becomes the second to last, and so on.
- */
-
+// Reverse function reverses array so that the first element becomes the last, the second element becomes the second to last, and so on.
 func Reverse(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1324,10 +1241,7 @@ func Reverse(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Gets all but the first element of array.
- */
-
+// Tail function gets all but the first element of array.
 func Tail(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1355,10 +1269,7 @@ func Tail(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates a slice of array with n elements taken from the beginning.
- */
-
+// Take function creates a slice of array with n elements taken from the beginning.
 func Take(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -1397,10 +1308,7 @@ func Take(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates a slice of array with n elements taken from the end.
- */
-
+// TakeRight function creates a slice of array with n elements taken from the end.
 func TakeRight(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -1439,11 +1347,7 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates an array of unique values, in order,
- * from all given arrays using SameValueZero for equality comparisons.
- */
-
+// Union function creates an array of unique values, in order, from all given arrays using SameValueZero for equality comparisons.
 func Union(data interface{}, target ...interface{}) (interface{}, error) {
 	var err error
 
@@ -1510,33 +1414,17 @@ func Union(data interface{}, target ...interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates a duplicate-free version of an array,
- * using SameValueZero for equality comparisons,
- * in which only the first occurrence of each element is kept.
- * The order of result values is determined by the order
- * they occur in the array.
- */
-
+// Uniq function creates a duplicate-free version of an array, using SameValueZero for equality comparisons, in which only the first occurrence of each element is kept. The order of result values is determined by the order they occur in the array.
 func Uniq(data interface{}) (interface{}, error) {
 	return Union(data)
 }
 
-/*
- * Creates an array excluding all given values using SameValueZero for equality comparisons.
- */
-
+// Without function creates an array excluding all given values using SameValueZero for equality comparisons.
 func Without(data interface{}, target ...interface{}) (interface{}, error) {
 	return Pull(data, target...)
 }
 
-/*
- * This method is like _.xor except that it accepts iteratee which is invoked
- * for each element of each arrays to generate the criterion by which by which they're compared.
- * The order of result values is determined by the order they occur in the arrays.
- * The iteratee is invoked with one argument: (value).
- */
-
+// Xor function accepts iteratee which is invoked for each element of each arrays to generate the criterion by which by which they're compared. The order of result values is determined by the order they occur in the arrays. The iteratee is invoked with one argument: (value).
 func Xor(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 

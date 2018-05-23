@@ -11,6 +11,7 @@ func init() {
 	randMath.Seed(time.Now().UnixNano())
 }
 
+// RandomString function generate random string in defined length
 func RandomString(length int) string {
 	data := make([]byte, length)
 
@@ -22,6 +23,7 @@ func RandomString(length int) string {
 	return res
 }
 
+// RandomStringAlphabet function generate random alphabet string in defined length
 func RandomStringAlphabet(length int) string {
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 

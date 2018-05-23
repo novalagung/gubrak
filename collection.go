@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Count function creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the number of times the key was returned by iteratee. The iteratee is invoked with one argument: (value).
 func Count(data interface{}, args ...interface{}) (int, error) {
 	var err error
 
@@ -78,7 +79,7 @@ func _countSlice(err *error, dataValue reflect.Value, dataValueType reflect.Type
 	forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
 		res := callFuncSliceLoop(callbackValue, each, i, callbackTypeNumIn)
 		if res[0].Bool() {
-			resultCounter += 1
+			resultCounter++
 		}
 	})
 
@@ -122,19 +123,14 @@ func _countCollection(err *error, dataValue reflect.Value, dataValueType reflect
 	forEachCollection(dataValue, dataValueMapKeys, func(value, key reflect.Value, i int) {
 		res := callFuncCollectionLoop(callbackValue, value, key, callbackTypeNumIn)
 		if res[0].Bool() {
-			resultCounter += 1
+			resultCounter++
 		}
 	})
 
 	return resultCounter
 }
 
-/*
- * Iterates over elements of array and invokes iteratee for each element.
- * The iteratee is invoked with two arguments: (value, index).
- * Iteratee functions may exit iteration early by explicitly returning false.
- */
-
+// Each function iterates over elements of array and invokes iteratee for each element. The iteratee is invoked with two arguments: (value, index). Iteratee functions may exit iteration early by explicitly returning false.
 func Each(data, callback interface{}) error {
 	var err error
 
@@ -240,10 +236,7 @@ func _eachCollection(err *error, dataValue reflect.Value, dataValueType reflect.
 	})
 }
 
-/*
- * This method is like _.forEach except that it iterates over elements of collection from right to left.
- */
-
+// EachRight function is like ForEach() except that it iterates over elements of collection from right to left.
 func EachRight(data, callback interface{}) error {
 	var err error
 
@@ -271,12 +264,7 @@ func EachRight(data, callback interface{}) error {
 	return err
 }
 
-/*
- * Iterates over elements of collection,
- * returning an array of all elements predicate returns truthy for.
- * The predicate is invoked with two arguments: (value, index).
- */
-
+// Filter function iterates over elements of collection, returning an array of all elements predicate returns truthy for. The predicate is invoked with two arguments: (value, index).
 func Filter(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -369,12 +357,7 @@ func _filterCollection(err *error, dataValue reflect.Value, dataValueType reflec
 	return result.Interface()
 }
 
-/*
- * Iterates over elements of collection,
- * returning the first element predicate returns truthy for.
- * The predicate is invoked with three arguments: (value, index).
- */
-
+// Find function iterates over elements of collection, returning the first element predicate returns truthy for. The predicate is invoked with three arguments: (value, index).
 func Find(data, callback interface{}, args ...int) (interface{}, error) {
 	var err error
 
@@ -447,10 +430,7 @@ func Find(data, callback interface{}, args ...int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * This method is like _.find except that it iterates over elements of collection from right to left.
- */
-
+// FindLast function is like Find() except that it iterates over elements of collection from right to left.
 func FindLast(data, callback interface{}, args ...int) (interface{}, error) {
 	var err error
 
@@ -525,30 +505,17 @@ func FindLast(data, callback interface{}, args ...int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Alias of Each
- */
-
+// ForEach is alias of Each()
 func ForEach(data, callback interface{}) error {
 	return Each(data, callback)
 }
 
-/*
- * Alias of EachRight
- */
-
+// ForEachRight is alias of EachRight()
 func ForEachRight(data, callback interface{}) error {
 	return EachRight(data, callback)
 }
 
-/*
- * Creates an object composed of keys generated from the results of running each element
- * of collection thru iteratee.
- * The order of grouped values is determined by the order they occur in collection.
- * The corresponding value of each key is an array of elements responsible for generating the key.
- * The iteratee is invoked with one argument: (value).
- */
-
+// GroupBy function creates an object composed of keys generated from the results of running each element of collection thru iteratee. The order of grouped values is determined by the order they occur in collection. The corresponding value of each key is an array of elements responsible for generating the key. The iteratee is invoked with one argument: (value).
 func GroupBy(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -608,11 +575,7 @@ func GroupBy(data, callback interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates an array of values by running each element in collection thru iteratee.
- * The iteratee is invoked with two arguments: (value, index).
- */
-
+// Map function creates an array of values by running each element in collection thru iteratee. The iteratee is invoked with two arguments: (value, index).
 func Map(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -661,12 +624,7 @@ func Map(data, callback interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Checks if value is in collection. If collection is a string, it's checked for a substring of value,
- * otherwise SameValueZero is used for equality comparisons.
- * If fromIndex is negative, it's used as the offset from the end of collection.
- */
-
+// Includes function checks if value is in collection. If collection is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If fromIndex is negative, it's used as the offset from the end of collection.
 func Includes(data, search interface{}, args ...int) (bool, error) {
 	var err error
 
@@ -676,9 +634,9 @@ func Includes(data, search interface{}, args ...int) (bool, error) {
 		if dataValue, dataOK := data.(string); dataOK {
 			if searchValue, searchOK := search.(string); searchOK {
 				return strings.Contains(dataValue, searchValue)
-			} else {
-				return false
 			}
+
+			return false
 		}
 
 		if !isNonNilData(err, "data", data) {
@@ -704,10 +662,10 @@ func Includes(data, search interface{}, args ...int) (bool, error) {
 			if dataValueKind == reflect.Map {
 				*err = nil
 				return _includesCollection(err, dataValue, search, startIndex)
-			} else {
-				*err = errors.New((*err).Error() + ", map, or a string")
-				return false
 			}
+
+			*err = errors.New((*err).Error() + ", map, or a string")
+			return false
 		}
 
 		return _includesSlice(err, dataValue, dataValueLen, search, startIndex)
@@ -764,13 +722,7 @@ func _includesCollection(err *error, dataValue reflect.Value, search interface{}
 	return isFound
 }
 
-/*
- * Creates an object composed of keys generated from the results of running each element of collection
- * thru iteratee.
- * The corresponding value of each key is the last element responsible for generating the key.
- * The iteratee is invoked with one argument: (value).
- */
-
+// KeyBy function creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
 func KeyBy(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -820,15 +772,7 @@ func KeyBy(data, callback interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * This method is like _.sortBy except that it allows specifying the sort orders of the iteratees to sort by.
- * If orders is unspecified, all values are sorted in ascending order.
- * Otherwise, specify an order of "desc" for descending or "asc"
- * for ascending sort order of corresponding values.
- *
- * The algorithm used is merge sort, as per savigo's post on https://sagivo.com/go-sort-faster-4869bdabc670
- */
-
+// OrderBy sort slices. If orders is unspecified, all values are sorted in ascending order. Otherwise, specify an order of "desc" for descending or "asc" for ascending sort order of corresponding values. The algorithm used is merge sort, as per savigo's post on https://sagivo.com/go-sort-faster-4869bdabc670
 func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 	var err error
 
@@ -1014,18 +958,18 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 				if isLeftLowerThanRight {
 					if isAscending {
 						result.Index(i + j).Set(leftElem)
-						i += 1
+						i++
 					} else {
 						result.Index(i + j).Set(rightElem)
-						j += 1
+						j++
 					}
 				} else {
 					if isAscending {
 						result.Index(i + j).Set(rightElem)
-						j += 1
+						j++
 					} else {
 						result.Index(i + j).Set(leftElem)
-						i += 1
+						i++
 					}
 				}
 			}
@@ -1036,12 +980,12 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 
 			for i < leftSlice.Len() {
 				result.Index(i + j).Set(leftSlice.Index(i))
-				i += 1
+				i++
 			}
 
 			for j < rightSlice.Len() {
 				result.Index(i + j).Set(rightSlice.Index(j))
-				j += 1
+				j++
 			}
 
 			return result
@@ -1052,21 +996,15 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 			_doSortAsync(dataValue, c)
 
 			return (<-c).Interface()
-		} else {
-			return _doSortSync(dataValue).Interface()
 		}
+
+		return _doSortSync(dataValue).Interface()
 	}(&err)
 
 	return result, err
 }
 
-/*
- * Creates an array of elements split into two groups,
- * the first of which contains elements predicate returns truthy for,
- * the second of which contains elements predicate returns falsey for.
- * The predicate is invoked with one argument: (value).
- */
-
+// Partition function creates an array of elements split into two groups, the first of which contains elements predicate returns truthy for, the second of which contains elements predicate returns falsey for. The predicate is invoked with one argument: (value).
 func Partition(data, callback interface{}) (interface{}, interface{}, error) {
 	var truhty, falsey interface{}
 	var err error
@@ -1122,11 +1060,7 @@ func Partition(data, callback interface{}) (interface{}, interface{}, error) {
 	return truhty, falsey, err
 }
 
-/*
- * Reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments:
-(accumulator, value, index|key, collection).
-*/
-
+// Reduce function reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments: (accumulator, value, index|key, collection)
 func Reduce(data, callback, initial interface{}) (interface{}, error) {
 	var err error
 
@@ -1167,22 +1101,22 @@ func _reduceCollection(err *error, dataValue reflect.Value, dataValueType reflec
 	if callbackValueNumIn < 2 || callbackValueNumIn > 3 {
 		*err = errors.New("callback must only have two or three parameters")
 		return nil
-	} else {
-		if callbackType.In(0).Kind() != initialValueType.Kind() {
-			*err = errors.New("callback 1st parameter's data type should be same with initial value's data type")
-			return nil
-		}
+	}
 
-		if callbackType.In(1).Kind() != dataValueType.Elem().Kind() {
-			*err = errors.New("callback 2nd parameter's data type should be same with map value data type")
-			return nil
-		}
+	if callbackType.In(0).Kind() != initialValueType.Kind() {
+		*err = errors.New("callback 1st parameter's data type should be same with initial value's data type")
+		return nil
+	}
 
-		if callbackValueNumIn > 2 {
-			if callbackType.In(2).Kind() != dataValueType.Key().Kind() {
-				*err = errors.New("callback 3rd parameter's data type should be same with map key type")
-				return nil
-			}
+	if callbackType.In(1).Kind() != dataValueType.Elem().Kind() {
+		*err = errors.New("callback 2nd parameter's data type should be same with map value data type")
+		return nil
+	}
+
+	if callbackValueNumIn > 2 {
+		if callbackType.In(2).Kind() != dataValueType.Key().Kind() {
+			*err = errors.New("callback 3rd parameter's data type should be same with map key type")
+			return nil
 		}
 	}
 
@@ -1218,22 +1152,22 @@ func _reduceSlice(err *error, dataValue reflect.Value, dataValueType reflect.Typ
 	if callbackValueNumIn < 2 || callbackValueNumIn > 3 {
 		*err = errors.New("callback must only have two or three parameters")
 		return nil
-	} else {
-		if callbackType.In(0).Kind() != initialValueType.Kind() {
-			*err = errors.New("callback 1st parameter's data type should be same with initial value's data type")
-			return nil
-		}
+	}
 
-		if callbackType.In(1).Kind() != dataValue.Index(0).Kind() {
-			*err = errors.New("callback 2nd parameter's data type should be same with slice element data type")
-			return nil
-		}
+	if callbackType.In(0).Kind() != initialValueType.Kind() {
+		*err = errors.New("callback 1st parameter's data type should be same with initial value's data type")
+		return nil
+	}
 
-		if callbackValueNumIn > 2 {
-			if callbackType.In(2).Kind() != reflect.Int {
-				*err = errors.New("callback 3rd parameter's data type should be int")
-				return nil
-			}
+	if callbackType.In(1).Kind() != dataValue.Index(0).Kind() {
+		*err = errors.New("callback 2nd parameter's data type should be same with slice element data type")
+		return nil
+	}
+
+	if callbackValueNumIn > 2 {
+		if callbackType.In(2).Kind() != reflect.Int {
+			*err = errors.New("callback 3rd parameter's data type should be int")
+			return nil
 		}
 	}
 
@@ -1255,10 +1189,7 @@ func _reduceSlice(err *error, dataValue reflect.Value, dataValueType reflect.Typ
 	return result.Interface()
 }
 
-/*
- * The opposite of _.filter; this method returns the elements of collection that predicate does not return truthy for.
- */
-
+// Reject function is the opposite of Filter(); This method returns the elements of collection that predicate does not return truthy for.
 func Reject(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -1309,10 +1240,7 @@ func Reject(data, callback interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Gets a random element from collection.
- */
-
+// Sample function gets a random element from collection.
 func Sample(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1339,10 +1267,7 @@ func Sample(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Gets n random elements at unique keys from collection up to the size of collection.
- */
-
+// SampleSize function gets n random elements at unique keys from collection up to the size of collection.
 func SampleSize(data interface{}, take int) (interface{}, error) {
 	var err error
 
@@ -1390,10 +1315,7 @@ func SampleSize(data interface{}, take int) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Creates an array of shuffled values, using a version of the Fisher-Yates shuffle.
- */
-
+// Shuffle function creates an array of shuffled values, using a version of the Fisher-Yates shuffle.
 func Shuffle(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1427,10 +1349,7 @@ func Shuffle(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-/*
- * Gets the size of collection by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
- */
-
+// Size function gets the size of collection by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
 func Size(data interface{}) (int, error) {
 	var err error
 
@@ -1461,10 +1380,7 @@ func Size(data interface{}) (int, error) {
 	return result, err
 }
 
-/*
- * Alias of OrderBy
- */
-
+// SortBy is alias of OrderBy()
 func SortBy(data, callback interface{}, args ...bool) (interface{}, error) {
 	return OrderBy(data, callback, args...)
 }
