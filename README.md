@@ -17,9 +17,7 @@ go get -u github.com/novalagung/gubrak
 
 ### Documentation
 
-See [official documentation page](https://gubrak.github.io/#/documentation).
-
-[Godoc documentation page](http://godoc.org/github.com/novalagung/gubrak) is still in progress.
+[Godoc documentation page](http://godoc.org/github.com/novalagung/gubrak).
 
 ### Hello World Example
 
@@ -141,7 +139,6 @@ These are list of available functions that stable.
  - gubrak.Uniq()
  - gubrak.Without()
  - gubrak.Xor()
-
 
 ### Contribution
 
