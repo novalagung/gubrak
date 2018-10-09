@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// Chunk creates an slice of elements split into groups the length of size. If data can't be split evenly, the final chunk will be the remaining elements.
+// Chunk creates a slice of elements split into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
 //
 // Parameters
 //
@@ -19,7 +19,7 @@ import (
 //
 // This function return two values:
 //  slice // description: returns the new slice of chunks
-//  error // description: hold error message if there is some error
+//  error // description: hold error message if there is an error
 func Chunk(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -68,17 +68,18 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Compact creates an slice with all falsey values removed. The values false, nil, 0, "", (*string)(nil), and other nil values are falsey.
+// Compact creates a slice with all falsey values removed from the `data`. The values false, nil, 0, "", (*string)(nil), and other nil-able types are falsey.
 //
 // Parameters
 //
-// This function requires one mandatory parameter `data`:
-//  data // type: slice, description: the slice to process
+// This function requires one mandatory parameter:
+//  data // type: slice, description: the slice to compact
 //
 // Return values
 //
-// This function return one value:
+// This function return two values:
 //  slice // description: returns the new slice of filtered values
+//  error // description: hold error message if there is an error
 func Compact(data interface{}) (interface{}, error) {
 	var err error
 
@@ -162,11 +163,11 @@ func Compact(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Concat creates a new slice concatenating data with any additional slice and/or values.
+// Concat creates a new slice concatenating `data` with any additional slice and/or values.
 //
 // Parameters
 //
-// This function requires one mandatory parameter `data`, and variadic parameters:
+// This function requires one mandatory parameter `data`, and unlimited variadic parameters:
 //  data        // type: slice, description: the slice to concatenate
 //  dataConcat1 // type: slice, description: the values to concatenate
 //  dataConcat2 // type: slice, description: the values to concatenate
@@ -177,7 +178,7 @@ func Compact(data interface{}) (interface{}, error) {
 //
 // This function return two values:
 //  slice // description: returns the new concatenated slice
-//  error // description: hold error message if there is some error
+//  error // description: hold error message if there is an error
 func Concat(data interface{}, concatenableData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -231,11 +232,11 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 	return result, err
 }
 
-// Difference creates a slice of data values not included in the other given slices. The order and references of result values are determined by the first slice.
+// Difference creates a slice of `data` values not included in the other given slices. The order and references of result values are determined by the first slice.
 //
 // Parameters
 //
-// This function requires one mandatory parameter `data`, and variadic parameters:
+// This function requires one mandatory parameter `data`, and unlimited variadic parameters:
 //  data      // type: slice, description: the slice to inspect
 //  dataDiff1 // type: slice, description: the values to exclude
 //  dataDiff2 // type: slice, description: the values to exclude
@@ -246,7 +247,7 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 //
 // This function return two values:
 //  slice // description: returns the new slice of filtered values
-//  error // description: hold error message if there is some error
+//  error // description: hold error message if there is an error
 func Difference(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -314,7 +315,7 @@ func Difference(data interface{}, compareData ...interface{}) (interface{}, erro
 	return result, err
 }
 
-// Drop creates a slice of data with n elements dropped from the beginning.
+// Drop creates a slice of `data` with `n` elements dropped from the beginning.
 //
 // Parameters
 //
@@ -325,8 +326,8 @@ func Difference(data interface{}, compareData ...interface{}) (interface{}, erro
 // Return values
 //
 // This function return two values:
-//  slice // description: returns the slice
-//  error // description: hold error message if there is some error
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func Drop(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -371,7 +372,7 @@ func Drop(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// DropRight creates a slice of data with n elements dropped from the end.
+// DropRight creates a slice of `data` with `n` elements dropped from the end.
 //
 // Parameters
 //
@@ -382,8 +383,8 @@ func Drop(data interface{}, size int) (interface{}, error) {
 // Return values
 //
 // This function return two values:
-//  slice // description: returns the slice
-//  error // description: hold error message if there is some error
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func DropRight(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -426,7 +427,7 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Fill do fills elements of data with value from start up to, but not including, end.
+// Fill fills elements of `data` with `value` from `start` up to, but not including, `end`.
 //
 // Parameters
 //
@@ -439,9 +440,9 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 // Return values
 //
 // This function return two values:
-//  slice // type: returns the slice
-//  error // type: hold error message if there is some error
-func Fill(data, fill interface{}, args ...int) (interface{}, error) {
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
+func Fill(data, value interface{}, args ...int) (interface{}, error) {
 	var err error
 
 	result := func(err *error) interface{} {
@@ -486,7 +487,7 @@ func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 			return result.Interface()
 		}
 
-		fillValue, fillType, _, _ := inspectData(fill)
+		fillValue, fillType, _, _ := inspectData(value)
 
 		if fillType.Kind() != dataType.Elem().Kind() {
 			*err = errors.New("replacement data type must be same with slice's element type")
@@ -507,7 +508,7 @@ func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 	return result, err
 }
 
-// FindIndex is similar like `Find` except that it returns the index of the first element predicate returns truthy for instead of the element itself.
+// FindIndex is similar like `Find`, except that it returns the index of the first element `predicate` returns truthy for instead of the element itself.
 //
 // Parameters
 //
@@ -519,9 +520,9 @@ func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 // Return values
 //
 // This function return two values:
-//  number // type: returns the index of the found element, else -1
-//  error  // type: hold error message if there is some error
-func FindIndex(data, callback interface{}, args ...int) (int, error) {
+//  number // description: returns the index of the found element, else `-1`
+//  error  // description: hold error message if there is an error
+func FindIndex(data, predicate interface{}, args ...int) (int, error) {
 	var err error
 
 	result := func(err *error) int {
@@ -537,7 +538,7 @@ func FindIndex(data, callback interface{}, args ...int) (int, error) {
 			return -1
 		}
 
-		callbackValue, callbackType := inspectFunc(err, callback)
+		callbackValue, callbackType := inspectFunc(err, predicate)
 		if *err != nil {
 			return -1
 		}
@@ -583,7 +584,7 @@ func FindIndex(data, callback interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// FindLastIndex is similar like `FindIndex` except that it iterates over elements of data from right to left.
+// FindLastIndex is similar like `FindIndex`, except that it iterates over elements of `data` from right to left.
 //
 // Parameters
 //
@@ -595,9 +596,9 @@ func FindIndex(data, callback interface{}, args ...int) (int, error) {
 // Return values
 //
 // This function return two values:
-//  number // description: returns the index of the found element, else -1
-//  error  // hold error message if there is some error
-func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
+//  number // description: returns the index of the found element, else `-1`
+//  error  // description: hold error message if there is an error
+func FindLastIndex(data, predicate interface{}, args ...int) (int, error) {
 	var err error
 
 	result := func(err *error) int {
@@ -613,7 +614,7 @@ func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 			return -1
 		}
 
-		callbackValue, callbackType := inspectFunc(err, callback)
+		callbackValue, callbackType := inspectFunc(err, predicate)
 		if *err != nil {
 			return -1
 		}
@@ -662,7 +663,7 @@ func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// First do gets the first element of data.
+// First gets the first element of `data`.
 //
 // Parameters
 //
@@ -673,7 +674,7 @@ func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 //
 // This function return two values:
 //  anyType // description: returns the first element of data
-//  error   // description: hold error message if there is some error
+//  error   // description: hold error message if there is an error
 func First(data interface{}) (interface{}, error) {
 	var err error
 
@@ -700,7 +701,7 @@ func First(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// FromPairs returns an object composed from key-value data.
+// FromPairs returns an object composed from key-value `data`.
 //
 // Parameters
 //
@@ -711,7 +712,7 @@ func First(data interface{}) (interface{}, error) {
 //
 // This function return two values:
 //  map[interface{}]interface{} // description: returns the new object
-//  error                       // description: hold error message if there is some error
+//  error                       // description: hold error message if there is an error
 func FromPairs(data interface{}) (interface{}, error) {
 	var err error
 
@@ -776,7 +777,8 @@ func Head(data interface{}) (interface{}, error) {
 	return First(data)
 }
 
-// IndexOf do gets the index at which the first occurrence of value is found in data. If fromIndex is negative, it's used as the offset from the end of slice.
+// IndexOf gets the index at which the first occurrence of value is found in data. If fromIndex is negative, it's used as the offset from the end of slice.
+// IndexOf gets the index at which the first occurrence of `search` is found in `data`. If `fromIndex` is negative, it's used as the offset from the end of `data`.
 //
 // Parameters
 //
@@ -789,7 +791,7 @@ func Head(data interface{}) (interface{}, error) {
 //
 // This function return two values:
 //  number // description: returns the index of the matched value, else -1
-//  error  // description: hold error message if there is some error
+//  error  // description: hold error message if there is an error
 func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	var err error
 
@@ -854,7 +856,7 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// Initial do gets all but the last element of data.
+// Initial gets all but the last element of data.
 //
 // Parameters
 //
@@ -864,8 +866,8 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 // Return values
 //
 // This function return two values:
-//  slice // description: returns the slice of code
-//  error // description: hold error message if there is some error
+//  slice // description: returns the slice of `data`
+//  error // description: hold error message if there is an error
 func Initial(data interface{}) (interface{}, error) {
 	var err error
 
@@ -892,7 +894,22 @@ func Initial(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Intersection function creates an array of unique values that are included in all given arrays using SameValueZero for equality comparisons. The order and references of result values are determined by the first array.
+// Intersection creates a slice of unique values that are included in all given slices. The order and references of result values are determined by the first slice.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`; and variadic parameters:
+//  data // type: slice, the slice to inspect
+//  dataIntersect1 // type: slice, the values to compare
+//  dataIntersect2 // type: slice, the values to compare
+//  dataIntersect3 // type: slice, the values to compare
+// ...
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of intersecting values
+//  error // description: hold error message if there is an error
 func Intersection(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -976,7 +993,19 @@ func Intersection(data interface{}, compareData ...interface{}) (interface{}, er
 	return result, err
 }
 
-// Join function converts all elements in array into a string separated by separator.
+// Join converts all elements in `data` into a string separated by `separator`.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data      // type: slice, description: the slices to convert
+//  separator // type: string, description: the element separator
+//
+// Return values
+//
+// This function return two values:
+//  string // description: returns the joined string
+//  error  // description: hold error message if there is an error
 func Join(data interface{}, separator string) (string, error) {
 	var err error
 
