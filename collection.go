@@ -809,7 +809,7 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 			isAscending = args[0]
 		}
 
-		isAsync := true
+		isAsync := false
 		if len(args) > 1 {
 			isAsync = args[1]
 		}

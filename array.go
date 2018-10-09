@@ -7,7 +7,19 @@ import (
 	"strings"
 )
 
-// Chunk function creates an array of elements split into groups the length of size. If array can't be split evenly, the final chunk will be the remaining elements.
+// Chunk creates an slice of elements split into groups the length of size. If data can't be split evenly, the final chunk will be the remaining elements.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is some error
 func Chunk(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -56,7 +68,17 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Compact function creates an array with all falsey values removed. The values false, nil, 0, "", (*string)(nil), and other nil values are falsey.
+// Compact creates an slice with all falsey values removed. The values false, nil, 0, "", (*string)(nil), and other nil values are falsey.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`:
+//  data // type: slice, description: the slice to process
+//
+// Return values
+//
+// This function return one value:
+//  slice // description: returns the new slice of filtered values
 func Compact(data interface{}) (interface{}, error) {
 	var err error
 
@@ -140,7 +162,22 @@ func Compact(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Concat function creates a new array concatenating array with any additional arrays and/or values.
+// Concat creates a new slice concatenating data with any additional slice and/or values.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`, and variadic parameters:
+//  data        // type: slice, description: the slice to concatenate
+//  dataConcat1 // type: slice, description: the values to concatenate
+//  dataConcat2 // type: slice, description: the values to concatenate
+//  dataConcat3 // type: slice, description: the values to concatenate
+//  ...
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new concatenated slice
+//  error // description: hold error message if there is some error
 func Concat(data interface{}, concatenableData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -194,7 +231,22 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 	return result, err
 }
 
-// Difference function creates an array of array values not included in the other given arrays. The order and references of result values are determined by the first array.
+// Difference creates a slice of data values not included in the other given slices. The order and references of result values are determined by the first slice.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`, and variadic parameters:
+//  data      // type: slice, description: the slice to inspect
+//  dataDiff1 // type: slice, description: the values to exclude
+//  dataDiff2 // type: slice, description: the values to exclude
+//  dataDiff3 // type: slice, description: the values to exclude
+//  ...
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of filtered values
+//  error // description: hold error message if there is some error
 func Difference(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -262,7 +314,19 @@ func Difference(data interface{}, compareData ...interface{}) (interface{}, erro
 	return result, err
 }
 
-// Drop function creates a slice of array with n elements dropped from the beginning.
+// Drop creates a slice of data with n elements dropped from the beginning.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to query
+//  n    // type: number, description: the number of elements to drop
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the slice
+//  error // description: hold error message if there is some error
 func Drop(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -307,7 +371,19 @@ func Drop(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// DropRight function creates a slice of array with n elements dropped from the last.
+// DropRight creates a slice of data with n elements dropped from the end.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to query
+//  n    // type: number, description: the number of elements to drop
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the slice
+//  error // description: hold error message if there is some error
 func DropRight(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -350,7 +426,21 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Fill function fills elements of array with value from start up to, but not including, end.
+// Fill do fills elements of data with value from start up to, but not including, end.
+//
+// Parameters
+//
+// This function requires two mandatory parameters `data` and `value`; and two optional parameters:
+//  data          // type: slice, description: the slice to fill
+//  value         // type: anyType, description: the value to fill slice with. This variable's data type must be same with slice's element data type
+//  start=0       // optional, type: number, description: the start position
+//  end=len(data) // optional, type: number, description: the end position
+//
+// Return values
+//
+// This function return two values:
+//  slice // type: returns the slice
+//  error // type: hold error message if there is some error
 func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 	var err error
 
@@ -417,7 +507,20 @@ func Fill(data, fill interface{}, args ...int) (interface{}, error) {
 	return result, err
 }
 
-// FindIndex function is like Find() except that it returns the index of the first element predicate returns truthy for instead of the element itself.
+// FindIndex is similar like `Find` except that it returns the index of the first element predicate returns truthy for instead of the element itself.
+//
+// Parameters
+//
+// This function requires two mandatory parameters `data` and `predicate`; and two optional parameters:
+//  data        // type: slice, description: the slice to inspect
+//  predicate   // type: FuncSliceLoopOutputBool, description: the function invoked per iteration. The second argument represents index of each element, and it's optional
+//  fromIndex=0 // optional, type: number, description: the index to search from
+//
+// Return values
+//
+// This function return two values:
+//  number // type: returns the index of the found element, else -1
+//  error  // type: hold error message if there is some error
 func FindIndex(data, callback interface{}, args ...int) (int, error) {
 	var err error
 
@@ -480,7 +583,20 @@ func FindIndex(data, callback interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// FindLastIndex function is like FindIndex() except that it iterates over elements of collection from right to left.
+// FindLastIndex is similar like `FindIndex` except that it iterates over elements of data from right to left.
+//
+// Parameters
+//
+// This function requires two mandatory parameters `data` and `predicate`; and an optional parameter:
+//  data                  // type: slice, description: the slice to inspect
+//  predicate             // type: FuncSliceLoopOutputBool, description: the function invoked per iteration. The second argument represents index of each element, and it's optional
+//  fromIndex=len(data)-1 // optional, type: number, description: the index to search from
+//
+// Return values
+//
+// This function return two values:
+//  number // description: returns the index of the found element, else -1
+//  error  // hold error message if there is some error
 func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 	var err error
 
@@ -546,7 +662,18 @@ func FindLastIndex(data, callback interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// First function gets the first element of array.
+// First do gets the first element of data.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`:
+//  data // type: slice, description: the slice to query
+//
+// Return values
+//
+// This function return two values:
+//  anyType // description: returns the first element of data
+//  error   // description: hold error message if there is some error
 func First(data interface{}) (interface{}, error) {
 	var err error
 
@@ -573,7 +700,18 @@ func First(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// FromPairs returns an object composed from key-value pairs
+// FromPairs returns an object composed from key-value data.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`:
+//  data // type: slice []interface{}, description: the key-value pairs
+//
+// Return values
+//
+// This function return two values:
+//  map[interface{}]interface{} // description: returns the new object
+//  error                       // description: hold error message if there is some error
 func FromPairs(data interface{}) (interface{}, error) {
 	var err error
 
@@ -633,12 +771,25 @@ func FromPairs(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Head is alias of First() function
+// Head is an alias of `First`.
 func Head(data interface{}) (interface{}, error) {
 	return First(data)
 }
 
-// IndexOf function gets the index at which the first occurrence of value is found in array using SameValueZero for equality comparisons. If FromIndex() is negative, it's used as the offset from the end of array.
+// IndexOf do gets the index at which the first occurrence of value is found in data. If fromIndex is negative, it's used as the offset from the end of slice.
+//
+// Parameters
+//
+// This function requires two mandatory parameters `data` and `value`; and one optional parameter:
+//  data        // type: slice, description: the slice to inspect
+//  value       // type: anyType, description: the value to search for
+//  fromIndex=0 // optional, type: number, description: the index to search from
+//
+// Return values
+//
+// This function return two values:
+//  number // description: returns the index of the matched value, else -1
+//  error  // description: hold error message if there is some error
 func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	var err error
 
@@ -703,7 +854,18 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// Initial function gets all but the last element of array.
+// Initial do gets all but the last element of data.
+//
+// Parameters
+//
+// This function requires one mandatory parameter:
+//  data // type: slice, description: the slice to query
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the slice of code
+//  error // description: hold error message if there is some error
 func Initial(data interface{}) (interface{}, error) {
 	var err error
 
