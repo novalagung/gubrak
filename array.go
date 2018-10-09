@@ -20,6 +20,10 @@ import (
 // This function return two values:
 //  slice // description: returns the new slice of chunks
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func Chunk(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -80,6 +84,10 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns the new slice of filtered values
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 4 examples available:
 func Compact(data interface{}) (interface{}, error) {
 	var err error
 
@@ -179,6 +187,10 @@ func Compact(data interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns the new concatenated slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Concat(data interface{}, concatenableData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -248,6 +260,10 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 // This function return two values:
 //  slice // description: returns the new slice of filtered values
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func Difference(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -328,6 +344,10 @@ func Difference(data interface{}, compareData ...interface{}) (interface{}, erro
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Drop(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -385,6 +405,10 @@ func Drop(data interface{}, size int) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func DropRight(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -442,6 +466,10 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func Fill(data, value interface{}, args ...int) (interface{}, error) {
 	var err error
 
@@ -522,6 +550,10 @@ func Fill(data, value interface{}, args ...int) (interface{}, error) {
 // This function return two values:
 //  number // description: returns the index of the found element, else `-1`
 //  error  // description: hold error message if there is an error
+//
+// Examples
+//
+// 5 examples available:
 func FindIndex(data, predicate interface{}, args ...int) (int, error) {
 	var err error
 
@@ -598,6 +630,10 @@ func FindIndex(data, predicate interface{}, args ...int) (int, error) {
 // This function return two values:
 //  number // description: returns the index of the found element, else `-1`
 //  error  // description: hold error message if there is an error
+//
+// Examples
+//
+// 4 examples available:
 func FindLastIndex(data, predicate interface{}, args ...int) (int, error) {
 	var err error
 
@@ -675,6 +711,10 @@ func FindLastIndex(data, predicate interface{}, args ...int) (int, error) {
 // This function return two values:
 //  anyType // description: returns the first element of data
 //  error   // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func First(data interface{}) (interface{}, error) {
 	var err error
 
@@ -713,6 +753,10 @@ func First(data interface{}) (interface{}, error) {
 // This function return two values:
 //  map[interface{}]interface{} // description: returns the new object
 //  error                       // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func FromPairs(data interface{}) (interface{}, error) {
 	var err error
 
@@ -792,6 +836,10 @@ func Head(data interface{}) (interface{}, error) {
 // This function return two values:
 //  number // description: returns the index of the matched value, else -1
 //  error  // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	var err error
 
@@ -868,6 +916,10 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 // This function return two values:
 //  slice // description: returns the slice of `data`
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 4 examples available:
 func Initial(data interface{}) (interface{}, error) {
 	var err error
 
@@ -910,6 +962,10 @@ func Initial(data interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns the new slice of intersecting values
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Intersection(data interface{}, compareData ...interface{}) (interface{}, error) {
 	var err error
 
@@ -1006,6 +1062,10 @@ func Intersection(data interface{}, compareData ...interface{}) (interface{}, er
 // This function return two values:
 //  string // description: returns the joined string
 //  error  // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Join(data interface{}, separator string) (string, error) {
 	var err error
 
@@ -1071,6 +1131,10 @@ func Join(data interface{}, separator string) (string, error) {
 // This function return two values:
 //  anyType // description: returns the last element of `data`
 //  error   // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func Last(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1111,6 +1175,10 @@ func Last(data interface{}) (interface{}, error) {
 // This function return two values:
 //  number // description: returns the index of the matched value, else `-1`
 //  error  // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	var err error
 
@@ -1185,6 +1253,10 @@ func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error)
 // This function return two values:
 //  AnyType // description: returns the nth element of `data`
 //  error   // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Nth(data interface{}, i int) (interface{}, error) {
 	var err error
 
@@ -1235,6 +1307,10 @@ func Nth(data interface{}, i int) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 	var err error
 
@@ -1295,6 +1371,10 @@ func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func PullAll(data interface{}, items interface{}) (interface{}, error) {
 	var err error
 
@@ -1364,6 +1444,10 @@ func PullAll(data interface{}, items interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 1 examples available:
 func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 	var err error
 
@@ -1430,6 +1514,10 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 //  slice // description: returns slice after elements removed as per `predicate`
 //  slice // description: returns slice of removed elements as per `predicate`
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Remove(data interface{}, predicate interface{}) (interface{}, interface{}, error) {
 	var result, removed interface{}
 	var err error
@@ -1502,6 +1590,10 @@ func Remove(data interface{}, predicate interface{}) (interface{}, interface{}, 
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Reverse(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1546,6 +1638,10 @@ func Reverse(data interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Tail(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1586,6 +1682,10 @@ func Tail(data interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Take(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -1637,6 +1737,10 @@ func Take(data interface{}, size int) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func TakeRight(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -1691,6 +1795,10 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 	var err error
 
@@ -1769,6 +1877,10 @@ func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 2 examples available:
 func Uniq(data interface{}) (interface{}, error) {
 	return Union(data)
 }
@@ -1789,6 +1901,10 @@ func Uniq(data interface{}) (interface{}, error) {
 // This function return two values:
 //  slice // description: returns slice
 //  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 3 examples available:
 func Without(data interface{}, items ...interface{}) (interface{}, error) {
 	return Pull(data, items...)
 }
