@@ -238,9 +238,9 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 //
 // This function requires one mandatory parameter `data`, and unlimited variadic parameters:
 //  data      // type: slice, description: the slice to inspect
-//  dataDiff1 // type: slice, description: the values to exclude
-//  dataDiff2 // type: slice, description: the values to exclude
-//  dataDiff3 // type: slice, description: the values to exclude
+//  slice1 // optional, type: slice, description: the values to exclude
+//  slice2 // optional, type: slice, description: the values to exclude
+//  slice3 // optional, type: slice, description: the values to exclude
 //  ...
 //
 // Return values
@@ -898,11 +898,11 @@ func Initial(data interface{}) (interface{}, error) {
 //
 // Parameters
 //
-// This function requires one mandatory parameter `data`; and variadic parameters:
+// This function requires one mandatory parameter `data`; and unlimited variadic parameters:
 //  data // type: slice, the slice to inspect
-//  dataIntersect1 // type: slice, the values to compare
-//  dataIntersect2 // type: slice, the values to compare
-//  dataIntersect3 // type: slice, the values to compare
+//  dataIntersect1 // optional, type: slice, the values to compare
+//  dataIntersect2 // optional, type: slice, the values to compare
+//  dataIntersect3 // optional, type: slice, the values to compare
 // ...
 //
 // Return values
@@ -1059,7 +1059,18 @@ func Join(data interface{}, separator string) (string, error) {
 	return result, err
 }
 
-// Last function gets the last element of array.
+// Last gets the last element of array.
+//
+// Parameters
+//
+// This function requires one mandatory parameter:
+//  data      // type: slice, description: the slices to query
+//
+// Return values
+//
+// This function return two values:
+//  anyType // description: returns the last element of `data`
+//  error   // description: hold error message if there is an error
 func Last(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1086,7 +1097,20 @@ func Last(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// LastIndexOf function is like IndexOf() except that it iterates over elements of array from right to left.
+// LastIndexOf method is like `IndexOf`, except that it iterates over elements of `data` from right to left.
+//
+// Parameters
+//
+// This function requires two mandatory parameters `data` and `search`; and an optional parameter:
+//  data                  // type: slice, description: the slices to inspect
+//  search                // type: anyType, description: the value to search for
+//  fromIndex=len(data)-1 // type: number, description: the index to search from
+//
+// Return values
+//
+// This function return two values:
+//  number // description: returns the index of the matched value, else `-1`
+//  error  // description: hold error message if there is an error
 func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	var err error
 
@@ -1148,7 +1172,19 @@ func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error)
 	return result, err
 }
 
-// Nth function gets the element at index n of array. If n is negative, the nth element from the end is returned.
+// Nth gets the element at index `n` of `data`. If n is negative, the nth element from the end is returned.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slices to query
+//  n=0  // type: number, description: The index of the element to return
+//
+// Return values
+//
+// This function return two values:
+//  AnyType // description: returns the nth element of `data`
+//  error   // description: hold error message if there is an error
 func Nth(data interface{}, i int) (interface{}, error) {
 	var err error
 
@@ -1183,7 +1219,22 @@ func Nth(data interface{}, i int) (interface{}, error) {
 	return result, err
 }
 
-// Pull function removes all given values from array using SameValueZero for equality comparisons.
+// Pull removes all given values from `data` that presented on `items`.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`; and unlimited variadic parameters:
+//  data  // type: slice, description: the slices to modify
+//  item1 // optional, type: anyType, description: item to remove
+//  item2 // optional, type: anyType, description: item to remove
+//  item3 // optional, type: anyType, description: item to remove
+//  ...
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 	var err error
 
@@ -1231,7 +1282,19 @@ func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 	return result, err
 }
 
-// PullAll function is like Pull() except that it accepts an array of values to remove.
+// PullAll is similar like `Pull`, except that it accepts an array of values to remove.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data  // type: slice, description: the slices to modify
+//  items // type: slice, description: items to remove
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func PullAll(data interface{}, items interface{}) (interface{}, error) {
 	var err error
 
@@ -1285,7 +1348,22 @@ func PullAll(data interface{}, items interface{}) (interface{}, error) {
 	return result, err
 }
 
-// PullAt function removes elements from array corresponding to indexes and returns an array of removed elements.
+// PullAt removes elements from `data` corresponding to `indexes` and returns an array of removed elements.
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`; and unlimited variadic parameters:
+//  data     // type: slice, description: the slices to modify
+//  indexes1 // optional, type: int, description: index to remove
+//  indexes2 // optional, type: int, description: index to remove
+//  indexes3 // optional, type: int, description: index to remove
+//  ...
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 	var err error
 
@@ -1338,8 +1416,21 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 	return result, err
 }
 
-// Remove function removes all elements from array that predicate returns truthy for and returns an array of the removed elements. The predicate is invoked with three arguments: (value, index, array).
-func Remove(data interface{}, callback interface{}) (interface{}, interface{}, error) {
+// Remove removes all elements from `data` that `predicate` returns truthy for and returns a slice of the removed elements.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data      // type: slice, description: the slice to inspect
+//  predicate // type: FuncSliceLoopOutputBool, description: the function invoked per iteration. The second argument represents index of each element, and it's optional
+//
+// Return values
+//
+// This function return three values:
+//  slice // description: returns slice after elements removed as per `predicate`
+//  slice // description: returns slice of removed elements as per `predicate`
+//  error // description: hold error message if there is an error
+func Remove(data interface{}, predicate interface{}) (interface{}, interface{}, error) {
 	var result, removed interface{}
 	var err error
 
@@ -1359,7 +1450,7 @@ func Remove(data interface{}, callback interface{}) (interface{}, interface{}, e
 			return
 		}
 
-		callbackValue, callbackType := inspectFunc(err, callback)
+		callbackValue, callbackType := inspectFunc(err, predicate)
 		if *err != nil {
 			return
 		}
@@ -1399,7 +1490,18 @@ func Remove(data interface{}, callback interface{}) (interface{}, interface{}, e
 	return result, removed, err
 }
 
-// Reverse function reverses array so that the first element becomes the last, the second element becomes the second to last, and so on.
+// Reverse reverses data so that the first element becomes the last, the second element becomes the second to last, and so on.
+//
+// Parameters
+//
+// This function requires one mandatory parameter:
+//  data // type: slice, description: the slice to modify
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func Reverse(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1432,7 +1534,18 @@ func Reverse(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Tail function gets all but the first element of array.
+// Tail gets all but the first element of array.
+//
+// Parameters
+//
+// This function requires one mandatory parameter:
+//  data // type: slice, description: the slice to modify
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func Tail(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1460,7 +1573,19 @@ func Tail(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Take function creates a slice of array with n elements taken from the beginning.
+// Take creates a slice of `data` with `size` elements taken from the beginning.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to query
+//  size // type: number, description: the number of elements to take
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func Take(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -1499,7 +1624,19 @@ func Take(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// TakeRight function creates a slice of array with n elements taken from the end.
+// TakeRight creates a slice of `data` with `seize` elements taken from the end.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to query
+//  size // type: number, description: the number of elements to take
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func TakeRight(data interface{}, size int) (interface{}, error) {
 	var err error
 
@@ -1538,8 +1675,23 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Union function creates an array of unique values, in order, from all given arrays using SameValueZero for equality comparisons.
-func Union(data interface{}, target ...interface{}) (interface{}, error) {
+// Combine all slices presented on the parameters, then create slice of unique values from it.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data   // type: slice, description: the slice to inspect
+//  slice1 // optional, type: slice, description: the slice to inspect
+//  slice2 // optional, type: slice, description: the slice to inspect
+//  slice3 // optional, type: slice, description: the slice to inspect
+//  ...
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
+func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 	var err error
 
 	result := (func(err *error) interface{} {
@@ -1573,7 +1725,7 @@ func Union(data interface{}, target ...interface{}) (interface{}, error) {
 			}
 		})
 
-		for _, each := range target {
+		for _, each := range slices {
 			targetValue, _, _, targetValueLen := inspectData(each)
 
 			if !isSlice(err, "data", targetValue) {
@@ -1605,12 +1757,38 @@ func Union(data interface{}, target ...interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Uniq function creates a duplicate-free version of an array, using SameValueZero for equality comparisons, in which only the first occurrence of each element is kept. The order of result values is determined by the order they occur in the array.
+// Uniq creates a unique duplicate-free version of a slice. The order of result values is determined by the order they occur in the array.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to inspect
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
 func Uniq(data interface{}) (interface{}, error) {
 	return Union(data)
 }
 
-// Without function creates an array excluding all given values using SameValueZero for equality comparisons.
-func Without(data interface{}, target ...interface{}) (interface{}, error) {
-	return Pull(data, target...)
+// Without creates a slice from `data` excluding all given values presented on the `items`
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data  // type: slice, description: the slice to inspect
+//  item1 // optional, type: anyType, description: item to exclude
+//  item2 // optional, type: anyType, description: item to exclude
+//  item3 // optional, type: anyType, description: item to exclude
+//  ...
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns slice
+//  error // description: hold error message if there is an error
+func Without(data interface{}, items ...interface{}) (interface{}, error) {
+	return Pull(data, items...)
 }
