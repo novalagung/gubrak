@@ -1,14 +1,12 @@
 package gubrak
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRandomString(t *testing.T) {
-	fmt.Println(RandomString(32))
 	assert.NotEqual(t,
 		RandomString(32),
 		RandomString(32),
