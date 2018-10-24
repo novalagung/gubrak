@@ -1,10 +1,13 @@
 language: go
 os:
-- linux
+  - linux
 go:
-- go1.8
-- go1.9
-- go1.10
+  - go1.8
+  - go1.9
+  - go1.10
 go_import_path: github.com/novalagung/gubrak
+install:
+  - go get -u github.com/golang/dep/...
+  - dep ensure
 script:
-- go test -cover -race -v ./...
+  - go test -cover -race -v ./...

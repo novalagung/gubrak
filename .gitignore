@@ -12,4 +12,5 @@
 *.out
 
 # Custom
-test/majestic_million.csv
+vendor
+test/majestic_million.csv# Binaries for programs and plugins
