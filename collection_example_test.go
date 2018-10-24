@@ -421,3 +421,448 @@ func ExampleIncludes_includesSlice4() {
 func ExampleIncludes_includesSlice5() {
 	Includes("damian", "an") // ===> true
 }
+
+func ExampleKeyBy_keyBy() {
+	type HashMap map[string]string
+
+	data := []HashMap{
+		{"name": "grayson", "hobby": "helping people"},
+		{"name": "jason", "hobby": "punching people"},
+		{"name": "tim", "hobby": "stay awake all the time"},
+		{"name": "damian", "hobby": "getting angry"},
+	}
+
+	result, err := KeyBy(data, func(each HashMap) string {
+		return each["name"]
+	})
+
+	/*
+	   map[string]main.HashMap {
+	     "grayson": main.HashMap{ "hobby": "helping people", "name": "grayson" },
+	     "jason":   main.HashMap{ "name": "jason", "hobby": "punching people" },
+	     "tim":     main.HashMap{ "name": "tim", "hobby": "stay awake all the time" },
+	     "damian":  main.HashMap{ "name": "damian", "hobby": "getting angry" },
+	   }
+	*/
+}
+
+func ExampleMap_map1() {
+	type Sample struct {
+		EbookName      string
+		DailyDownloads int
+	}
+
+	data := []Sample{
+		{EbookName: "clean code", DailyDownloads: 10000},
+		{EbookName: "rework", DailyDownloads: 12000},
+		{EbookName: "detective comics", DailyDownloads: 11500},
+	}
+
+	newData, err := Map(data, func(each Sample, i int) string {
+		return each.EbookName
+	})
+
+	// ===> []string{ "clean code", "rework", "detective comics" }
+}
+
+func ExampleMap_map2() {
+	type SampleOne struct {
+		EbookName      string
+		DailyDownloads int
+		IsActive       bool
+	}
+
+	type SampleTwo struct {
+		Ebook                string
+		DownloadsInThousands float32
+	}
+
+	data := []SampleOne{
+		{EbookName: "clean code", DailyDownloads: 10000, IsActive: true},
+		{EbookName: "rework", DailyDownloads: 12000, IsActive: false},
+		{EbookName: "detective comics", DailyDownloads: 11500, IsActive: true},
+	}
+
+	newData, err := Map(data, func(each SampleOne, i int) SampleTwo {
+		ebook := each.EbookName
+		if !each.IsActive {
+			ebook = fmt.Sprintf("%s (inactive)", each.EbookName)
+		}
+
+		downloadsInThousands := float32(each.DailyDownloads) / float32(1000)
+
+		return SampleTwo{Ebook: ebook, DownloadsInThousands: downloadsInThousands}
+	})
+
+	/*
+
+		  []SampleTwo {
+			{ Ebook: "clean code", DownloadsInThousands: 10 },
+			{ Ebook: "rework (inactive)", DownloadsInThousands: 12 },
+			{ Ebook: "detective comics", DownloadsInThousands: 11.5 },
+		  }
+
+	*/
+}
+
+func ExampleOrderBy_orderBy1() {
+	type HashMap map[string]string
+
+	data := []HashMap{
+		{"name": "tim", "hobby": "stay awake all the time"},
+		{"name": "grayson", "hobby": "helping people"},
+		{"name": "damian", "hobby": "getting angry"},
+		{"name": "jason", "hobby": "punching people"},
+	}
+
+	result, err := OrderBy(data, func(each HashMap) string {
+		return each["name"]
+	})
+
+	/*
+	   []main.HashMap{
+	     { "name": "damian", "hobby": "getting angry" },
+	     { "name": "grayson", "hobby": "helping people" },
+	     { "name": "jason", "hobby": "punching people" },
+	     { "name": "tim", "hobby": "stay awake all the time" },
+	   }
+	*/
+}
+
+func ExampleOrderBy_orderBy2() {
+	type HashMap map[string]interface{}
+
+	data := []HashMap{
+		{"name": "tim", "hobby": "stay awake all the time", "age": 20},
+		{"name": "grayson", "hobby": "helping people", "age": 24},
+		{"name": "damian", "hobby": "getting angry", "age": 17},
+		{"name": "jason", "hobby": "punching people", "age": 22},
+	}
+
+	result, err := OrderBy(data, func(each HashMap) int {
+		return each["age"].(int)
+	})
+
+	/*
+		[]main.HashMap{
+		  { "age": 17, "hobby": "getting angry", "name": "damian" },
+		  { "age": 20, "name": "tim", "hobby": "stay awake all the time" },
+		  { "age": 22, "name": "jason", "hobby": "punching people" },
+		  { "age": 24, "name": "grayson", "hobby": "helping people" },
+		}
+	*/
+}
+
+func ExampleOrderBy_orderBy3() {
+	type HashMap map[string]interface{}
+
+	data := []HashMap{
+		{"name": "tim", "hobby": "stay awake all the time", "age": 20},
+		{"name": "grayson", "hobby": "helping people", "age": 24},
+		{"name": "damian", "hobby": "getting angry", "age": 17},
+		{"name": "jason", "hobby": "punching people", "age": 22},
+	}
+
+	result, err := OrderBy(data, func(each HashMap) int {
+		return each["age"].(int)
+	}, false)
+
+	/*
+	   []main.HashMap{
+	     { "age": 24, "name": "grayson", "hobby": "helping people" },
+	     { "age": 22, "name": "jason", "hobby": "punching people" },
+	     { "age": 20, "name": "tim", "hobby": "stay awake all the time" },
+	     { "age": 17, "name": "damian", "hobby": "getting angry" },
+	   }
+	*/
+}
+
+func ExampleOrderBy_orderBy4() {
+	type HashMap map[string]interface{}
+
+	data := []HashMap{
+		{"name": "tim", "hobby": "stay awake all the time", "age": 20},
+		{"name": "grayson", "hobby": "helping people", "age": 24},
+		{"name": "damian", "hobby": "getting angry", "age": 17},
+		{"name": "jason", "hobby": "punching people", "age": 22},
+	}
+
+	result, err := OrderBy(data, func(each HashMap) int {
+		return each["age"].(int)
+	}, true, false)
+
+	/*
+	   []main.HashMap{
+	     { "age": 17, "name": "damian", "hobby": "getting angry" },
+	     { "age": 20, "name": "tim", "hobby": "stay awake all the time" },
+	     { "age": 22, "name": "jason", "hobby": "punching people" },
+	     { "age": 24, "name": "grayson", "hobby": "helping people" },
+	   }
+	*/
+}
+
+func ExamplePartition_partition() {
+	type HashMap map[string]interface{}
+
+	data := []HashMap{
+		{"name": "grayson", "isMale": true},
+		{"name": "jason", "isMale": true},
+		{"name": "barbara", "isMale": false},
+		{"name": "tim", "isMale": true},
+		{"name": "cassandra", "isMale": false},
+		{"name": "stephanie", "isMale": false},
+		{"name": "damian", "isMale": true},
+		{"name": "duke", "isMale": true},
+	}
+
+	resultTruthy, resultFalsey, err := Partition(data, func(each HashMap) bool {
+		return each["isMale"].(bool)
+	})
+
+	fmt.Prinf("%#v \n", resultTruthy)
+	/*
+	   []HashMap {
+	     { "name": "grayson", "isMale": true },
+	     { "name": "jason", "isMale": true },
+	     { "name": "tim", "isMale": true },
+	     { "name": "damian", "isMale": true },
+	     { "name": "duke", "isMale": true },
+	   }
+	*/
+
+	fmt.Prinf("%#v \n", resultFalsey)
+	/*
+	   []HashMap {
+	     { "name": "barbara", "isMale": false },
+	     { "name": "cassandra", "isMale": false },
+	     { "name": "stephanie", "isMale": false },
+	   }
+	*/
+}
+
+func ExampleReduce_reduceMap1() {
+	type HashMap map[string]interface{}
+
+	data := HashMap{
+		"name":   "grayson",
+		"age":    21,
+		"isMale": true,
+	}
+
+	result, err := Reduce(data, func(accumulator string, value interface{}, key string) string {
+		if accumulator == "" {
+			accumulator = fmt.Sprintf("%s: %v", key, value)
+		} else {
+			accumulator = fmt.Sprintf("%s, %s: %v", accumulator, key, value)
+		}
+
+		return accumulator
+	}, "")
+
+	// ===> "name: grayson, age: 21, isMale: true"
+}
+
+func ExampleReduce_reduceSlice1() {
+	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+
+	result, err := Reduce(data, func(accumulator, each int) int {
+		return accumulator + each
+	}, 0)
+	// ===> 55
+}
+
+func ExampleReduce_reduceSlice2() {
+	type HashMap map[string]interface{}
+
+	data := [][]interface{}{
+		{"name", "grayson"},
+		{"age", 21},
+		{"isMale", true},
+	}
+
+	result, err := Reduce(data, func(accumulator HashMap, each []interface{}, i int) HashMap {
+		accumulator[each[0].(string)] = each[1]
+		return accumulator
+	}, HashMap{})
+
+	/*
+	   HashMap {
+	     "name":   "grayson",
+	     "age":    21,
+	     "isMale": true,
+	   }
+	*/
+}
+
+func ExampleReject_rejectMap() {
+	data := map[string]int{
+		"clean code":       10000,
+		"rework":           12000,
+		"detective comics": 11500,
+	}
+
+	result, err := Reject(data, func(value int, key string) bool {
+		return value > 11000
+	})
+
+	// ===> map[string]int{ "clean code": 10000 }
+}
+
+func ExampleReject_rejectSlice() {
+	type Book struct {
+		EbookName      string
+		DailyDownloads int
+	}
+
+	data := []Book{
+		{EbookName: "clean code", DailyDownloads: 10000},
+		{EbookName: "rework", DailyDownloads: 12000},
+		{EbookName: "detective comics", DailyDownloads: 11500},
+	}
+
+	result, err := Reject(data, func(each Book) bool {
+		return each.DailyDownloads > 11000
+	})
+
+	/*
+		  []Book{
+			{ EbookName: "clean code", DailyDownloads: 10000 },
+		  }
+	*/
+}
+
+func ExampleSample_sample() {
+	type Book struct {
+		EbookName      string
+		DailyDownloads int
+	}
+
+	data := []Book{
+		{EbookName: "clean code", DailyDownloads: 10000},
+		{EbookName: "rework", DailyDownloads: 12000},
+		{EbookName: "detective comics", DailyDownloads: 11500},
+	}
+
+	result, err := Sample(data)
+
+	/*
+		  the result can be this:
+			{ EbookName: "clean code", DailyDownloads: 10000 },
+
+		  this:
+			{ EbookName: "rework", DailyDownloads: 12000 },
+
+		  or this:
+			{ EbookName: "detective comics", DailyDownloads: 11500 },
+	*/
+}
+
+func ExampleSampleSize_sampleSize() {
+	type Book struct {
+		EbookName      string
+		DailyDownloads int
+	}
+
+	data := []Book{
+		{EbookName: "clean code", DailyDownloads: 10000},
+		{EbookName: "rework", DailyDownloads: 12000},
+		{EbookName: "detective comics", DailyDownloads: 11500},
+	}
+
+	result, err := SampleSize(data, 2)
+
+	/*
+		  the result can be this:
+			[]Book{
+			  { EbookName: "clean code", DailyDownloads: 10000 },
+			  { EbookName: "rework", DailyDownloads: 12000 },
+			}
+
+		  this:
+			[]Book{
+			  { EbookName: "rework", DailyDownloads: 12000 },
+			  { EbookName: "detective comics", DailyDownloads: 11500 },
+			}
+
+		  or this:
+			[]Book{
+			  { EbookName: "clean code", DailyDownloads: 10000 },
+			  { EbookName: "detective comics", DailyDownloads: 11500 },
+			}
+	*/
+}
+
+func ExampleShuffle_shuffle1() {
+	data := []int{1, 2, 3, 4}
+	result, err := Shuffle(data)
+
+	/*
+		the result can be this:
+		  []int{ 1, 4, 2, 3 }
+
+		this:
+		  []int{ 4, 1, 2, 3 }
+
+		or this:
+		  []int{ 4, 1, 3, 2 }
+
+		or this:
+		  []int{ 3, 4, 1, 2 }
+
+		or ... any other possibilities.
+	*/
+}
+
+func ExampleShuffle_shuffle2() {
+	type Book struct {
+		EbookName      string
+		DailyDownloads int
+	}
+
+	data := []Book{
+		{EbookName: "clean code", DailyDownloads: 10000},
+		{EbookName: "rework", DailyDownloads: 12000},
+		{EbookName: "detective comics", DailyDownloads: 11500},
+	}
+
+	result, err := Shuffle(data)
+
+	/*
+		  the result can be this:
+			[]Book {
+			  { EbookName: "detective comics", DailyDownloads: 11500 },
+			  { EbookName: "clean code", DailyDownloads: 10000 },
+			  { EbookName: "rework", DailyDownloads: 12000 },
+			}
+
+		  this:
+			[]Book {
+			  { EbookName: "clean code", DailyDownloads: 10000 },
+			  { EbookName: "detective comics", DailyDownloads: 11500 },
+			  { EbookName: "rework", DailyDownloads: 12000 },
+			}
+
+		  or this:
+			[]Book {
+			  { EbookName: "rework", DailyDownloads: 12000 },
+			  { EbookName: "detective comics", DailyDownloads: 11500 },
+			  { EbookName: "clean code", DailyDownloads: 10000 },
+			}
+	*/
+}
+
+func ExampleSize_sizeSlice() {
+	Size([]int{1, 2, 3, 4, 5}) // ===> 5
+	Size("bruce")              // ===> 5
+}
+
+func ExampleSize_sizeMap() {
+	data := map[string]interface{}{
+		"name":   "noval",
+		"age":    24,
+		"isMale": true,
+	}
+
+	result, err := Size(data)
+	// ===> 3
+}
