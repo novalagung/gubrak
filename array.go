@@ -746,7 +746,7 @@ func First(data interface{}) (interface{}, error) {
 // Parameters
 //
 // This function requires one mandatory parameter `data`:
-//  data // type: slice []interface{}, description: the key-value pairs
+//  data // type: [][]interface{}, description: the key-value pairs
 //
 // Return values
 //
@@ -903,7 +903,7 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// Initial function gets all but the last element of data.
+// Initial function gets all but the last element of `data`.
 //
 // Parameters
 //
@@ -1778,7 +1778,7 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Union function combines all slices presented on the parameters, then create slice of unique values from it. The order of result values is determined by the order they occur in the array.
+// Union function combines all slices presented on the parameters, then create slice of unique values from it. All slice must have same data type.
 //
 // Parameters
 //
@@ -1864,7 +1864,7 @@ func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Uniq function is same like `Union` but only accept one parameter
+// Uniq function is same like `Union` but only accept one parameter.
 //
 // Parameters
 //
@@ -1884,7 +1884,7 @@ func Uniq(data interface{}) (interface{}, error) {
 	return Union(data)
 }
 
-// Without creates a slice from `data` excluding all given values presented on the `items`
+// Without creates a slice from `data` excluding all given values presented on the `items`.
 //
 // Parameters
 //
