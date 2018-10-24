@@ -17,8 +17,8 @@ go get -u github.com/novalagung/gubrak
 
 ## Documentation
 
- - [API Documentation](https://gubrak.github.io/)
- - [Godoc](https://godoc.org/github.com/novalagung/gubrak)
+ - [API Documentation](https://gubrak.github.io/) (always updated)
+ - [Godoc](https://godoc.org/github.com/novalagung/gubrak) (update delayed)
 
 ## Hello World Example
 

@@ -2,6 +2,7 @@ package gubrak
 
 import (
 	randMath "math/rand"
+	"regexp"
 	"time"
 )
 
@@ -9,7 +10,7 @@ func init() {
 	randMath.Seed(time.Now().UnixNano())
 }
 
-// RandomStringAlphabet function generate random alphabet string in defined length
+// RandomString function generate random alphabet string in defined length
 func RandomString(length int) string {
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
@@ -19,4 +20,10 @@ func RandomString(length int) string {
 	}
 
 	return string(b)
+}
+
+// ReplaceCaseInsensitive function replace all string that match with `find` without caring about it's case
+func ReplaceCaseInsensitive(text, find, replacement string) string {
+	re := regexp.MustCompile(`(?i)` + find)
+	return re.ReplaceAllString(text, replacement)
 }
