@@ -123,7 +123,6 @@ These are list of available functions that stable.
 - gubrak.PullAt()
 - gubrak.RandomInt()
 - gubrak.RandomString()
-- gubrak.RandomStringAlphabet()
 - gubrak.Reduce()
 - gubrak.Reject()
 - gubrak.Remove()
@@ -139,7 +138,6 @@ These are list of available functions that stable.
 - gubrak.Union()
 - gubrak.Uniq()
 - gubrak.Without()
-- gubrak.Xor()
 
 ## Contribution
 
