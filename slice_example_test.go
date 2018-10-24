@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ExampleChunk_1() {
+func ExampleChunk_chunk1() {
 	data := []int{1, 2, 3, 4, 5}
 	size := 2
 
@@ -19,7 +19,7 @@ func ExampleChunk_1() {
 	// ===> [][]int{ { 1, 2 }, { 3, 4 }, { 5 } }
 }
 
-func ExampleChunk_2() {
+func ExampleChunk_chunk2() {
 	data := []string{"a", "b", "c", "d", "e"}
 	size := 3
 
@@ -32,7 +32,7 @@ func ExampleChunk_2() {
 	// ===> [][]string{ { "a", "b", "c" }, { "d", "e" } }
 }
 
-func ExampleChunk_3() {
+func ExampleChunk_chunk3() {
 	data := []interface{}{
 		3.2, "a", -1,
 		make([]byte, 0),
@@ -56,7 +56,7 @@ func ExampleChunk_3() {
 	*/
 }
 
-func ExampleCompact_1() {
+func ExampleCompact_compact1() {
 	data := []int{-2, -1, 0, 1, 2}
 
 	result, err := Compact(data)
@@ -68,7 +68,7 @@ func ExampleCompact_1() {
 	// ===> []int{ -2, -1, 1, 2 }
 }
 
-func ExampleCompact_2() {
+func ExampleCompact_compact2() {
 	data := []string{"a", "b", "", "d"}
 
 	result, err := Compact(data)
@@ -80,7 +80,7 @@ func ExampleCompact_2() {
 	// ===> []string{ "a", "b", "d" }
 }
 
-func ExampleCompact_3() {
+func ExampleCompact_compact3() {
 	data := []interface{}{-2, 0, 1, 2, false, true, "", "hello", nil}
 
 	result, err := Compact(data)
@@ -92,7 +92,7 @@ func ExampleCompact_3() {
 	// ===> []interface{}{ -2, 1, 2, true, "hello" }
 }
 
-func ExampleCompact_4() {
+func ExampleCompact_compact4() {
 	item1, item2, item3 := "a", "b", "c"
 	data := []*string{&item1, nil, &item2, nil, &item3}
 
@@ -105,7 +105,7 @@ func ExampleCompact_4() {
 	// ===> []*string{ (*string)(0xc42000e1e0), (*string)(0xc42000e1f0), (*string)(0xc42000e200) }
 }
 
-func ExampleConcat_1() {
+func ExampleConcat_concat1() {
 	data := []int{1, 2, 3, 4}
 	dataConcat1 := []int{4, 6, 7}
 	dataConcat2 := []int{8, 9}
@@ -119,7 +119,7 @@ func ExampleConcat_1() {
 	// ===> []int{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 }
 
-func ExampleConcat_2() {
+func ExampleConcat_concat2() {
 	data := []string{"my"}
 	dataConcat1 := []string{"name", "is"}
 	dataConcat2 := []string{"jason", "todd"}
@@ -133,7 +133,7 @@ func ExampleConcat_2() {
 	// ===> []string{ "my", "name", "is", "jason", "todd" }
 }
 
-func ExampleDifference_1() {
+func ExampleDifference_difference1() {
 	data := []int{1, 2, 3, 4, 4, 6, 7}
 	dataDiff := []int{2, 7}
 
@@ -146,7 +146,7 @@ func ExampleDifference_1() {
 	// ===> []int{ 1, 3, 4, 4, 6 }
 }
 
-func ExampleDifference_2() {
+func ExampleDifference_difference2() {
 	data := []string{"a", "b", "b", "c", "d", "e", "f", "g", "h"}
 	dataDiff1 := []string{"b", "d"}
 	dataDiff2 := []string{"e", "f", "h"}
@@ -160,7 +160,7 @@ func ExampleDifference_2() {
 	// ===> []string{ "a", "c", "g" }
 }
 
-func ExampleDifference_3() {
+func ExampleDifference_difference3() {
 	data := []float64{1.1, 1.11, 1.2, 2.3, 3.0, 3, 4.0, 4.00000, 4.000000001}
 	dataDiff1 := []float64{1.1, 3}
 	dataDiff2 := []float64{4.000000001}
@@ -174,7 +174,7 @@ func ExampleDifference_3() {
 	// ===> []float64{ 1.11, 1.2, 2.3, 4, 4 }
 }
 
-func ExampleDrop_1() {
+func ExampleDrop_drop1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	n := 1
 
@@ -187,7 +187,7 @@ func ExampleDrop_1() {
 	// ===> []int{ 2, 3, 4, 4, 5, 6 }
 }
 
-func ExampleDrop_2() {
+func ExampleDrop_drop2() {
 	data := []string{"a", "b", "c", "d", "e", "f"}
 	n := 3
 
@@ -200,7 +200,7 @@ func ExampleDrop_2() {
 	// ===> []string{ "d", "e", "f" }
 }
 
-func ExampleDropRight_1() {
+func ExampleDropRight_dropRight1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	n := 1
 
@@ -213,7 +213,7 @@ func ExampleDropRight_1() {
 	// ===> []int{ 1, 2, 3, 4, 4, 5 }
 }
 
-func ExampleDropRight_2() {
+func ExampleDropRight_dropRight2() {
 	data := []string{"a", "b", "c", "d", "e", "f"}
 	n := 3
 
@@ -226,7 +226,7 @@ func ExampleDropRight_2() {
 	// ===> []string{ "a", "b", "c" }
 }
 
-func ExampleFill_1() {
+func ExampleFill_fill1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	replacement := 9
 
@@ -239,7 +239,7 @@ func ExampleFill_1() {
 	// ===> []int{ 9, 9, 9, 9, 9, 9, 9 }
 }
 
-func ExampleFill_2() {
+func ExampleFill_fill2() {
 	data := []string{"grayson", "jason", "tim", "damian"}
 	replacement := "alfred"
 	start := 2
@@ -253,7 +253,7 @@ func ExampleFill_2() {
 	// ===> []int{ "grayson", "jason", "alfred", "alfred" }
 }
 
-func ExampleFill_3() {
+func ExampleFill_fill3() {
 	data := []float64{1, 2.2, 3.0002, 4, 4, 5.12, 6}
 	replacement := float64(9)
 	start, end := 3, 5
@@ -267,7 +267,7 @@ func ExampleFill_3() {
 	// ===> []float64{ 1, 2.2, 3.0002, 9, 9, 5.12, 6 }
 }
 
-func ExampleFindIndex_1() {
+func ExampleFindIndex_findIndex1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 	predicate := func(each string) bool {
 		return each == "tim"
@@ -282,7 +282,7 @@ func ExampleFindIndex_1() {
 	// ===> 3
 }
 
-func ExampleFindIndex_2() {
+func ExampleFindIndex_findIndex2() {
 	data := []int{-2, -1, 0, 1, 2}
 
 	result, err := FindIndex(data, func(each int) bool {
@@ -296,7 +296,7 @@ func ExampleFindIndex_2() {
 	// ===> -1
 }
 
-func ExampleFindIndex_3() {
+func ExampleFindIndex_findIndex3() {
 	data := []float64{1, 1.1, 1.2, 1.200001, 1.2000000001, 1.3}
 
 	result, err := FindIndex(data, func(each float64) bool {
@@ -310,7 +310,7 @@ func ExampleFindIndex_3() {
 	// ===> 4
 }
 
-func ExampleFindIndex_4() {
+func ExampleFindIndex_findIndex4() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -326,7 +326,7 @@ func ExampleFindIndex_4() {
 	// ===> 2
 }
 
-func ExampleFindIndex_5() {
+func ExampleFindIndex_findIndex5() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -342,7 +342,7 @@ func ExampleFindIndex_5() {
 	// ===> 3
 }
 
-func ExampleFindLastIndex_1() {
+func ExampleFindLastIndex_findLastIndex1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 
 	result, err := FindLastIndex(data, func(each string) bool {
@@ -356,7 +356,7 @@ func ExampleFindLastIndex_1() {
 	// ===> 4
 }
 
-func ExampleFindLastIndex_2() {
+func ExampleFindLastIndex_findLastIndex2() {
 	data := []int{1, 2, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -372,7 +372,7 @@ func ExampleFindLastIndex_2() {
 	// ===> 4
 }
 
-func ExampleFindLastIndex_3() {
+func ExampleFindLastIndex_findLastIndex3() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -388,7 +388,7 @@ func ExampleFindLastIndex_3() {
 	// ===> 3
 }
 
-func ExampleFindLastIndex_4() {
+func ExampleFindLastIndex_findLastIndex4() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -404,7 +404,7 @@ func ExampleFindLastIndex_4() {
 	// ===> -1
 }
 
-func ExampleFirst_1() {
+func ExampleFirst_first1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	result, err := First(data)
 
@@ -416,7 +416,7 @@ func ExampleFirst_1() {
 	// ===> "damian"
 }
 
-func ExampleFirst_2() {
+func ExampleFirst_first2() {
 	data := []string{}
 	result, err := First(data)
 
@@ -428,7 +428,7 @@ func ExampleFirst_2() {
 	// ===> nil
 }
 
-func ExampleFromPairs_1() {
+func ExampleFromPairs_fromPairs1() {
 	data := []interface{}{
 		[]interface{}{"a", 1},
 		[]interface{}{"b", 2},
@@ -448,7 +448,7 @@ func ExampleFromPairs_1() {
 	*/
 }
 
-func ExampleFromPairs_2() {
+func ExampleFromPairs_fromPairs2() {
 	data := []interface{}{
 		[]interface{}{true, []int{1, 2, 3}},
 		[]interface{}{false, []string{"damian", "grayson"}},
@@ -468,7 +468,7 @@ func ExampleFromPairs_2() {
 	*/
 }
 
-func ExampleIndexOf_1() {
+func ExampleIndexOf_indexOf1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 	IndexOf(data, "duke")    // ===> -1
 	IndexOf(data, "tim")     // ===> 3
@@ -478,7 +478,7 @@ func ExampleIndexOf_1() {
 	IndexOf(data, "tim", -2) // ===> -1
 }
 
-func ExampleIndexOf_2() {
+func ExampleIndexOf_indexOf2() {
 	data := []float64{2.1, 2.2, 3, 3.00000, 3.1, 3.9, 3.95}
 	IndexOf(data, 2.2)           // ===> 1
 	IndexOf(data, 3)             // ===> -1
@@ -487,13 +487,13 @@ func ExampleIndexOf_2() {
 	IndexOf(data, float64(3), 3) // ===> 3
 }
 
-func ExampleIndexOf_3() {
+func ExampleIndexOf_indexOf3() {
 	data := []interface{}{"jason", 24, true}
 	IndexOf(data, 24)     // ===> 1
 	IndexOf(data, 24, -1) // ===> -1
 }
 
-func ExampleInitial_1() {
+func ExampleInitial_initial1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	result, err := Initial(data)
 
@@ -505,7 +505,7 @@ func ExampleInitial_1() {
 	// ===> []string{ "damian", "grayson" }
 }
 
-func ExampleInitial_2() {
+func ExampleInitial_initial2() {
 	data := []int{1, 2, 3, 4, 5}
 	result, err := Initial(data)
 
@@ -517,7 +517,7 @@ func ExampleInitial_2() {
 	// ===> []int{ 1, 2, 3, 4 }
 }
 
-func ExampleInitial_3() {
+func ExampleInitial_initial3() {
 	data := []map[string]string{{"name": "jason"}}
 	result, err := Initial(data)
 
@@ -529,7 +529,7 @@ func ExampleInitial_3() {
 	// ===> []map[string]string{}
 }
 
-func ExampleInitial_4() {
+func ExampleInitial_initial4() {
 	data := []float64{}
 	result, err := Initial(data)
 
@@ -541,7 +541,7 @@ func ExampleInitial_4() {
 	// ===> []float64{}
 }
 
-func ExampleIntersection_1() {
+func ExampleIntersection_intersection1() {
 	result, err := Intersection(
 		[]string{"damian", "grayson", "cassandra", "tim", "tim", "jason"},
 		[]string{"cassandra", "tim", "jason"},
@@ -556,7 +556,7 @@ func ExampleIntersection_1() {
 	// ===> []string{ "cassandra", "jason" }
 }
 
-func ExampleIntersection_2() {
+func ExampleIntersection_intersection2() {
 	result, err := Intersection(
 		[]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.1001, 1.2, 1.33, 1.4},
 		[]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.2, 1.33},
@@ -573,7 +573,7 @@ func ExampleIntersection_2() {
 	// ===> []float64{ 0.8001, 0.999, 1.33 }
 }
 
-func ExampleJoin_1() {
+func ExampleJoin_join1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	separator := " - "
 
@@ -586,7 +586,7 @@ func ExampleJoin_1() {
 	// ===> "damian - grayson - cassandra"
 }
 
-func ExampleJoin_2() {
+func ExampleJoin_join2() {
 	data := []int{1, 2, 3, 4}
 	separator := ", "
 
@@ -599,7 +599,7 @@ func ExampleJoin_2() {
 	// ===> "1, 2, 3, 4"
 }
 
-func ExampleLast_1() {
+func ExampleLast_last1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	result, err := Last(data)
 
@@ -611,7 +611,7 @@ func ExampleLast_1() {
 	// ===> "cassandra"
 }
 
-func ExampleLast_2() {
+func ExampleLast_last2() {
 	data := []int{1}
 	result, err := Last(data)
 
@@ -623,7 +623,7 @@ func ExampleLast_2() {
 	// ===> 1
 }
 
-func ExampleLast_3() {
+func ExampleLast_last3() {
 	data := []string{}
 	result, err := Last(data)
 
@@ -635,7 +635,7 @@ func ExampleLast_3() {
 	// ===> nil
 }
 
-func ExampleLastIndexOf_1() {
+func ExampleLastIndexOf_lastIndexOf1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 
 	LastIndexOf(data, "duke")    // ===> -1
@@ -646,7 +646,7 @@ func ExampleLastIndexOf_1() {
 	LastIndexOf(data, "tim", -2) // ===> 4
 }
 
-func ExampleLastIndexOf_2() {
+func ExampleLastIndexOf_lastIndexOf2() {
 	data := []float64{2.1, 2.2, 3, 3.00000, 3.1, 3.9, 3.95}
 
 	LastIndexOf(data, 2.2)           // ===> 1
@@ -656,14 +656,14 @@ func ExampleLastIndexOf_2() {
 	LastIndexOf(data, float64(3), 3) // ===> 3
 }
 
-func ExampleLastIndexOf_3() {
+func ExampleLastIndexOf_lastIndexOf3() {
 	data := []interface{}{"jason", 24, true}
 
 	LastIndexOf(data, 24)     // ===> 1
 	LastIndexOf(data, 24, -1) // ===> 1
 }
 
-func ExampleNth_1() {
+func ExampleNth_nth1() {
 	data := []string{"grayson", "jason", "tim", "damian"}
 
 	Nth(data, 1)  // ===> "jason"
@@ -671,7 +671,7 @@ func ExampleNth_1() {
 	Nth(data, -1) // ===> "damian"
 }
 
-func ExampleNth_2() {
+func ExampleNth_nth2() {
 	data := []int{1, 2, 3, 4, 5}
 	result, err := Nth(data, 4)
 
@@ -683,7 +683,7 @@ func ExampleNth_2() {
 	// ===> 5
 }
 
-func ExamplePull_1() {
+func ExamplePull_pull1() {
 	data := []int{1, 2, 3, 4, 5, 6}
 	result, err := Pull(data, 3)
 
@@ -695,7 +695,7 @@ func ExamplePull_1() {
 	// ===> []int{ 1, 2, 4, 5, 6 }
 }
 
-func ExamplePull_2() {
+func ExamplePull_pull2() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 	result, err := Pull(data, 2.1, 3.2, 6.3)
 
@@ -707,7 +707,7 @@ func ExamplePull_2() {
 	// ===> []float64{ 1.1, 4.2, 5.2 }
 }
 
-func ExamplePull_3() {
+func ExamplePull_pull3() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
 	result, err := Pull(data, "grayson", "tim")
 
@@ -719,7 +719,7 @@ func ExamplePull_3() {
 	// ===> []string{ "damian", "cassandra", "jason", "stephanie" }
 }
 
-func ExamplePullAll_1() {
+func ExamplePullAll_pullAll1() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 	exclude := []float64{2.1, 3.2, 6.3}
 
@@ -732,7 +732,7 @@ func ExamplePullAll_1() {
 	// ===> []float64{ 1.1, 4.2, 5.2 }
 }
 
-func ExamplePullAll_2() {
+func ExamplePullAll_pullAll2() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
 	exclude := []string{"grayson", "tim"}
 
@@ -745,7 +745,7 @@ func ExamplePullAll_2() {
 	// ===> []string{ "damian", "cassandra", "jason", "stephanie" }
 }
 
-func ExamplePullAt() {
+func ExamplePullAt_pullAt() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 
 	result, err := PullAt(data, 1, 3)
@@ -757,7 +757,7 @@ func ExamplePullAt() {
 	// ===> []float64{ 1.1, 3.2, 5.2, 6.3 }
 }
 
-func ExampleRemove_1() {
+func ExampleRemove_remove1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	result, removed, err := Remove(data, func(each string) bool {
 		return strings.Contains(each, "m")
@@ -771,7 +771,7 @@ func ExampleRemove_1() {
 	fmt.Println(removed) // ===> []string{ "damian", "tim" }
 }
 
-func ExampleRemove_2() {
+func ExampleRemove_remove2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	result, removed, err := Remove(data, func(each int) bool {
 		return each%2 == 0
@@ -785,7 +785,7 @@ func ExampleRemove_2() {
 	fmt.Println(removed) // ===> []int{ 2, 4, 6, 8 }
 }
 
-func ExampleReverse_1() {
+func ExampleReverse_reverse1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	result, err := Reverse(data)
 
@@ -797,7 +797,7 @@ func ExampleReverse_1() {
 	// ===> []string{ "tim", "grayson", "damian", "jason" }
 }
 
-func ExampleReverse_2() {
+func ExampleReverse_reverse2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	result, err := Reverse(data)
 
@@ -809,7 +809,7 @@ func ExampleReverse_2() {
 	// ===> []int{ 9, 8, 7, 6, 5, 4, 3, 2, 1 }
 }
 
-func ExampleTail_1() {
+func ExampleTail_tail1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	result, err := Tail(data)
 
@@ -821,7 +821,7 @@ func ExampleTail_1() {
 	// ===> []string{ "damian", "grayson", "tim" }
 }
 
-func ExampleTail_2() {
+func ExampleTail_tail2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	result, err := Tail(data)
 
@@ -833,7 +833,7 @@ func ExampleTail_2() {
 	// ===> []int{ 2, 3, 4, 5, 6, 7, 8, 9 }
 }
 
-func ExampleTake_1() {
+func ExampleTake_take1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	take := 2
 
@@ -846,7 +846,7 @@ func ExampleTake_1() {
 	// ===> []string{ "jason", "damian" }
 }
 
-func ExampleTake_2() {
+func ExampleTake_take2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	take := 5
 
@@ -859,7 +859,7 @@ func ExampleTake_2() {
 	// ===> []int{ 1, 2, 3, 4, 5 }
 }
 
-func ExampleTakeRight_1() {
+func ExampleTakeRight_takeRight1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	take := 2
 
@@ -872,7 +872,7 @@ func ExampleTakeRight_1() {
 	// ===> []string{ "grayson", "tim" }
 }
 
-func ExampleTakeRight_2() {
+func ExampleTakeRight_takeRight2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	take := 5
 
@@ -885,7 +885,7 @@ func ExampleTakeRight_2() {
 	// ===> []int{ 5, 6, 7, 8, 9 }
 }
 
-func ExampleUnion_1() {
+func ExampleUnion_union1() {
 	result, err := Union(
 		[]string{"damian", "grayson", "grayson", "cassandra"},
 		[]string{"tim", "grayson", "jason", "stephanie"},
@@ -900,7 +900,7 @@ func ExampleUnion_1() {
 	// ===> []string{ "damian", "grayson", "cassandra", "tim", "jason", "stephanie", "duke" }
 }
 
-func ExampleUnion_2() {
+func ExampleUnion_union2() {
 	result, err := Union(
 		[]int{1, 2, 3},
 		[]int{2, 3, 4, 5, 6},
@@ -916,7 +916,7 @@ func ExampleUnion_2() {
 	// ===> []int{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 }
 
-func ExampleUniq_1() {
+func ExampleUniq_uniq1() {
 	data := []string{"damian", "grayson", "grayson", "cassandra"}
 	result, err := Uniq(data)
 
@@ -928,7 +928,7 @@ func ExampleUniq_1() {
 	// ===> []string{ "damian", "grayson", "cassandra" }
 }
 
-func ExampleUniq_2() {
+func ExampleUniq_uniq2() {
 	data := []float64{1.1, 3.00000, 3.1, 2.2000000, 3, 2.2, 3.0}
 	result, err := Uniq(data)
 
@@ -940,7 +940,7 @@ func ExampleUniq_2() {
 	// ===> []float64{ 1.1, 3, 3.1, 2.2 }
 }
 
-func ExampleWithout_1() {
+func ExampleWithout_without1() {
 	data := []int{1, 2, 3, 4, 5, 6}
 	exclude := []int{3}
 
@@ -953,7 +953,7 @@ func ExampleWithout_1() {
 	// ===> []int{ 1, 2, 4, 5, 6 }
 }
 
-func ExampleWithout_2() {
+func ExampleWithout_without2() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 	exclude := []float64{2.1, 3.2, 6.3}
 
@@ -966,7 +966,7 @@ func ExampleWithout_2() {
 	// ===> []float64{ 1.1, 4.2, 5.2 }
 }
 
-func ExampleWithout_3() {
+func ExampleWithout_without3() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
 	exclude := []string{"grayson", "tim"}
 
