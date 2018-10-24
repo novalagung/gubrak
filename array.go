@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// Chunk creates a slice of elements split into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
+// Chunk function creates a slice of elements split into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
 //
 // Parameters
 //
@@ -72,7 +72,7 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Compact creates a slice with all falsey values removed from the `data`. The values false, nil, 0, "", (*string)(nil), and other nil-able types are falsey.
+// Compact function creates a slice with all falsey values removed from the `data`. These values: `false`, `nil`, `0`, `""`, `(*string)(nil)`, and other nil-able types are considered to be falsey.
 //
 // Parameters
 //
@@ -171,7 +171,7 @@ func Compact(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Concat creates a new slice concatenating `data` with any additional slice and/or values.
+// Concat function creates a new slice concatenating `data` with any additional slices (the 2nd parameter and rest).
 //
 // Parameters
 //
@@ -191,7 +191,7 @@ func Compact(data interface{}) (interface{}, error) {
 // Examples
 //
 // 2 examples available:
-func Concat(data interface{}, concatenableData ...interface{}) (interface{}, error) {
+func Concat(data interface{}, dataConcats ...interface{}) (interface{}, error) {
 	var err error
 
 	result := func(err *error) interface{} {
@@ -217,7 +217,7 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 			result = reflect.Append(result, each)
 		})
 
-		for i, eachConcatenableData := range concatenableData {
+		for i, eachConcatenableData := range dataConcats {
 			eachLabel := fmt.Sprintf("concat data %d", (i + 1))
 			eachValue, eachType, _, eachValueLen := inspectData(eachConcatenableData)
 
@@ -244,12 +244,12 @@ func Concat(data interface{}, concatenableData ...interface{}) (interface{}, err
 	return result, err
 }
 
-// Difference creates a slice of `data` values not included in the other given slices. The order and references of result values are determined by the first slice.
+// Difference function creates a slice of `data` values not included in the other given slices. The order and references of result values are determined by the first slice.
 //
 // Parameters
 //
 // This function requires one mandatory parameter `data`, and unlimited variadic parameters:
-//  data      // type: slice, description: the slice to inspect
+//  data   // type: slice, description: the slice to inspect
 //  slice1 // optional, type: slice, description: the values to exclude
 //  slice2 // optional, type: slice, description: the values to exclude
 //  slice3 // optional, type: slice, description: the values to exclude
@@ -331,7 +331,7 @@ func Difference(data interface{}, compareData ...interface{}) (interface{}, erro
 	return result, err
 }
 
-// Drop creates a slice of `data` with `n` elements dropped from the beginning.
+// Drop function creates a slice of `data` with `n` elements dropped from the beginning.
 //
 // Parameters
 //
@@ -392,7 +392,7 @@ func Drop(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// DropRight creates a slice of `data` with `n` elements dropped from the end.
+// DropRight function creates a slice of `data` with `n` elements dropped from the end.
 //
 // Parameters
 //
@@ -451,7 +451,7 @@ func DropRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Fill fills elements of `data` with `value` from `start` up to, but not including, `end`.
+// Fill function fills elements of `data` with `value` from `start` up to, but not including, `end`.
 //
 // Parameters
 //
@@ -536,13 +536,13 @@ func Fill(data, value interface{}, args ...int) (interface{}, error) {
 	return result, err
 }
 
-// FindIndex is similar like `Find`, except that it returns the index of the first element `predicate` returns truthy for instead of the element itself.
+// FindIndex function is similar like `Find`, except that it returns the index of the first element `predicate` returns truthy for, instead of the element itself.
 //
 // Parameters
 //
 // This function requires two mandatory parameters `data` and `predicate`; and two optional parameters:
 //  data        // type: slice, description: the slice to inspect
-//  predicate   // type: FuncSliceLoopOutputBool, description: the function invoked per iteration. The second argument represents index of each element, and it's optional
+//  predicate   // type: func(each anyType, i int)bool, description: the function invoked per iteration.
 //  fromIndex=0 // optional, type: number, description: the index to search from
 //
 // Return values
@@ -616,13 +616,13 @@ func FindIndex(data, predicate interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// FindLastIndex is similar like `FindIndex`, except that it iterates over elements of `data` from right to left.
+// FindLastIndex function is similar like `FindIndex`, except that it iterates over elements of `data` from right to left.
 //
 // Parameters
 //
 // This function requires two mandatory parameters `data` and `predicate`; and an optional parameter:
 //  data                  // type: slice, description: the slice to inspect
-//  predicate             // type: FuncSliceLoopOutputBool, description: the function invoked per iteration. The second argument represents index of each element, and it's optional
+//  predicate             // type: func(each anyType, i int)bool, description: the function invoked per iteration.it's optional
 //  fromIndex=len(data)-1 // optional, type: number, description: the index to search from
 //
 // Return values
@@ -699,7 +699,7 @@ func FindLastIndex(data, predicate interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// First gets the first element of `data`.
+// First function gets the first element of `data`.
 //
 // Parameters
 //
@@ -741,7 +741,7 @@ func First(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// FromPairs returns an object composed from key-value `data`.
+// FromPairs function returns an object composed from key-value `data`.
 //
 // Parameters
 //
@@ -816,13 +816,12 @@ func FromPairs(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Head is an alias of `First`.
+// Head function is an alias of `First`.
 func Head(data interface{}) (interface{}, error) {
 	return First(data)
 }
 
-// IndexOf gets the index at which the first occurrence of value is found in data. If fromIndex is negative, it's used as the offset from the end of slice.
-// IndexOf gets the index at which the first occurrence of `search` is found in `data`. If `fromIndex` is negative, it's used as the offset from the end of `data`.
+// IndexOf function gets the index at which the first occurrence of `search` is found in `data`. If `fromIndex` is negative, it's used as the offset from the end of `data`.
 //
 // Parameters
 //
@@ -904,7 +903,7 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 	return result, err
 }
 
-// Initial gets all but the last element of data.
+// Initial function gets all but the last element of data.
 //
 // Parameters
 //
@@ -946,12 +945,12 @@ func Initial(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Intersection creates a slice of unique values that are included in all given slices. The order and references of result values are determined by the first slice.
+// Intersection function creates a slice of unique values that are included in all given slices. The order and references of result values are determined by the first slice.
 //
 // Parameters
 //
 // This function requires one mandatory parameter `data`; and unlimited variadic parameters:
-//  data // type: slice, the slice to inspect
+//  data           // type: slice, the slice to inspect
 //  dataIntersect1 // optional, type: slice, the values to compare
 //  dataIntersect2 // optional, type: slice, the values to compare
 //  dataIntersect3 // optional, type: slice, the values to compare
@@ -966,7 +965,7 @@ func Initial(data interface{}) (interface{}, error) {
 // Examples
 //
 // 2 examples available:
-func Intersection(data interface{}, compareData ...interface{}) (interface{}, error) {
+func Intersection(data interface{}, dataIntersects ...interface{}) (interface{}, error) {
 	var err error
 
 	result := func(err *error) interface{} {
@@ -988,7 +987,7 @@ func Intersection(data interface{}, compareData ...interface{}) (interface{}, er
 		}
 		compareValueInReflect := make([]CompareMap, 0)
 
-		for _, compare := range compareData {
+		for _, compare := range dataIntersects {
 			eachValue, _, _, eachValueLen := inspectData(compare)
 
 			if isSlice(err, "data", eachValue) {
@@ -1049,7 +1048,7 @@ func Intersection(data interface{}, compareData ...interface{}) (interface{}, er
 	return result, err
 }
 
-// Join converts all elements in `data` into a string separated by `separator`.
+// Join function converts all elements in `data` into a string separated by `separator`.
 //
 // Parameters
 //
@@ -1119,12 +1118,12 @@ func Join(data interface{}, separator string) (string, error) {
 	return result, err
 }
 
-// Last gets the last element of array.
+// Last function gets the last element of `data`.
 //
 // Parameters
 //
 // This function requires one mandatory parameter:
-//  data      // type: slice, description: the slices to query
+//  data // type: slice, description: the slices to query
 //
 // Return values
 //
@@ -1161,7 +1160,7 @@ func Last(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// LastIndexOf method is like `IndexOf`, except that it iterates over elements of `data` from right to left.
+// LastIndexOf function is like `IndexOf`, except that it iterates over elements of `data` from right to left.
 //
 // Parameters
 //
@@ -1240,7 +1239,7 @@ func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error)
 	return result, err
 }
 
-// Nth gets the element at index `n` of `data`. If n is negative, the nth element from the end is returned.
+// Nth function gets the element at index `n` of `data`. If `n` is negative, the nth element from the end is returned.
 //
 // Parameters
 //
@@ -1291,7 +1290,7 @@ func Nth(data interface{}, i int) (interface{}, error) {
 	return result, err
 }
 
-// Pull removes all given values from `data` that presented on `items`.
+// Pull function removes all given values from `data`.
 //
 // Parameters
 //
@@ -1358,7 +1357,7 @@ func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 	return result, err
 }
 
-// PullAll is similar like `Pull`, except that it accepts an array of values to remove.
+// PullAll function is similar like `Pull`, except that it accepts a slice of values to remove.
 //
 // Parameters
 //
@@ -1428,7 +1427,7 @@ func PullAll(data interface{}, items interface{}) (interface{}, error) {
 	return result, err
 }
 
-// PullAt removes elements from `data` corresponding to `indexes` and returns an array of removed elements.
+// PullAt function removes elements from `data` corresponding to `indexes` and returns an array of removed elements.
 //
 // Parameters
 //
@@ -1500,13 +1499,13 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 	return result, err
 }
 
-// Remove removes all elements from `data` that `predicate` returns truthy for and returns a slice of the removed elements.
+// Remove function removes all elements from `data` that `predicate` returns truthy for and returns a slice of the removed elements.
 //
 // Parameters
 //
 // This function requires two mandatory parameters:
 //  data      // type: slice, description: the slice to inspect
-//  predicate // type: FuncSliceLoopOutputBool, description: the function invoked per iteration. The second argument represents index of each element, and it's optional
+//  predicate // type: func(each anyType, i int)bool, description: the function invoked per iteration.
 //
 // Return values
 //
@@ -1578,7 +1577,7 @@ func Remove(data interface{}, predicate interface{}) (interface{}, interface{}, 
 	return result, removed, err
 }
 
-// Reverse reverses data so that the first element becomes the last, the second element becomes the second to last, and so on.
+// Reverse function reverses `data` so that the first element becomes the last, the second element becomes the second to last, and so on.
 //
 // Parameters
 //
@@ -1626,7 +1625,7 @@ func Reverse(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Tail gets all but the first element of array.
+// Tail function gets all but the first element of `data`.
 //
 // Parameters
 //
@@ -1669,7 +1668,7 @@ func Tail(data interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Take creates a slice of `data` with `size` elements taken from the beginning.
+// Take function creates a slice of `data` with `size` elements taken from the beginning.
 //
 // Parameters
 //
@@ -1724,7 +1723,7 @@ func Take(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// TakeRight creates a slice of `data` with `seize` elements taken from the end.
+// TakeRight function creates a slice of `data` with `size` elements taken from the end.
 //
 // Parameters
 //
@@ -1779,7 +1778,7 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 	return result, err
 }
 
-// Combine all slices presented on the parameters, then create slice of unique values from it.
+// Union function combines all slices presented on the parameters, then create slice of unique values from it. The order of result values is determined by the order they occur in the array.
 //
 // Parameters
 //
@@ -1865,7 +1864,7 @@ func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 	return result, err
 }
 
-// Uniq creates a unique duplicate-free version of a slice. The order of result values is determined by the order they occur in the array.
+// Uniq function is same like `Union` but only accept one parameter
 //
 // Parameters
 //

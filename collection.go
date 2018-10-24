@@ -10,7 +10,23 @@ import (
 	"time"
 )
 
-// Count function creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the number of times the key was returned by iteratee. The iteratee is invoked with one argument: (value).
+// Count creates an object composed of keys generated from the results of running each element of `data` thru `iteratee`. The corresponding value of each key is the number of times the key was returned by `iteratee`.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data     // type: slice or map, description: the slice/map to iterate over
+//  iteratee // optional, type: func(each anyType, i int)bool or func(value anyType, key anyType, i int), description: the function invoked per iteration.
+//
+// Return values
+//
+// This function return two values:
+//  number // description: Returns the composed aggregate object
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Count(data interface{}, args ...interface{}) (int, error) {
 	var err error
 
@@ -130,7 +146,22 @@ func _countCollection(err *error, dataValue reflect.Value, dataValueType reflect
 	return resultCounter
 }
 
-// Each function iterates over elements of array and invokes iteratee for each element. The iteratee is invoked with two arguments: (value, index). Iteratee functions may exit iteration early by explicitly returning false.
+// Each iterates over elements of `data` and invokes `iteratee` for each element. Iteratee functions may exit iteration early by explicitly returning false
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data     // type: slice or map, description: the slice/map to iterate over
+//  iteratee // optional, type: FuncSliceLoopOutputBool, description: the function invoked per iteration. The second argument represents index of each element, and it's optional
+//
+// Return values
+//
+// This function return two values:
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Each(data, callback interface{}) error {
 	var err error
 
@@ -237,6 +268,22 @@ func _eachCollection(err *error, dataValue reflect.Value, dataValueType reflect.
 }
 
 // EachRight function is like ForEach() except that it iterates over elements of collection from right to left.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func EachRight(data, callback interface{}) error {
 	var err error
 
@@ -265,6 +312,22 @@ func EachRight(data, callback interface{}) error {
 }
 
 // Filter function iterates over elements of collection, returning an array of all elements predicate returns truthy for. The predicate is invoked with two arguments: (value, index).
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Filter(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -358,6 +421,22 @@ func _filterCollection(err *error, dataValue reflect.Value, dataValueType reflec
 }
 
 // Find function iterates over elements of collection, returning the first element predicate returns truthy for. The predicate is invoked with three arguments: (value, index).
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Find(data, callback interface{}, args ...int) (interface{}, error) {
 	var err error
 
@@ -431,6 +510,22 @@ func Find(data, callback interface{}, args ...int) (interface{}, error) {
 }
 
 // FindLast function is like Find() except that it iterates over elements of collection from right to left.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func FindLast(data, callback interface{}, args ...int) (interface{}, error) {
 	var err error
 
@@ -516,6 +611,22 @@ func ForEachRight(data, callback interface{}) error {
 }
 
 // GroupBy function creates an object composed of keys generated from the results of running each element of collection thru iteratee. The order of grouped values is determined by the order they occur in collection. The corresponding value of each key is an array of elements responsible for generating the key. The iteratee is invoked with one argument: (value).
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func GroupBy(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -576,6 +687,22 @@ func GroupBy(data, callback interface{}) (interface{}, error) {
 }
 
 // Map function creates an array of values by running each element in collection thru iteratee. The iteratee is invoked with two arguments: (value, index).
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Map(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -625,6 +752,22 @@ func Map(data, callback interface{}) (interface{}, error) {
 }
 
 // Includes function checks if value is in collection. If collection is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If fromIndex is negative, it's used as the offset from the end of collection.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Includes(data, search interface{}, args ...int) (bool, error) {
 	var err error
 
@@ -723,6 +866,22 @@ func _includesCollection(err *error, dataValue reflect.Value, search interface{}
 }
 
 // KeyBy function creates an object composed of keys generated from the results of running each element of collection thru iteratee. The corresponding value of each key is the last element responsible for generating the key. The iteratee is invoked with one argument: (value).
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func KeyBy(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -773,6 +932,22 @@ func KeyBy(data, callback interface{}) (interface{}, error) {
 }
 
 // OrderBy sort slices. If orders is unspecified, all values are sorted in ascending order. Otherwise, specify an order of "desc" for descending or "asc" for ascending sort order of corresponding values. The algorithm used is merge sort, as per savigo's post on https://sagivo.com/go-sort-faster-4869bdabc670
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 	var err error
 
@@ -1009,6 +1184,22 @@ func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
 }
 
 // Partition function creates an array of elements split into two groups, the first of which contains elements predicate returns truthy for, the second of which contains elements predicate returns falsey for. The predicate is invoked with one argument: (value).
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Partition(data, callback interface{}) (interface{}, interface{}, error) {
 	var truhty, falsey interface{}
 	var err error
@@ -1065,6 +1256,22 @@ func Partition(data, callback interface{}) (interface{}, interface{}, error) {
 }
 
 // Reduce function reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value. The iteratee is invoked with four arguments: (accumulator, value, index|key, collection)
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Reduce(data, callback, initial interface{}) (interface{}, error) {
 	var err error
 
@@ -1194,6 +1401,22 @@ func _reduceSlice(err *error, dataValue reflect.Value, dataValueType reflect.Typ
 }
 
 // Reject function is the opposite of Filter(); This method returns the elements of collection that predicate does not return truthy for.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Reject(data, callback interface{}) (interface{}, error) {
 	var err error
 
@@ -1245,6 +1468,22 @@ func Reject(data, callback interface{}) (interface{}, error) {
 }
 
 // Sample function gets a random element from collection.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Sample(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1272,6 +1511,22 @@ func Sample(data interface{}) (interface{}, error) {
 }
 
 // SampleSize function gets n random elements at unique keys from collection up to the size of collection.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func SampleSize(data interface{}, take int) (interface{}, error) {
 	var err error
 
@@ -1320,6 +1575,22 @@ func SampleSize(data interface{}, take int) (interface{}, error) {
 }
 
 // Shuffle function creates an array of shuffled values, using a version of the Fisher-Yates shuffle.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Shuffle(data interface{}) (interface{}, error) {
 	var err error
 
@@ -1354,6 +1625,22 @@ func Shuffle(data interface{}) (interface{}, error) {
 }
 
 // Size function gets the size of collection by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
+//
+// Parameters
+//
+// This function requires two mandatory parameters:
+//  data // type: slice, description: the slice to process
+//  size // type: number, description: the length of each chunk
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new slice of chunks
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// N examples available:
 func Size(data interface{}) (int, error) {
 	var err error
 
