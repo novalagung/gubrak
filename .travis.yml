@@ -2,15 +2,13 @@ language: go
 os:
   - linux
 go:
-  - go1.8
-  - go1.9
-  - go1.10
+  - tip
 go_import_path: github.com/novalagung/gubrak
 before_install:
   - go get github.com/mattn/goveralls
-  - go get -u github.com/golang/dep/...
+  - go get github.com/golang/dep/cmd/dep
 install:
-  - dep ensure
+  - $GOPATH/bin/dep ensure
 before_script:
   - wget http://downloads.majestic.com/majestic_million.csv
 script:
