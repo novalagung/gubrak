@@ -6,10 +6,13 @@ go:
   - go1.9
   - go1.10
 go_import_path: github.com/novalagung/gubrak
-install:
+before_install:
+  - go get github.com/mattn/goveralls
   - go get -u github.com/golang/dep/...
+install:
   - dep ensure
 before_script:
   - wget http://downloads.majestic.com/majestic_million.csv
 script:
   - go test -cover -race -v ./...
+  - $GOPATH/bin/goveralls -service=travis-ci
