@@ -10,6 +10,6 @@ install:
   - go get -u github.com/golang/dep/...
   - dep ensure
 before_script:
-  - wget http://downloads.majestic.com/majestic_million.csv .
+  - wget http://downloads.majestic.com/majestic_million.csv
 script:
   - go test -cover -race -v ./...
