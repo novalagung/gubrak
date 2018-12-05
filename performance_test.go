@@ -1,7 +1,7 @@
 package gubrak
 
 import (
-	"github.com/gocarina/gocsv"
+	"github.com/DefinitelyMod/gocsv"
 	// "github.com/stretchr/testify/assert"
 	"os"
 	"path/filepath"

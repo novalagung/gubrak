@@ -9,7 +9,7 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/gocarina/gocsv"
+  name = "github.com/DefinitelyMod/gocsv"
   packages = ["."]
   revision = "71f99b1720d2e4191fb6131ee3e92086f8368e04"
 
