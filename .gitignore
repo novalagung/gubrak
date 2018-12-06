@@ -13,4 +13,5 @@
 
 # Custom
 vendor
-test/majestic_million.csv# Binaries for programs and plugins
+majestic_million.csv
+# Binaries for programs and plugins

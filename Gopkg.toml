@@ -27,7 +27,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/gocarina/gocsv"
+  name = "github.com/DefinitelyMod/gocsv"
 
 [[constraint]]
   name = "github.com/stretchr/testify"
