@@ -11,39 +11,51 @@ import (
 
 func TestChunkNegativeSize(t *testing.T) {
 	data := []string{"a", "b", "c", "d"}
-	result, err := Chunk(data, -1)
-	// ===> []
+	size := -1
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "size must not be negative number")
 	assert.Nil(t, result)
+
+	// ===> []
 }
 
 func TestChunkZeroSize(t *testing.T) {
 	data := []string{"a", "b", "c", "d"}
-	result, err := Chunk(data, 0)
-	// ===> []
+	size := 0
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.Equal(t, make([][]string, 0), result)
+
+	// ===> []
 }
 
 func TestChunkSizeTwoInt(t *testing.T) {
 	data := []int{1, 2, 3, 4, 5}
-	result, err := Chunk(data, 2)
-	// ===> [][]int{ {1, 2}, {3, 4}, {5} }
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]int{{1, 2}, {3, 4}, {5}}, result)
+
+	// ===> [][]int{ {1, 2}, {3, 4}, {5} }
 }
 
 func TestChunkSizeThreeString(t *testing.T) {
 	data := []string{"a", "b", "c", "d", "e"}
-	result, err := Chunk(data, 3)
-	// ===> [][]string{ {"a", "b", "c"}, {"d", "e"} }
+	size := 3
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]string{{"a", "b", "c"}, {"d", "e"}}, result)
+
+	// ===> [][]string{ {"a", "b", "c"}, {"d", "e"} }
 }
 
 func TestChunkSliceInterface(t *testing.T) {
@@ -55,12 +67,9 @@ func TestChunkSliceInterface(t *testing.T) {
 		map[string]int{"b": 2},
 		[]string{"a", "b", "c"},
 	}
-	result, err := Chunk(data, 2)
-	// ===> [][]interface{}{
-	//        {3.2, "a"},
-	//        {-1, []uint8{}},
-	//        {map[string]int{"b": 2}, []string{"a", "b", "c"}},
-	//      }
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]interface{}{
@@ -68,90 +77,124 @@ func TestChunkSliceInterface(t *testing.T) {
 		{-1, []uint8{}},
 		{map[string]int{"b": 2}, []string{"a", "b", "c"}},
 	}, result)
+
+	// ===> [][]interface{}{
+	//        {3.2, "a"},
+	//        {-1, []uint8{}},
+	//        {map[string]int{"b": 2}, []string{"a", "b", "c"}},
+	//      }
 }
 
 func TestChunkSizeTwo(t *testing.T) {
 	data := []string{"a", "b", "c", "d"}
-	result, err := Chunk(data, 2)
-	// ===> [["a", "b"], ["c", "d"]]
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]string{{"a", "b"}, {"c", "d"}}, result)
+
+	// ===> [["a", "b"], ["c", "d"]]
 }
 
 func TestChunkSizeThree(t *testing.T) {
 	data := []string{"a", "b", "c", "d"}
-	result, err := Chunk(data, 3)
-	// ===> [["a", "b", "c"], ["d"]]
+	size := 3
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]string{{"a", "b", "c"}, {"d"}}, result)
+
+	// ===> [["a", "b", "c"], ["d"]]
 }
 
 func TestChunkSizeFour(t *testing.T) {
 	data := []string{"a", "b", "c", "d"}
-	result, err := Chunk(data, 4)
-	// ===> [["a", "b", "c", "d"]]
+	size := 4
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]string{{"a", "b", "c", "d"}}, result)
+
+	// ===> [["a", "b", "c", "d"]]
 }
 
 func TestChunkSizeAHundred(t *testing.T) {
 	data := []string{"a", "b", "c", "d"}
-	result, err := Chunk(data, 1000)
-	// ===> [["a", "b", "c", "d"]]
+	size := 1000
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]string{{"a", "b", "c", "d"}}, result)
+
+	// ===> [["a", "b", "c", "d"]]
 }
 
 func TestChunkNilData(t *testing.T) {
-	result, err := Chunk(nil, 2)
-	// ===> nil
+	var data interface{}
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data cannot be nil")
 	assert.Nil(t, result)
+
+	// ===> nil
 }
 
 func TestChunkEmptyData(t *testing.T) {
 	data := []string{}
-	result, err := Chunk(data, 2)
-	// ===> []
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, [][]string{}, result)
+
+	// ===> []
 }
 
 func TestChunkStringData(t *testing.T) {
 	data := "hello"
-	result, err := Chunk(data, 2)
-	// ===> nil
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data must be slice")
 	assert.Nil(t, result)
+
+	// ===> nil
 }
 
 func TestChunkIntData(t *testing.T) {
 	data := 12
-	result, err := Chunk(data, 2)
-	// ===> nil
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data must be slice")
 	assert.Nil(t, result)
+
+	// ===> nil
 }
 
 func TestChunkPointerData(t *testing.T) {
 	data := "hello"
-	result, err := Chunk(&data, 2)
-	// ===> nil
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data must be slice")
 	assert.Nil(t, result)
+
+	// ===> nil
 }
 
 func TestChunkMapData(t *testing.T) {
@@ -159,12 +202,15 @@ func TestChunkMapData(t *testing.T) {
 		"fruit":     "manggo",
 		"vegetable": "spinach",
 	}
-	result, err := Chunk(&data, 2)
-	// ===> nil
+	size := 2
+
+	result, err := From(data).Chunk(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data must be slice")
 	assert.Nil(t, result)
+
+	// ===> nil
 }
 
 func TestCompactFewData(t *testing.T) {
@@ -176,7 +222,6 @@ func TestCompactFewData(t *testing.T) {
 	dataSliceInt := []int{1, 2, 3}
 	dataMapEmpty := make(map[string]string, 0)
 	dataMap := map[string]string{"name": "damian"}
-
 	data := []interface{}{
 		-2, 0, 1, 2,
 		false, true,
@@ -192,21 +237,8 @@ func TestCompactFewData(t *testing.T) {
 		dataMap,
 	}
 
-	result, err := Compact(data)
+	result, err := From(data).Compact().ResultAndError()
 	resultParsed := result.([]interface{})
-	/* ===> [
-		 0: -2,
-		 1: 1,
-		 2: 2,
-		 3: true,
-		 4: "damian",
-		 5: "damian",
-		 6: (*string)(0xc42008f2b0),
-		 7: []int{},
-		 8: []int{1, 2, 3},
-		 9: map[string]string{},
-		10: map[string]string{"name":"damian"}
-	] */
 
 	assert.Empty(t, err)
 	assert.Len(t, resultParsed, 11)
@@ -231,121 +263,172 @@ func TestCompactFewData(t *testing.T) {
 	assert.Equal(t, map[string]string{"name": "damian"}, resultParsed[10])
 	assert.Equal(t, "damian", resultParsed[10].(map[string]string)["name"])
 	assert.Len(t, resultParsed[10], 1)
+
+	/* ===> [
+		 0: -2,
+		 1: 1,
+		 2: 2,
+		 3: true,
+		 4: "damian",
+		 5: "damian",
+		 6: (*string)(0xc42008f2b0),
+		 7: []int{},
+		 8: []int{1, 2, 3},
+		 9: map[string]string{},
+		10: map[string]string{"name":"damian"}
+	] */
 }
 
 func TestCompactInt(t *testing.T) {
 	data := []int{-2, -1, 0, 1, 2}
 
-	result, err := Compact(data)
+	result, err := From(data).Compact().ResultAndError()
 	resultParsed := result.([]int)
-	/* ===> [-2, -1, 1, 2] */
 
 	assert.Empty(t, err)
 	assert.Len(t, resultParsed, 4)
 
 	assert.Equal(t, []int{-2, -1, 1, 2}, resultParsed)
+
+	/* ===> [-2, -1, 1, 2] */
 }
 
 func TestCompactString(t *testing.T) {
 	data := []string{"a", "b", "", "d"}
 
-	result, err := Compact(data)
+	result, err := From(data).Compact().ResultAndError()
 	resultParsed := result.([]string)
-	/* ===> []string{"a", "b", "d"} */
 
 	assert.Empty(t, err)
 	assert.Len(t, resultParsed, 3)
 
 	assert.Equal(t, []string{"a", "b", "d"}, resultParsed)
+
+	/* ===> []string{"a", "b", "d"} */
 }
 
 func TestCompactPointerString(t *testing.T) {
 	item1, item2, item3 := "a", "b", "c"
 	data := []*string{&item1, nil, &item2, nil, &item3}
 
-	result, err := Compact(data)
+	result, err := From(data).Compact().ResultAndError()
 	resultParsed := result.([]*string)
-	/* ===> []string{"a", "b", "d"} */
 
 	assert.Empty(t, err)
 	assert.Len(t, resultParsed, 3)
+
+	/* ===> []string{"a", "b", "d"} */
 }
 
 func TestCompactNilData(t *testing.T) {
-	result, err := Compact(nil)
+	var data interface{}
+
+	result, err := From(data).Compact().ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data cannot be nil")
 	assert.Nil(t, result)
 }
 
-func TestConcatIntData(t *testing.T) {
+func TestConcatManyIntData(t *testing.T) {
 	data := []int{1, 2, 3, 4}
-	data1 := []int{4, 6, 7}
-	data2 := []int{8, 9}
-	result, err := Concat(data, data1, data2)
-	// ===> []int{1, 2, 3, 4, 4, 6, 7, 8, 9}
+	dataConcat1 := []int{4, 6, 7}
+	dataConcat2 := []int{8, 9}
+
+	result, err := From(data).ConcatMany(dataConcat1, dataConcat2).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 6, 7, 8, 9}, result)
+
+	// ===> []int{1, 2, 3, 4, 4, 6, 7, 8, 9}
 }
 
-func TestConcatStringData(t *testing.T) {
+func TestConcatManyStringData(t *testing.T) {
 	data := []string{"my"}
 	dataConcat1 := []string{"name", "is"}
 	dataConcat2 := []string{"jason", "todd"}
-	result, err := Concat(data, dataConcat1, dataConcat2)
-	// ===> []string{ "my", "name", "is", "jason", "todd" }
+
+	result, err := From(data).ConcatMany(dataConcat1, dataConcat2).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []string{"my", "name", "is", "jason", "todd"}, result)
+
+	// ===> []string{ "my", "name", "is", "jason", "todd" }
 }
 
-func TestConcatNilData(t *testing.T) {
-	result, err := Concat(nil)
-	// ===> nil
+func TestConcatManyNilData(t *testing.T) {
+	var data interface{}
+
+	result, err := From(data).ConcatMany().ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data cannot be nil")
 	assert.Nil(t, result)
+
+	// ===> nil
 }
 
-func TestConcatWithNil(t *testing.T) {
+func TestConcatManyWithNil(t *testing.T) {
 	data := []int{1, 2, 3, 4}
-	result, err := Concat(data, nil)
-	// ===> []int{1, 2, 3, 4}
+	var dataToConcat interface{}
+
+	result, err := From(data).ConcatMany(dataToConcat).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "concat data 1 must be slice")
 	assert.EqualValues(t, []int{1, 2, 3, 4}, result)
+
+	// ===> []int{1, 2, 3, 4}
+}
+
+func TestConcatWithNil(t *testing.T) {
+	data := []int{1, 2, 3, 4}
+	var dataToConcat interface{}
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "concat data 1 must be slice")
+	assert.EqualValues(t, []int{1, 2, 3, 4}, result)
+
+	// ===> []int{1, 2, 3, 4}
 }
 
 func TestCountSlice(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := Count(data)
+
+	result, err := From(data).Count().ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 3, result)
+
+	// ===> 3
 }
 
 func TestCountSliceWithPredicate(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := Count(data, func(each string) bool {
+
+	result, err := From(data).Count(func(each string) bool {
 		return strings.Contains(each, "d")
-	})
+	}).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 2, result)
+
+	// ===> 2
 }
 
 func TestCountSliceWithPredicate2(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := Count(data, func(each string, i int) bool {
+
+	result, err := From(data).Count(func(each string, i int) bool {
 		return len(each) > 6 && i > 1
-	})
+	}).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 1, result)
+
+	// ===> 1
 }
 
 func TestCountMap(t *testing.T) {
@@ -354,10 +437,13 @@ func TestCountMap(t *testing.T) {
 		"age":    12,
 		"isMale": true,
 	}
-	result, err := Count(data)
+
+	result, err := From(data).Count().ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 3, result)
+
+	// ===> 3
 }
 
 func TestCountMapWithPredicate1(t *testing.T) {
@@ -366,12 +452,15 @@ func TestCountMapWithPredicate1(t *testing.T) {
 		"age":    12,
 		"isMale": true,
 	}
-	result, err := Count(data, func(val interface{}, key string) bool {
+
+	result, err := From(data).Count(func(val interface{}, key string) bool {
 		return strings.Contains(strings.ToLower(key), "m")
-	})
+	}).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 2, result)
+
+	// ===> 2
 }
 
 func TestDifferenceOneData(t *testing.T) {

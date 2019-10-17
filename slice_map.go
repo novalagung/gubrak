@@ -27,17 +27,21 @@ import (
 // Examples
 //
 // 3 examples available:
-func Chunk(data interface{}, size int) (interface{}, error) {
-	var err error
+func (g *Chainable) Chunk(size int) IChainable {
+	g.lastOperation = OperationChunk
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
 
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -72,7 +76,11 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 		return result.Interface()
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
 }
 
 // Compact function creates a slice with all falsey values removed from the `data`. These values: `false`, `nil`, `0`, `""`, `(*string)(nil)`, and other nil-able types are considered to be falsey.
@@ -91,17 +99,21 @@ func Chunk(data interface{}, size int) (interface{}, error) {
 // Examples
 //
 // 4 examples available:
-func Compact(data interface{}) (interface{}, error) {
-	var err error
+func (g *Chainable) Compact() IChainable {
+	g.lastOperation = OperationCompact
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
 
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -171,18 +183,22 @@ func Compact(data interface{}) (interface{}, error) {
 		return result.Interface()
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
 }
 
-// Concat function creates a new slice concatenating `data` with any additional slices (the 2nd parameter and rest).
+// ConcatMany function creates a new slice concatenating `data` with any additional slices (the 2nd parameter and rest).
 //
 // Parameters
 //
 // This function requires one mandatory parameter `data`, and unlimited variadic parameters:
 //  data        // type: slice, description: the slice to concatenate
-//  dataConcat1 // type: slice, description: the values to concatenate
-//  dataConcat2 // type: slice, description: the values to concatenate
-//  dataConcat3 // type: slice, description: the values to concatenate
+//  sliceToConcat1 // type: slice, description: the values to concatenate
+//  sliceToConcat2 // type: slice, description: the values to concatenate
+//  sliceToConcat3 // type: slice, description: the values to concatenate
 //  ...
 //
 // Return values
@@ -194,17 +210,22 @@ func Compact(data interface{}) (interface{}, error) {
 // Examples
 //
 // 2 examples available:
-func Concat(data interface{}, dataConcats ...interface{}) (interface{}, error) {
-	var err error
 
+func (g *Chainable) ConcatMany(slicesToConcat ...interface{}) IChainable {
+	g.lastOperation = OperationConcatMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -220,7 +241,7 @@ func Concat(data interface{}, dataConcats ...interface{}) (interface{}, error) {
 			result = reflect.Append(result, each)
 		})
 
-		for i, eachConcatenableData := range dataConcats {
+		for i, eachConcatenableData := range slicesToConcat {
 			eachLabel := fmt.Sprintf("concat data %d", (i + 1))
 			eachValue, eachType, _, eachValueLen := inspectData(eachConcatenableData)
 
@@ -244,7 +265,32 @@ func Concat(data interface{}, dataConcats ...interface{}) (interface{}, error) {
 		return result.Interface()
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+// Concat function creates a new slice concatenating `data` with an additional slice (the 2nd parameter).
+//
+// Parameters
+//
+// This function requires one mandatory parameter `data`, and unlimited variadic parameters:
+//  data        // type: slice, description: the slice to concatenate
+//  sliceToConcat // type: slice, description: the values to concatenate
+//
+// Return values
+//
+// This function return two values:
+//  slice // description: returns the new concatenated slice
+//  error // description: hold error message if there is an error
+//
+// Examples
+//
+// 1 examples available:
+func (g *Chainable) Concat(sliceToConcat interface{}) IChainable {
+	return g.ConcatMany([]interface{}{sliceToConcat}...)
 }
 
 // Count creates an object composed of keys generated from the results of running each element of `data` thru `iteratee`. The corresponding value of each key is the number of times the key was returned by `iteratee`.
@@ -264,13 +310,17 @@ func Concat(data interface{}, dataConcats ...interface{}) (interface{}, error) {
 // Examples
 //
 // N examples available:
-func Count(data interface{}, args ...interface{}) (int, error) {
-	var err error
+func (g *Chainable) Count(args ...interface{}) IChainableCount {
+	g.lastOperation = OperationConcat
+	if g.IsError() || g.shouldReturn() {
+		return &privateChainableCount{chainable: g}
+	}
 
+	err := (error)(nil)
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return 0
 		}
 
@@ -279,7 +329,7 @@ func Count(data interface{}, args ...interface{}) (int, error) {
 			callback = args[0]
 		}
 
-		dataValue, dataValueType, dataValueKind, dataValueLen := inspectData(data)
+		dataValue, dataValueType, dataValueKind, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			if dataValueKind == reflect.Map {
@@ -293,7 +343,11 @@ func Count(data interface{}, args ...interface{}) (int, error) {
 		return _countSlice(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback)
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return &privateChainableCount{chainable: g.markError(result, err)}
+	}
+
+	return &privateChainableCount{chainable: g.markResult(result)}
 }
 
 func _countSlice(err *error, dataValue reflect.Value, dataValueType reflect.Type, dataValueKind reflect.Kind, dataValueLen int, callback interface{}) int {

@@ -10,11 +10,7 @@ func ExampleChunk_chunk1() {
 	data := []int{1, 2, 3, 4, 5}
 	size := 2
 
-	result, err := Chunk(data, size)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).Chunk(size).Result()
 	fmt.Println(result)
 	// ===> [][]int{ { 1, 2 }, { 3, 4 }, { 5 } }
 }
@@ -23,11 +19,7 @@ func ExampleChunk_chunk2() {
 	data := []string{"a", "b", "c", "d", "e"}
 	size := 3
 
-	result, err := Chunk(data, size)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).Chunk(size).Result()
 	fmt.Println(result)
 	// ===> [][]string{ { "a", "b", "c" }, { "d", "e" } }
 }
@@ -41,7 +33,7 @@ func ExampleChunk_chunk3() {
 	}
 	size := 3
 
-	result, err := Chunk(data, size)
+	result, err := From(data).Chunk(size).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -59,11 +51,7 @@ func ExampleChunk_chunk3() {
 func ExampleCompact_compact1() {
 	data := []int{-2, -1, 0, 1, 2}
 
-	result, err := Compact(data)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).Compact().Result()
 	fmt.Println(result)
 	// ===> []int{ -2, -1, 1, 2 }
 }
@@ -71,11 +59,7 @@ func ExampleCompact_compact1() {
 func ExampleCompact_compact2() {
 	data := []string{"a", "b", "", "d"}
 
-	result, err := Compact(data)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).Compact().Result()
 	fmt.Println(result)
 	// ===> []string{ "a", "b", "d" }
 }
@@ -83,11 +67,7 @@ func ExampleCompact_compact2() {
 func ExampleCompact_compact3() {
 	data := []interface{}{-2, 0, 1, 2, false, true, "", "hello", nil}
 
-	result, err := Compact(data)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).Compact().Result()
 	fmt.Println(result)
 	// ===> []interface{}{ -2, 1, 2, true, "hello" }
 }
@@ -96,7 +76,7 @@ func ExampleCompact_compact4() {
 	item1, item2, item3 := "a", "b", "c"
 	data := []*string{&item1, nil, &item2, nil, &item3}
 
-	result, err := Compact(data)
+	result, err := From(data).Compact().ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -105,26 +85,22 @@ func ExampleCompact_compact4() {
 	// ===> []*string{ (*string)(0xc42000e1e0), (*string)(0xc42000e1f0), (*string)(0xc42000e200) }
 }
 
-func ExampleConcat_concat1() {
+func ExampleConcatMany_concat1() {
 	data := []int{1, 2, 3, 4}
 	dataConcat1 := []int{4, 6, 7}
 	dataConcat2 := []int{8, 9}
 
-	result, err := Concat(data, dataConcat1, dataConcat2)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).ConcatMany(dataConcat1, dataConcat2).Result()
 	fmt.Println(result)
 	// ===> []int{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 }
 
-func ExampleConcat_concat2() {
+func ExampleConcatMany_concat2() {
 	data := []string{"my"}
 	dataConcat1 := []string{"name", "is"}
 	dataConcat2 := []string{"jason", "todd"}
 
-	result, err := Concat(data, dataConcat1, dataConcat2)
+	result, err := From(data).ConcatMany(dataConcat1, dataConcat2).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -133,17 +109,22 @@ func ExampleConcat_concat2() {
 	// ===> []string{ "my", "name", "is", "jason", "todd" }
 }
 
+func ExampleConcat_concat1() {
+	data := []int{1, 2, 3, 4}
+	dataConcat := []int{4, 6, 7}
+
+	result := From(data).Concat(dataConcat).Result()
+	fmt.Println(result)
+	// ===> []int{ 1, 2, 3, 4, 5, 6, 7 }
+}
+
 func ExampleCount_countMap1() {
 	data := map[string]interface{}{
 		"name":   "jason",
 		"age":    12,
 		"isMale": true,
 	}
-	result, err := Count(data)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).Count().Result()
 	fmt.Println(result)
 	// ===> 3
 }
@@ -155,13 +136,11 @@ func ExampleCount_countMap2() {
 		"isMale": true,
 	}
 
-	result, err := Count(data, func(val interface{}, key string) bool {
-		return strings.Contains(strings.ToLower(key), "m")
-	})
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).
+		Count(func(val interface{}, key string) bool {
+			return strings.Contains(strings.ToLower(key), "m")
+		}).
+		Result()
 	fmt.Println(result)
 	// ===> 2
 }
@@ -173,24 +152,18 @@ func ExampleCount_countMap3() {
 		"isMale": true,
 	}
 
-	result, err := Count(data, func(val interface{}, key string, i int) bool {
-		return strings.Contains(strings.ToLower(key), "m") && i > 1
-	})
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).
+		Count(func(val interface{}, key string, i int) bool {
+			return strings.Contains(strings.ToLower(key), "m") && i > 1
+		}).
+		Result()
 	fmt.Println(result)
 	// ===> 1
 }
 
 func ExampleCount_countSlice1() {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := Count(data)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).Count().Result()
 	fmt.Println(result)
 	// ===> 3
 }
@@ -198,13 +171,11 @@ func ExampleCount_countSlice1() {
 func ExampleCount_countSlice2() {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	result, err := Count(data, func(each string) bool {
-		return strings.Contains(each, "d")
-	})
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
+	result := From(data).
+		Count(func(each string) bool {
+			return strings.Contains(each, "d")
+		}).
+		Result()
 	fmt.Println(result)
 	// ===> 2
 }
@@ -212,9 +183,11 @@ func ExampleCount_countSlice2() {
 func ExampleCount_countSlice3() {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	result, err := Count(data, func(each string, i int) bool {
-		return len(each) > 6 && i > 1
-	})
+	result, err := From(data).
+		Count(func(each string, i int) bool {
+			return len(each) > 6 && i > 1
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
