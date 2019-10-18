@@ -405,10 +405,10 @@ func TestCountSlice(t *testing.T) {
 	// ===> 3
 }
 
-func TestCountSliceWithPredicate(t *testing.T) {
+func TestCountBySliceWithPredicate(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	result, err := From(data).Count(func(each string) bool {
+	result, err := From(data).CountBy(func(each string) bool {
 		return strings.Contains(each, "d")
 	}).ResultAndError()
 
@@ -418,10 +418,10 @@ func TestCountSliceWithPredicate(t *testing.T) {
 	// ===> 2
 }
 
-func TestCountSliceWithPredicate2(t *testing.T) {
+func TestCountBySliceWithPredicate2(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	result, err := From(data).Count(func(each string, i int) bool {
+	result, err := From(data).CountBy(func(each string, i int) bool {
 		return len(each) > 6 && i > 1
 	}).ResultAndError()
 
@@ -446,14 +446,14 @@ func TestCountMap(t *testing.T) {
 	// ===> 3
 }
 
-func TestCountMapWithPredicate1(t *testing.T) {
+func TestCountByMapWithPredicate1(t *testing.T) {
 	data := map[string]interface{}{
 		"name":   "jason",
 		"age":    12,
 		"isMale": true,
 	}
 
-	result, err := From(data).Count(func(val interface{}, key string) bool {
+	result, err := From(data).CountBy(func(val interface{}, key string) bool {
 		return strings.Contains(strings.ToLower(key), "m")
 	}).ResultAndError()
 
@@ -466,11 +466,13 @@ func TestCountMapWithPredicate1(t *testing.T) {
 func TestDifferenceOneData(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 6, 7}
 	diff := []int{2, 7}
-	result, err := Difference(data, diff)
-	// ===> []int{1, 3, 4, 4, 6}
+
+	result, err := From(data).Difference(diff).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 3, 4, 4, 6}, result)
+
+	// ===> []int{1, 3, 4, 4, 6}
 }
 
 func TestDifferenceOneMultipleData(t *testing.T) {
@@ -478,53 +480,65 @@ func TestDifferenceOneMultipleData(t *testing.T) {
 	diff1 := []int{2, 7}
 	diff2 := []int{1, 2, 3}
 	diff3 := []int{4, 7}
-	result, err := Difference(data, diff1, diff2, diff3)
-	// ===> []int{6}
+
+	result, err := From(data).DifferenceMany(diff1, diff2, diff3).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{6}, result)
+
+	// ===> []int{6}
 }
 
 func TestDifferenceStringData(t *testing.T) {
 	data := []string{"a", "b", "b", "c", "d", "e", "f", "g", "h"}
 	dataDiff1 := []string{"b", "d"}
 	dataDiff2 := []string{"e", "f", "h"}
-	result, err := Difference(data, dataDiff1, dataDiff2)
-	// ===> []string{ "a", "c", "g" }
+
+	result, err := From(data).DifferenceMany(dataDiff1, dataDiff2).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []string{"a", "c", "g"}, result)
+
+	// ===> []string{ "a", "c", "g" }
 }
 
 func TestDifferenceFloatData(t *testing.T) {
 	data := []float64{1.1, 1.11, 1.2, 2.3, 3.0, 3, 4.0, 4.00000, 4.000000001}
 	dataDiff1 := []float64{1.1, 3}
 	dataDiff2 := []float64{4.000000001}
-	result, err := Difference(data, dataDiff1, dataDiff2)
-	// ===> []float64{ 1.11, 1.2, 2.3, 4, 4 }
+
+	result, err := From(data).DifferenceMany(dataDiff1, dataDiff2).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []float64{1.11, 1.2, 2.3, 4, 4}, result)
+
+	// ===> []float64{ 1.11, 1.2, 2.3, 4, 4 }
 }
 
 func TestDifferenceNilData(t *testing.T) {
+	var data interface{}
 	diff := []int{2, 7}
-	result, err := Difference(nil, diff)
-	// ===> nil
+
+	result, err := From(data).Difference(diff).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data cannot be nil")
 	assert.Nil(t, result)
+
+	// ===> nil
 }
 
 func TestDifferenceWithNilDiffData(t *testing.T) {
 	data := []int{2, 7}
-	result, err := Difference(data, nil)
-	// ===> []int{2, 7}
+	var diff interface{}
+
+	result, err := From(data).Difference(diff).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "difference data 1 must be slice")
 	assert.EqualValues(t, []int{2, 7}, result)
+
+	// ===> []int{2, 7}
 }
 
 func TestDropZeroSize(t *testing.T) {

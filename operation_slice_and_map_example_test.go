@@ -129,7 +129,7 @@ func ExampleCount_countMap1() {
 	// ===> 3
 }
 
-func ExampleCount_countMap2() {
+func ExampleCountBy_countMap2() {
 	data := map[string]interface{}{
 		"name":   "jason",
 		"age":    12,
@@ -137,7 +137,7 @@ func ExampleCount_countMap2() {
 	}
 
 	result := From(data).
-		Count(func(val interface{}, key string) bool {
+		CountBy(func(val interface{}, key string) bool {
 			return strings.Contains(strings.ToLower(key), "m")
 		}).
 		Result()
@@ -145,7 +145,7 @@ func ExampleCount_countMap2() {
 	// ===> 2
 }
 
-func ExampleCount_countMap3() {
+func ExampleCountBy_countMap3() {
 	data := map[string]interface{}{
 		"name":   "jason",
 		"age":    12,
@@ -153,7 +153,7 @@ func ExampleCount_countMap3() {
 	}
 
 	result := From(data).
-		Count(func(val interface{}, key string, i int) bool {
+		CountBy(func(val interface{}, key string, i int) bool {
 			return strings.Contains(strings.ToLower(key), "m") && i > 1
 		}).
 		Result()
@@ -168,11 +168,11 @@ func ExampleCount_countSlice1() {
 	// ===> 3
 }
 
-func ExampleCount_countSlice2() {
+func ExampleCountBy_countSlice2() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	result := From(data).
-		Count(func(each string) bool {
+		CountBy(func(each string) bool {
 			return strings.Contains(each, "d")
 		}).
 		Result()
@@ -180,11 +180,11 @@ func ExampleCount_countSlice2() {
 	// ===> 2
 }
 
-func ExampleCount_countSlice3() {
+func ExampleCountBy_countSlice3() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	result, err := From(data).
-		Count(func(each string, i int) bool {
+		CountBy(func(each string, i int) bool {
 			return len(each) > 6 && i > 1
 		}).
 		ResultAndError()
@@ -200,7 +200,7 @@ func ExampleDifference_difference1() {
 	data := []int{1, 2, 3, 4, 4, 6, 7}
 	dataDiff := []int{2, 7}
 
-	result, err := Difference(data, dataDiff)
+	result, err := From(data).Difference(dataDiff).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -209,12 +209,12 @@ func ExampleDifference_difference1() {
 	// ===> []int{ 1, 3, 4, 4, 6 }
 }
 
-func ExampleDifference_difference2() {
+func ExampleDifferenceMany_difference2() {
 	data := []string{"a", "b", "b", "c", "d", "e", "f", "g", "h"}
 	dataDiff1 := []string{"b", "d"}
 	dataDiff2 := []string{"e", "f", "h"}
 
-	result, err := Difference(data, dataDiff1, dataDiff2)
+	result, err := From(data).DifferenceMany(dataDiff1, dataDiff2).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -223,12 +223,12 @@ func ExampleDifference_difference2() {
 	// ===> []string{ "a", "c", "g" }
 }
 
-func ExampleDifference_difference3() {
+func ExampleDifferenceMany_difference3() {
 	data := []float64{1.1, 1.11, 1.2, 2.3, 3.0, 3, 4.0, 4.00000, 4.000000001}
 	dataDiff1 := []float64{1.1, 3}
 	dataDiff2 := []float64{4.000000001}
 
-	result, err := Difference(data, dataDiff1, dataDiff2)
+	result, err := From(data).DifferenceMany(dataDiff1, dataDiff2).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}

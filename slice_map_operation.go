@@ -1,15 +1,6 @@
 package gubrak
 
-type Operation string
-
 const (
-	OperationNone          = ""
-	OperationChunk         = "Chunk()"
-	OperationCompact       = "Compact()"
-	OperationConcatMany    = "ConcatMany()"
-	OperationConcat        = "Concat()"
-	OperationCount         = "Count()"
-	OperationDifference    = "Difference()"
 	OperationDrop          = "Drop()"
 	OperationDropRight     = "DropRight()"
 	OperationEach          = "Each()"
