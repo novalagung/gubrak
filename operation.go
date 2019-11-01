@@ -32,6 +32,12 @@ type IChainable interface {
 	IChainableIntersection
 	IChainableJoin
 	IChainableKeyBy
+	IChainableLast
+	IChainableLastIndexOf
+	IChainableMap
+	IChainableNth
+	IChainableOrderBy
+	IChainablePartition
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}

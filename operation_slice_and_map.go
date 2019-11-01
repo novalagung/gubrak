@@ -2135,19 +2135,31 @@ func (g *Chainable) KeyBy(callback interface{}) IChainable {
 	return g.markResult(result)
 }
 
-// ================================================================ RAW
+// ============================================== Last
 
-func Last(data interface{}) (interface{}, error) {
-	var err error
+const (
+	OperationLast = "Last()"
+)
 
+type IChainableLast interface {
+	Last(interface{}) IChainable
+}
+
+func (g *Chainable) Last(callback interface{}) IChainable {
+	g.lastOperation = OperationLast
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, _, _, dataValueLen := inspectData(data)
+		dataValue, _, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -2159,82 +2171,110 @@ func Last(data interface{}) (interface{}, error) {
 
 		return dataValue.Index(dataValueLen - 1).Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func LastIndexOf(data interface{}, search interface{}, args ...int) (int, error) {
-	var err error
+// ============================================== LastIndexOf
 
-	result := func(err *error) int {
-		defer catch(err)
+const (
+	OperationLastIndexOf = "LastIndexOf()"
+)
 
-		if !isNonNilData(err, "data", data) {
-			return -1
-		}
-
-		dataValue, _, _, dataValueLen := inspectData(data)
-
-		if !isSlice(err, "data", dataValue) {
-			return -1
-		}
-
-		startIndex := dataValueLen - 1
-		if len(args) > 0 {
-			startIndex = args[0]
-		}
-
-		if dataValueLen == 0 {
-			return -1
-		}
-
-		result := -1
-
-		forEachSliceStoppable(dataValue, dataValueLen, func(each reflect.Value, i int) bool {
-			if startIndex > -1 {
-				iFromRight := startIndex - i
-				if iFromRight > (dataValueLen-1) || iFromRight < 0 {
-					return true
-				}
-
-				eachFromRight := dataValue.Index(iFromRight)
-				if eachFromRight.Interface() == search && result == -1 {
-					result = iFromRight
-					return true
-				}
-			} else {
-				iFromRight := dataValueLen + startIndex - i
-				if iFromRight > (dataValueLen-1) || iFromRight < 0 {
-					return true
-				}
-
-				eachFromRight := dataValue.Index(iFromRight)
-				if eachFromRight.Interface() == search && result == -1 {
-					result = iFromRight
-					return true
-				}
-			}
-
-			return true
-		})
-
-		return result
-	}(&err)
-
-	return result, err
+type IChainableLastIndexOf interface {
+	LastIndexOf(interface{}, ...int) IChainableLastIndexOfResult
 }
 
-func Map(data, callback interface{}) (interface{}, error) {
-	var err error
+type IChainableLastIndexOfResult interface {
+	ResultAndError() (int, error)
+	Result() int
+	Error() error
+	IsError() bool
+}
 
+type resultLastIndexOf struct {
+	chainable *Chainable
+	IChainableIncludesResult
+}
+
+func (g *resultLastIndexOf) ResultAndError() (int, error) {
+	return g.Result(), g.Error()
+}
+
+func (g *resultLastIndexOf) Result() int {
+	v, _ := g.chainable.data.(int)
+	return v
+}
+
+func (g *resultLastIndexOf) Error() error {
+	return g.chainable.lastErrorCaught
+}
+
+func (g *resultLastIndexOf) IsError() bool {
+	return g.Error() != nil
+}
+
+func (g *Chainable) LastIndexOf(search interface{}, args ...int) IChainableLastIndexOfResult {
+	g.lastOperation = OperationLast
+	if g.IsError() || g.shouldReturn() {
+		return &resultLastIndexOf{chainable: g}
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, _, _, dataValueLen := inspectData(data)
+		dataValue, _, _, dataValueLen := inspectData(g.data)
+
+		if !isSlice(err, "data", dataValue) {
+			return nil
+		}
+
+		if dataValueLen == 0 {
+			return nil
+		}
+
+		return dataValue.Index(dataValueLen - 1).Interface()
+	}(&err)
+	if err != nil {
+		return &resultLastIndexOf{chainable: g.markError(result, err)}
+	}
+
+	return &resultLastIndexOf{chainable: g.markResult(result)}
+}
+
+// ============================================== Map
+
+const (
+	OperationMap = "Map()"
+)
+
+type IChainableMap interface {
+	Map(interface{}) IChainable
+}
+
+func (g *Chainable) Map(callback interface{}) IChainable {
+	g.lastOperation = OperationMap
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := func(err *error) interface{} {
+		defer catch(err)
+
+		if !isNonNilData(err, "data", g.data) {
+			return nil
+		}
+
+		dataValue, _, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -2268,21 +2308,39 @@ func Map(data, callback interface{}) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Nth(data interface{}, i int) (interface{}, error) {
-	var err error
+// ============================================== Nth
+
+const (
+	OperationNth = "Nth()"
+)
+
+type IChainableNth interface {
+	Nth(int) IChainable
+}
+
+func (g *Chainable) Nth(i int) IChainable {
+	g.lastOperation = OperationNth
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, _, _, dataValueLen := inspectData(data)
+		dataValue, _, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -2302,257 +2360,352 @@ func Nth(data interface{}, i int) (interface{}, error) {
 
 		return nil
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func OrderBy(data, callback interface{}, args ...bool) (interface{}, error) {
-	var err error
+// ============================================== OrderBy
 
-	result := func(err *error) interface{} {
-		defer catch(err)
+const (
+	OperationOrderBy = "OrderBy()"
+	OperationSortBy  = "SortBy()"
+)
 
-		if !isNonNilData(err, "data", data) {
-			return nil
+type IChainableOrderBy interface {
+	OrderBy(interface{}, ...bool) IChainable
+	SortBy(interface{}, ...bool) IChainable
+}
+
+func (g *Chainable) OrderBy(callback interface{}, args ...bool) IChainable {
+	g.lastOperation = OperationOrderBy
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _orderBy(&err, g.data, callback, args...)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func (g *Chainable) SortBy(callback interface{}, args ...bool) IChainable {
+	g.lastOperation = OperationSortBy
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _orderBy(&err, g.data, callback, args...)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func _orderBy(err *error, data, callback interface{}, args ...bool) interface{} {
+	defer catch(err)
+
+	if !isNonNilData(err, "data", data) {
+		return nil
+	}
+
+	dataValue, dataValueType, _, _ := inspectData(data)
+
+	if !isSlice(err, "data", dataValue) {
+		return nil
+	}
+
+	callbackValue, callbackType := inspectFunc(err, callback)
+	if *err != nil {
+		return nil
+	}
+
+	validateFuncInputForSliceLoopWithoutIndex(err, callbackType, dataValue)
+	if *err != nil {
+		return nil
+	}
+
+	validateFuncOutputOneVarDynamic(err, callbackType)
+	if *err != nil {
+		return nil
+	}
+
+	isAscending := true
+	if len(args) > 0 {
+		isAscending = args[0]
+	}
+
+	isAsync := false
+	if len(args) > 1 {
+		isAsync = args[1]
+	}
+
+	// =====
+
+	var _doSortAsync func(reflect.Value, chan reflect.Value)
+	var _doSortSync func(reflect.Value) reflect.Value
+	var _doMerge func(reflect.Value, reflect.Value) reflect.Value
+
+	_doSortAsync = func(slice reflect.Value, c chan reflect.Value) {
+		sliceLen := slice.Len()
+
+		if sliceLen < -1 {
+			c <- _doSortSync(slice)
+			return
 		}
 
-		dataValue, dataValueType, _, _ := inspectData(data)
-
-		if !isSlice(err, "data", dataValue) {
-			return nil
+		if sliceLen < 2 {
+			c <- slice
+			return
 		}
 
-		callbackValue, callbackType := inspectFunc(err, callback)
-		if *err != nil {
-			return nil
+		mid := sliceLen / 2
+
+		c1 := make(chan reflect.Value, 1)
+		c2 := make(chan reflect.Value, 1)
+
+		go _doSortAsync(slice.Slice(0, mid), c1)
+		go _doSortAsync(slice.Slice(mid, sliceLen), c2)
+
+		go func() {
+			c <- _doMerge(<-c1, <-c2)
+		}()
+	}
+
+	_doSortSync = func(slice reflect.Value) reflect.Value {
+		sliceLen := slice.Len()
+		if sliceLen < 2 {
+			return slice
 		}
 
-		validateFuncInputForSliceLoopWithoutIndex(err, callbackType, dataValue)
-		if *err != nil {
-			return nil
-		}
+		mid := sliceLen / 2
+		leftSlice := _doSortSync(slice.Slice(0, mid))
+		rightSlice := _doSortSync(slice.Slice(mid, slice.Len()))
 
-		validateFuncOutputOneVarDynamic(err, callbackType)
-		if *err != nil {
-			return nil
-		}
+		return _doMerge(leftSlice, rightSlice)
+	}
 
-		isAscending := true
-		if len(args) > 0 {
-			isAscending = args[0]
-		}
+	_doMerge = func(leftSlice, rightSlice reflect.Value) reflect.Value {
+		bitSize := 64
+		base := 10
 
-		isAsync := false
-		if len(args) > 1 {
-			isAsync = args[1]
-		}
+		resultLen := leftSlice.Len() + rightSlice.Len()
+		result := makeSlice(dataValueType, resultLen, resultLen)
 
-		// =====
+		isSortable := true
 
-		var _doSortAsync func(reflect.Value, chan reflect.Value)
-		var _doSortSync func(reflect.Value) reflect.Value
-		var _doMerge func(reflect.Value, reflect.Value) reflect.Value
+		var i, j int
 
-		_doSortAsync = func(slice reflect.Value, c chan reflect.Value) {
-			sliceLen := slice.Len()
+		for isSortable && i < leftSlice.Len() && j < rightSlice.Len() {
+			isLeftLowerThanRight := false
 
-			if sliceLen < -1 {
-				c <- _doSortSync(slice)
-				return
-			}
+			leftElem := leftSlice.Index(i)
+			leftValue := callFuncSliceLoop(callbackValue, leftElem, i, 1)[0]
 
-			if sliceLen < 2 {
-				c <- slice
-				return
-			}
+			rightElem := rightSlice.Index(j)
+			rightValue := callFuncSliceLoop(callbackValue, rightElem, j, 1)[0]
 
-			mid := sliceLen / 2
+			switch leftValue.Kind() {
+			case reflect.String:
+				if rightValue.Kind() == reflect.String {
+					isLeftLowerThanRight = leftValue.String() <= rightValue.String()
+				} else {
+					isLeftLowerThanRight = leftValue.String() <= fmt.Sprintf("%v", rightValue.Interface())
+				}
 
-			c1 := make(chan reflect.Value, 1)
-			c2 := make(chan reflect.Value, 1)
+			case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 
-			go _doSortAsync(slice.Slice(0, mid), c1)
-			go _doSortAsync(slice.Slice(mid, sliceLen), c2)
-
-			go func() {
-				c <- _doMerge(<-c1, <-c2)
-			}()
-		}
-
-		_doSortSync = func(slice reflect.Value) reflect.Value {
-			sliceLen := slice.Len()
-			if sliceLen < 2 {
-				return slice
-			}
-
-			mid := sliceLen / 2
-			leftSlice := _doSortSync(slice.Slice(0, mid))
-			rightSlice := _doSortSync(slice.Slice(mid, slice.Len()))
-
-			return _doMerge(leftSlice, rightSlice)
-		}
-
-		_doMerge = func(leftSlice, rightSlice reflect.Value) reflect.Value {
-			bitSize := 64
-			base := 10
-
-			resultLen := leftSlice.Len() + rightSlice.Len()
-			result := makeSlice(dataValueType, resultLen, resultLen)
-
-			isSortable := true
-
-			var i, j int
-
-			for isSortable && i < leftSlice.Len() && j < rightSlice.Len() {
-				isLeftLowerThanRight := false
-
-				leftElem := leftSlice.Index(i)
-				leftValue := callFuncSliceLoop(callbackValue, leftElem, i, 1)[0]
-
-				rightElem := rightSlice.Index(j)
-				rightValue := callFuncSliceLoop(callbackValue, rightElem, j, 1)[0]
-
-				switch leftValue.Kind() {
-				case reflect.String:
-					if rightValue.Kind() == reflect.String {
-						isLeftLowerThanRight = leftValue.String() <= rightValue.String()
-					} else {
-						isLeftLowerThanRight = leftValue.String() <= fmt.Sprintf("%v", rightValue.Interface())
-					}
-
+				switch rightValue.Kind() {
 				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-
-					switch rightValue.Kind() {
-					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-						isLeftLowerThanRight = leftValue.Int() <= rightValue.Int()
-
-					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-						isLeftLowerThanRight = uint64(leftValue.Int()) <= rightValue.Uint()
-
-					case reflect.Float32, reflect.Float64:
-						isLeftLowerThanRight = float64(leftValue.Int()) <= rightValue.Float()
-
-					case reflect.String:
-						v, _ := strconv.ParseInt(fmt.Sprintf("%v", rightValue.Interface()), base, bitSize)
-						isLeftLowerThanRight = leftValue.Int() <= v
-
-					default:
-						isSortable = false
-					}
+					isLeftLowerThanRight = leftValue.Int() <= rightValue.Int()
 
 				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-
-					switch rightValue.Kind() {
-					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-						isLeftLowerThanRight = leftValue.Uint() <= uint64(rightValue.Int())
-
-					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-						isLeftLowerThanRight = leftValue.Uint() <= rightValue.Uint()
-
-					case reflect.Float32, reflect.Float64:
-						isLeftLowerThanRight = float64(leftValue.Uint()) <= rightValue.Float()
-
-					case reflect.String:
-						v, _ := strconv.ParseUint(fmt.Sprintf("%v", rightValue.Interface()), base, bitSize)
-						isLeftLowerThanRight = leftValue.Uint() <= v
-
-					default:
-						isSortable = false
-					}
+					isLeftLowerThanRight = uint64(leftValue.Int()) <= rightValue.Uint()
 
 				case reflect.Float32, reflect.Float64:
+					isLeftLowerThanRight = float64(leftValue.Int()) <= rightValue.Float()
 
-					switch rightValue.Kind() {
-					case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-						isLeftLowerThanRight = leftValue.Float() <= float64(rightValue.Int())
-
-					case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-						isLeftLowerThanRight = leftValue.Float() <= float64(rightValue.Uint())
-
-					case reflect.Float32, reflect.Float64:
-						isLeftLowerThanRight = leftValue.Float() <= rightValue.Float()
-
-					case reflect.String:
-						s := strings.TrimSpace(fmt.Sprintf("%v", rightValue.Interface()))
-						v := float64(0)
-						if s != "" {
-							var errConvertion error
-							v, errConvertion = strconv.ParseFloat(s, bitSize)
-							if errConvertion != nil {
-								v = 0
-							}
-						}
-						isLeftLowerThanRight = leftValue.Float() <= v
-
-					default:
-						isSortable = false
-					}
+				case reflect.String:
+					v, _ := strconv.ParseInt(fmt.Sprintf("%v", rightValue.Interface()), base, bitSize)
+					isLeftLowerThanRight = leftValue.Int() <= v
 
 				default:
 					isSortable = false
 				}
 
-				if isLeftLowerThanRight {
-					if isAscending {
-						result.Index(i + j).Set(leftElem)
-						i++
-					} else {
-						result.Index(i + j).Set(rightElem)
-						j++
+			case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+
+				switch rightValue.Kind() {
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+					isLeftLowerThanRight = leftValue.Uint() <= uint64(rightValue.Int())
+
+				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+					isLeftLowerThanRight = leftValue.Uint() <= rightValue.Uint()
+
+				case reflect.Float32, reflect.Float64:
+					isLeftLowerThanRight = float64(leftValue.Uint()) <= rightValue.Float()
+
+				case reflect.String:
+					v, _ := strconv.ParseUint(fmt.Sprintf("%v", rightValue.Interface()), base, bitSize)
+					isLeftLowerThanRight = leftValue.Uint() <= v
+
+				default:
+					isSortable = false
+				}
+
+			case reflect.Float32, reflect.Float64:
+
+				switch rightValue.Kind() {
+				case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+					isLeftLowerThanRight = leftValue.Float() <= float64(rightValue.Int())
+
+				case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+					isLeftLowerThanRight = leftValue.Float() <= float64(rightValue.Uint())
+
+				case reflect.Float32, reflect.Float64:
+					isLeftLowerThanRight = leftValue.Float() <= rightValue.Float()
+
+				case reflect.String:
+					s := strings.TrimSpace(fmt.Sprintf("%v", rightValue.Interface()))
+					v := float64(0)
+					if s != "" {
+						var errConvertion error
+						v, errConvertion = strconv.ParseFloat(s, bitSize)
+						if errConvertion != nil {
+							v = 0
+						}
 					}
+					isLeftLowerThanRight = leftValue.Float() <= v
+
+				default:
+					isSortable = false
+				}
+
+			default:
+				isSortable = false
+			}
+
+			if isLeftLowerThanRight {
+				if isAscending {
+					result.Index(i + j).Set(leftElem)
+					i++
 				} else {
-					if isAscending {
-						result.Index(i + j).Set(rightElem)
-						j++
-					} else {
-						result.Index(i + j).Set(leftElem)
-						i++
-					}
+					result.Index(i + j).Set(rightElem)
+					j++
+				}
+			} else {
+				if isAscending {
+					result.Index(i + j).Set(rightElem)
+					j++
+				} else {
+					result.Index(i + j).Set(leftElem)
+					i++
 				}
 			}
-
-			if !isSortable {
-				return dataValue
-			}
-
-			for i < leftSlice.Len() {
-				result.Index(i + j).Set(leftSlice.Index(i))
-				i++
-			}
-
-			for j < rightSlice.Len() {
-				result.Index(i + j).Set(rightSlice.Index(j))
-				j++
-			}
-
-			return result
 		}
 
-		if isAsync {
-			c := make(chan reflect.Value)
-			_doSortAsync(dataValue, c)
-
-			return (<-c).Interface()
+		if !isSortable {
+			return dataValue
 		}
 
-		return _doSortSync(dataValue).Interface()
-	}(&err)
+		for i < leftSlice.Len() {
+			result.Index(i + j).Set(leftSlice.Index(i))
+			i++
+		}
 
-	return result, err
+		for j < rightSlice.Len() {
+			result.Index(i + j).Set(rightSlice.Index(j))
+			j++
+		}
+
+		return result
+	}
+
+	if isAsync {
+		c := make(chan reflect.Value)
+		_doSortAsync(dataValue, c)
+
+		return (<-c).Interface()
+	}
+
+	return _doSortSync(dataValue).Interface()
 }
 
-func Partition(data, callback interface{}) (interface{}, interface{}, error) {
-	var truhty, falsey interface{}
-	var err error
+// ============================================== Partition
 
-	truhty, falsey = func(err *error) (interface{}, interface{}) {
+const (
+	OperationPartition = "Partition()"
+)
+
+type IChainablePartition interface {
+	Partition(interface{}) IChainablePartitionResult
+}
+
+type IChainablePartitionResult interface {
+	ResultAndError() (interface{}, interface{}, error)
+	ResultTruthy() interface{}
+	ResultFalsey() interface{}
+	Error() error
+	IsError() bool
+}
+
+type resultPartition struct {
+	chainable *Chainable
+	IChainableIncludesResult
+}
+
+func (g *resultPartition) ResultAndError() (interface{}, interface{}, error) {
+	return g.ResultTruthy(), g.ResultFalsey(), g.Error()
+}
+
+func (g *resultPartition) ResultTruthy() interface{} {
+	v, _ := g.chainable.data.([]interface{})
+	if len(v) > 0 {
+		return v[0]
+	} else {
+		return nil
+	}
+}
+
+func (g *resultPartition) ResultFalsey() interface{} {
+	v, _ := g.chainable.data.([]interface{})
+	if len(v) > 1 {
+		return v[1]
+	} else {
+		return nil
+	}
+}
+
+func (g *resultPartition) Error() error {
+	return g.chainable.lastErrorCaught
+}
+
+func (g *resultPartition) IsError() bool {
+	return g.Error() != nil
+}
+
+func (g *Chainable) Partition(callback interface{}) IChainablePartitionResult {
+	g.lastOperation = OperationPartition
+	if g.IsError() || g.shouldReturn() {
+		return &resultPartition{chainable: g}
+	}
+
+	err := (error)(nil)
+	truhty, falsey := func(err *error) (interface{}, interface{}) {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil, nil
 		}
 
-		dataValue, dataValueType, _, dataValueLen := inspectData(data)
+		dataValue, dataValueType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil, nil
@@ -2592,6 +2745,18 @@ func Partition(data, callback interface{}) (interface{}, interface{}, error) {
 
 		return resultTruhty.Interface(), resultFalsey.Interface()
 	}(&err)
+	if err != nil {
+		return &resultPartition{chainable: g.markError([]interface{}{truhty, falsey}, err)}
+	}
+
+	return &resultPartition{chainable: g.markResult([]interface{}{truhty, falsey})}
+}
+
+// ================================================================ RAW
+
+func Partition(data, callback interface{}) (interface{}, interface{}, error) {
+	var truhty, falsey interface{}
+	var err error
 
 	return truhty, falsey, err
 }
@@ -3152,10 +3317,6 @@ func Size(data interface{}) (int, error) {
 	}(&err)
 
 	return result, err
-}
-
-func SortBy(data, callback interface{}, args ...bool) (interface{}, error) {
-	return OrderBy(data, callback, args...)
 }
 
 func Tail(data interface{}) (interface{}, error) {
