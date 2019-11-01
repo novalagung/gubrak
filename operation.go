@@ -23,6 +23,11 @@ type IChainable interface {
 	IChainableFill
 	IChainableFilter
 	IChainableFind
+	IChainableFirst
+	IChainableFromPairs
+	IChainableGroupBy
+	IChainableIncludes
+	IChainableIndexOf
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}

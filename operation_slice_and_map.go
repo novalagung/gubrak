@@ -1029,7 +1029,7 @@ func _filterCollection(err *error, dataValue reflect.Value, dataValueType reflec
 	return result.Interface()
 }
 
-// ============================================== Filter
+// ============================================== Find
 
 const (
 	OperationFind          = "Find()"
@@ -1351,45 +1351,95 @@ func (g *Chainable) FindLastIndex(predicate interface{}, args ...int) IChainable
 	return g.markResult(result)
 }
 
-// ================================================================ RAW
+// ============================================== First
 
-func First(data interface{}) (interface{}, error) {
-	var err error
+const (
+	OperationFirst = "First()"
+	OperationHead  = "Head()"
+)
 
-	result := func(err *error) interface{} {
-		defer catch(err)
-
-		if !isNonNilData(err, "data", data) {
-			return nil
-		}
-
-		dataValue, _, _, dataValueLen := inspectData(data)
-
-		if !isSlice(err, "data", dataValue) {
-			return nil
-		}
-
-		if dataValueLen == 0 {
-			return nil
-		}
-
-		return dataValue.Index(0).Interface()
-	}(&err)
-
-	return result, err
+type IChainableFirst interface {
+	First() IChainable
+	Head() IChainable
 }
 
-func FromPairs(data interface{}) (interface{}, error) {
-	var err error
+func (g *Chainable) First() IChainable {
+	g.lastOperation = OperationFirst
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
 
+	err := (error)(nil)
+	result := _first(&err, g.data)
+
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func (g *Chainable) Head() IChainable {
+	g.lastOperation = OperationHead
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _first(&err, g.data)
+
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func _first(err *error, data interface{}) interface{} {
+	defer catch(err)
+
+	if !isNonNilData(err, "data", data) {
+		return nil
+	}
+
+	dataValue, _, _, dataValueLen := inspectData(data)
+
+	if !isSlice(err, "data", dataValue) {
+		return nil
+	}
+
+	if dataValueLen == 0 {
+		return nil
+	}
+
+	return dataValue.Index(0).Interface()
+}
+
+// ============================================== FromPairs
+
+const (
+	OperationFromPairs = "FromPairs()"
+)
+
+type IChainableFromPairs interface {
+	FromPairs() IChainable
+}
+
+func (g *Chainable) FromPairs() IChainable {
+	g.lastOperation = OperationFromPairs
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataValueType, _, dataValueLen := inspectData(data)
+		dataValue, dataValueType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -1435,20 +1485,38 @@ func FromPairs(data interface{}) (interface{}, error) {
 		return result
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
 }
 
-func GroupBy(data, callback interface{}) (interface{}, error) {
-	var err error
+// ============================================== GroupBy
 
+const (
+	OperationGroupBy = "GroupBy()"
+)
+
+type IChainableGroupBy interface {
+	GroupBy(interface{}) IChainable
+}
+
+func (g *Chainable) GroupBy(callback interface{}) IChainable {
+	g.lastOperation = OperationGroupBy
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -1494,16 +1562,59 @@ func GroupBy(data, callback interface{}) (interface{}, error) {
 		return result.Interface()
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
 }
 
-func Head(data interface{}) (interface{}, error) {
-	return First(data)
+// ============================================== Includes
+
+const (
+	OperationIncludes = "Includes()"
+)
+
+type IChainableIncludes interface {
+	Includes(interface{}, ...int) IChainableIncludesResult
 }
 
-func Includes(data, search interface{}, args ...int) (bool, error) {
-	var err error
+type IChainableIncludesResult interface {
+	ResultAndError() (bool, error)
+	Result() bool
+	Error() error
+	IsError() bool
+}
 
+type resultIncludes struct {
+	chainable *Chainable
+	IChainableIncludesResult
+}
+
+func (g *resultIncludes) ResultAndError() (bool, error) {
+	return g.Result(), g.Error()
+}
+
+func (g *resultIncludes) Result() bool {
+	v, _ := g.chainable.data.(bool)
+	return v
+}
+
+func (g *resultIncludes) Error() error {
+	return g.chainable.lastErrorCaught
+}
+
+func (g *resultIncludes) IsError() bool {
+	return g.Error() != nil
+}
+
+func (g *Chainable) Includes(search interface{}, args ...int) IChainableIncludesResult {
+	g.lastOperation = OperationIncludes
+	if g.IsError() || g.shouldReturn() {
+		return &resultIncludes{chainable: g}
+	}
+
+	err := (error)(nil)
 	result := func(err *error) bool {
 		defer catch(err)
 
@@ -1546,8 +1657,11 @@ func Includes(data, search interface{}, args ...int) (bool, error) {
 
 		return _includesSlice(err, dataValue, dataValueLen, search, startIndex)
 	}(&err)
+	if err != nil {
+		return &resultIncludes{chainable: g.markError(result, err)}
+	}
 
-	return result, err
+	return &resultIncludes{chainable: g.markResult(result)}
 }
 
 func _includesSlice(err *error, dataValue reflect.Value, dataValueLen int, search interface{}, startIndex int) bool {
@@ -1598,9 +1712,52 @@ func _includesCollection(err *error, dataValue reflect.Value, search interface{}
 	return isFound
 }
 
-func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
-	var err error
+// ============================================== IndexOf
 
+const (
+	OperationIndexOf = "IndexOf()"
+)
+
+type IChainableIndexOf interface {
+	IndexOf(interface{}, ...int) IChainableIndexOfResult
+}
+
+type IChainableIndexOfResult interface {
+	ResultAndError() (int, error)
+	Result() int
+	Error() error
+	IsError() bool
+}
+
+type resultIndexOf struct {
+	chainable *Chainable
+	IChainableIncludesResult
+}
+
+func (g *resultIndexOf) ResultAndError() (int, error) {
+	return g.Result(), g.Error()
+}
+
+func (g *resultIndexOf) Result() int {
+	v, _ := g.chainable.data.(int)
+	return v
+}
+
+func (g *resultIndexOf) Error() error {
+	return g.chainable.lastErrorCaught
+}
+
+func (g *resultIndexOf) IsError() bool {
+	return g.Error() != nil
+}
+
+func (g *Chainable) IndexOf(search interface{}, args ...int) IChainableIndexOfResult {
+	g.lastOperation = OperationIndexOf
+	if g.IsError() || g.shouldReturn() {
+		return &resultIndexOf{chainable: g}
+	}
+
+	err := (error)(nil)
 	result := func(err *error) int {
 		defer catch(err)
 
@@ -1659,8 +1816,14 @@ func IndexOf(data interface{}, search interface{}, args ...int) (int, error) {
 		return result
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return &resultIndexOf{chainable: g.markError(result, err)}
+	}
+
+	return &resultIndexOf{chainable: g.markResult(result)}
 }
+
+// ================================================================ RAW
 
 func Initial(data interface{}) (interface{}, error) {
 	var err error
