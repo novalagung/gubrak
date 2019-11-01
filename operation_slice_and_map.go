@@ -1600,7 +1600,7 @@ func (g *Chainable) Includes(search interface{}, args ...int) IChainableIncludes
 	result := func(err *error) bool {
 		defer catch(err)
 
-		if dataValue, dataOK := data.(string); dataOK {
+		if dataValue, dataOK := g.data.(string); dataOK {
 			if searchValue, searchOK := search.(string); searchOK {
 				return strings.Contains(dataValue, searchValue)
 			}
@@ -1608,11 +1608,11 @@ func (g *Chainable) Includes(search interface{}, args ...int) IChainableIncludes
 			return false
 		}
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return false
 		}
 
-		dataValue, _, dataValueKind, dataValueLen := inspectData(data)
+		dataValue, _, dataValueKind, dataValueLen := inspectData(g.data)
 
 		startIndex := 0
 		if len(args) > 0 {
@@ -1743,11 +1743,11 @@ func (g *Chainable) IndexOf(search interface{}, args ...int) IChainableIndexOfRe
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return -1
 		}
 
-		dataValue, _, _, dataValueLen := inspectData(data)
+		dataValue, _, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return -1
@@ -1824,11 +1824,11 @@ func (g *Chainable) Initial(callback interface{}) IChainable {
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -1892,8 +1892,6 @@ func (g *Chainable) IntersectionMany(dataIntersects ...interface{}) IChainable {
 
 	return g.markResult(result)
 }
-
-// ================================================================ RAW
 
 func _intersection(err *error, data interface{}, dataIntersects ...interface{}) interface{} {
 	defer catch(err)
@@ -1972,23 +1970,66 @@ func _intersection(err *error, data interface{}, dataIntersects ...interface{}) 
 	return result.Interface()
 }
 
-func Join(data interface{}, separator string) (string, error) {
-	var err error
+// ============================================== Join
 
+const (
+	OperationJoin = "Join()"
+)
+
+type IChainableJoin interface {
+	Join(string) IChainableJoinResult
+}
+
+type IChainableJoinResult interface {
+	ResultAndError() (string, error)
+	Result() string
+	Error() error
+	IsError() bool
+}
+
+type resultJoin struct {
+	chainable *Chainable
+	IChainableIncludesResult
+}
+
+func (g *resultJoin) ResultAndError() (string, error) {
+	return g.Result(), g.Error()
+}
+
+func (g *resultJoin) Result() string {
+	v, _ := g.chainable.data.(string)
+	return v
+}
+
+func (g *resultJoin) Error() error {
+	return g.chainable.lastErrorCaught
+}
+
+func (g *resultJoin) IsError() bool {
+	return g.Error() != nil
+}
+
+func (g *Chainable) Join(separator string) IChainableJoinResult {
+	g.lastOperation = OperationJoin
+	if g.IsError() || g.shouldReturn() {
+		return &resultJoin{chainable: g}
+	}
+
+	err := (error)(nil)
 	result := func(err *error) string {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return ""
 		}
 
-		dataValue, _, _, dataValueLen := inspectData(data)
+		dataValue, _, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return ""
 		}
 
-		if val, ok := data.([]string); ok {
+		if val, ok := g.data.([]string); ok {
 			return strings.Join(val, separator)
 		}
 
@@ -2021,21 +2062,38 @@ func Join(data interface{}, separator string) (string, error) {
 
 		return strings.Join(dataInStringSlice, separator)
 	}(&err)
+	if err != nil {
+		return &resultJoin{chainable: g.markError(result, err)}
+	}
 
-	return result, err
+	return &resultJoin{chainable: g.markResult(result)}
 }
 
-func KeyBy(data, callback interface{}) (interface{}, error) {
-	var err error
+// ============================================== KeyBy
 
+const (
+	OperationKeyBy = "KeyBy()"
+)
+
+type IChainableKeyBy interface {
+	KeyBy(interface{}) IChainable
+}
+
+func (g *Chainable) KeyBy(callback interface{}) IChainable {
+	g.lastOperation = OperationKeyBy
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataValueType, _, dataValueLen := inspectData(data)
+		dataValue, dataValueType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -2070,9 +2128,14 @@ func KeyBy(data, callback interface{}) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
+
+// ================================================================ RAW
 
 func Last(data interface{}) (interface{}, error) {
 	var err error

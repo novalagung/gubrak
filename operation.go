@@ -30,6 +30,8 @@ type IChainable interface {
 	IChainableIndexOf
 	IChainableInitial
 	IChainableIntersection
+	IChainableJoin
+	IChainableKeyBy
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}
