@@ -1,10 +1,6 @@
 package gubrak
 
 const (
-	OperationDrop          = "Drop()"
-	OperationDropRight     = "DropRight()"
-	OperationEach          = "Each()"
-	OperationEachRight     = "EachRight()"
 	OperationFill          = "Fill()"
 	OperationFilter        = "Filter()"
 	OperationFind          = "Find()"
@@ -12,8 +8,6 @@ const (
 	OperationFindLast      = "FindLast()"
 	OperationFindLastIndex = "FindLastIndex()"
 	OperationFirst         = "First()"
-	OperationForEach       = "ForEach()"
-	OperationForEachRight  = "ForEachRight()"
 	OperationFromPairs     = "FromPairs()"
 	OperationGroupBy       = "GroupBy()"
 	OperationHead          = "Head()"

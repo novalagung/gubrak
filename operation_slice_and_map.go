@@ -542,3 +542,290 @@ func _difference(err *error, data interface{}, dataToCompare ...interface{}) int
 
 	return result.Interface()
 }
+
+// ============================================== Drop
+
+const (
+	OperationDrop      = "Drop()"
+	OperationDropRight = "DropRight()"
+)
+
+type IChainableDrop interface {
+	Drop(int) IChainable
+	DropRight(int) IChainable
+}
+
+func (g *Chainable) Drop(size int) IChainable {
+	g.lastOperation = OperationDrop
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := func(err *error) interface{} {
+		defer catch(err)
+
+		if !isNonNilData(err, "data", g.data) {
+			return nil
+		}
+
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
+
+		if !isSlice(err, "data", dataValue) {
+			return nil
+		}
+
+		if !isZeroOrPositiveNumber(err, "size", size) {
+			return g.data
+		}
+
+		if size == 0 {
+			return g.data
+		}
+
+		result := makeSlice(dataType)
+
+		if dataValueLen == 0 {
+			return result.Interface()
+		}
+
+		forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
+			if i < size {
+				return
+			}
+
+			result = reflect.Append(result, each)
+		})
+
+		return result.Interface()
+	}(&err)
+
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func (g *Chainable) DropRight(size int) IChainable {
+	g.lastOperation = OperationDropRight
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := func(err *error) interface{} {
+		defer catch(err)
+
+		if !isNonNilData(err, "data", g.data) {
+			return nil
+		}
+
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
+
+		if !isSlice(err, "data", dataValue) {
+			return nil
+		}
+
+		if !isZeroOrPositiveNumber(err, "size", size) {
+			return g.data
+		}
+
+		if size == 0 {
+			return g.data
+		}
+
+		result := makeSlice(dataType)
+
+		if dataValueLen == 0 {
+			return result.Interface()
+		}
+
+		forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
+			if i < (dataValueLen - size) {
+				result = reflect.Append(result, each)
+			}
+		})
+
+		return result.Interface()
+	}(&err)
+
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+// ============================================== Each
+
+const (
+	OperationEach         = "Each()"
+	OperationEachRight    = "EachRight()"
+	OperationForEach      = "ForEach()"
+	OperationForEachRight = "ForEachRight()"
+)
+
+type IChainableEach interface {
+	Each(interface{}) IChainableEachResult
+	EachRight(interface{}) IChainableEachResult
+	ForEach(interface{}) IChainableEachResult
+	ForEachRight(interface{}) IChainableEachResult
+}
+
+type IChainableEachResult interface {
+	Error() error
+	IsError() bool
+}
+
+type resultEach struct {
+	chainable *Chainable
+	IChainableCountResult
+}
+
+func (g *resultEach) Error() error {
+	return g.chainable.lastErrorCaught
+}
+
+func (g *resultEach) IsError() bool {
+	return g.Error() != nil
+}
+
+func (g *Chainable) Each(callback interface{}) IChainableEachResult {
+	g.lastOperation = OperationEach
+	if g.IsError() || g.shouldReturn() {
+		return &resultEach{chainable: g}
+	}
+
+	err := (error)(nil)
+	_each(&err, g.data, callback, true)
+
+	if err != nil {
+		return &resultEach{chainable: g.markError(nil, err)}
+	}
+
+	return &resultEach{chainable: g.markResult(nil)}
+}
+
+func (g *Chainable) EachRight(callback interface{}) IChainableEachResult {
+	g.lastOperation = OperationEachRight
+	if g.IsError() || g.shouldReturn() {
+		return &resultEach{chainable: g}
+	}
+
+	err := (error)(nil)
+	_each(&err, g.data, callback, true)
+
+	if err != nil {
+		return &resultEach{chainable: g.markError(nil, err)}
+	}
+
+	return &resultEach{chainable: g.markResult(nil)}
+}
+
+func (g *Chainable) ForEach(callback interface{}) IChainableEachResult {
+	return g.Each(callback)
+}
+
+func (g *Chainable) ForEachRight(callback interface{}) IChainableEachResult {
+	return g.EachRight(callback)
+}
+
+func _each(err *error, data, callback interface{}, isForward bool) {
+	defer catch(err)
+
+	if !isNonNilData(err, "data", data) {
+		return
+	}
+
+	dataValue, dataValueType, dataValueKind, dataValueLen := inspectData(data)
+
+	if !isSlice(err, "data", dataValue) {
+		if dataValueKind == reflect.Map {
+			*err = nil
+			_eachCollection(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback, isForward)
+		}
+
+		return
+	}
+
+	_eachSlice(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback, isForward)
+}
+
+func _eachSlice(err *error, dataValue reflect.Value, dataValueType reflect.Type, dataValueKind reflect.Kind, dataValueLen int, callback interface{}, isLoopIncremental bool) {
+	callbackValue, callbackType := inspectFunc(err, callback)
+	if *err != nil {
+		return
+	}
+
+	callbackTypeNumIn := validateFuncInputForSliceLoop(err, callbackType, dataValue)
+	if *err != nil {
+		return
+	}
+
+	validateFuncOutputOneVarBool(err, callbackType, false)
+	if *err != nil {
+		return
+	}
+
+	if dataValueLen == 0 {
+		return
+	}
+
+	forEachSliceStoppable(dataValue, dataValueLen, func(each reflect.Value, i int) bool {
+		var res []reflect.Value
+		if isLoopIncremental {
+			res = callFuncSliceLoop(callbackValue, each, i, callbackTypeNumIn)
+		} else {
+			indexFromRight := dataValueLen - i - 1
+			eachFromRight := dataValue.Index(indexFromRight)
+			res = callFuncSliceLoop(callbackValue, eachFromRight, indexFromRight, callbackTypeNumIn)
+		}
+
+		if len(res) > 0 {
+			return res[0].Bool()
+		}
+
+		return true
+	})
+}
+
+func _eachCollection(err *error, dataValue reflect.Value, dataValueType reflect.Type, dataValueKind reflect.Kind, dataValueLen int, callback interface{}, isLoopIncremental bool) {
+	callbackValue, callbackType := inspectFunc(err, callback)
+	if *err != nil {
+		return
+	}
+
+	callbackTypeNumIn := validateFuncInputForCollectionLoop(err, callbackType, dataValue)
+	if *err != nil {
+		return
+	}
+
+	validateFuncOutputNone(err, callbackType)
+	if *err != nil {
+		return
+	}
+
+	if dataValueLen == 0 {
+		return
+	}
+
+	dataValueMapKeys := dataValue.MapKeys()
+	forEachCollectionStoppable(dataValue, dataValueMapKeys, func(value reflect.Value, key reflect.Value, i int) bool {
+		var res []reflect.Value
+		if isLoopIncremental {
+			res = callFuncCollectionLoop(callbackValue, value, key, callbackTypeNumIn)
+		} else {
+			indexFromRight := dataValueLen - i - 1
+			keyFromRight := dataValueMapKeys[indexFromRight]
+			valueFromRight := dataValue.MapIndex(keyFromRight)
+			res = callFuncCollectionLoop(callbackValue, valueFromRight, keyFromRight, callbackTypeNumIn)
+		}
+
+		if len(res) > 0 {
+			return res[0].Bool()
+		}
+
+		return true
+	})
+}

@@ -18,6 +18,8 @@ type IChainable interface {
 	IChainableConcat
 	IChainableCount
 	IChainableDifference
+	IChainableDrop
+	IChainableEach
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}
