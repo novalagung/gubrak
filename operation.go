@@ -28,6 +28,8 @@ type IChainable interface {
 	IChainableGroupBy
 	IChainableIncludes
 	IChainableIndexOf
+	IChainableInitial
+	IChainableIntersection
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}

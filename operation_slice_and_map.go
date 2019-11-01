@@ -66,7 +66,6 @@ func (g *Chainable) Chunk(size int) IChainable {
 
 		return result.Interface()
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -165,7 +164,6 @@ func (g *Chainable) Compact() IChainable {
 
 		return result.Interface()
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -191,7 +189,6 @@ func (g *Chainable) ConcatMany(slicesToConcat ...interface{}) IChainable {
 
 	err := (error)(nil)
 	result := _concat(&err, g.data, slicesToConcat...)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -207,7 +204,6 @@ func (g *Chainable) Concat(sliceToConcat interface{}) IChainable {
 
 	err := (error)(nil)
 	result := _concat(&err, g.data, sliceToConcat)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -311,7 +307,6 @@ func (g *Chainable) CountBy(predicate interface{}) IChainableCountResult {
 
 	err := (error)(nil)
 	result := _count(&err, g.data, predicate)
-
 	if err != nil {
 		return &resultCount{chainable: g.markError(result, err)}
 	}
@@ -327,7 +322,6 @@ func (g *Chainable) Count() IChainableCountResult {
 
 	err := (error)(nil)
 	result := _count(&err, g.data, nil)
-
 	if err != nil {
 		return &resultCount{chainable: g.markError(result, err)}
 	}
@@ -461,9 +455,12 @@ func (g *Chainable) DifferenceMany(datasToCompare ...interface{}) IChainable {
 		return g
 	}
 
+	if len(datasToCompare) == 0 {
+		return g.markError(nil, errors.New("data to compare cannot be empty"))
+	}
+
 	err := (error)(nil)
 	result := _difference(&err, g.data, datasToCompare...)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -479,7 +476,6 @@ func (g *Chainable) Difference(dataToCompare interface{}) IChainable {
 
 	err := (error)(nil)
 	result := _difference(&err, g.data, dataToCompare)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -604,7 +600,6 @@ func (g *Chainable) Drop(size int) IChainable {
 
 		return result.Interface()
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -654,7 +649,6 @@ func (g *Chainable) DropRight(size int) IChainable {
 
 		return result.Interface()
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -704,7 +698,6 @@ func (g *Chainable) Each(callback interface{}) IChainableEachResult {
 
 	err := (error)(nil)
 	_each(&err, g.data, callback, true)
-
 	if err != nil {
 		return &resultEach{chainable: g.markError(nil, err)}
 	}
@@ -720,7 +713,6 @@ func (g *Chainable) EachRight(callback interface{}) IChainableEachResult {
 
 	err := (error)(nil)
 	_each(&err, g.data, callback, true)
-
 	if err != nil {
 		return &resultEach{chainable: g.markError(nil, err)}
 	}
@@ -911,7 +903,6 @@ func (g *Chainable) Fill(value interface{}, args ...int) IChainable {
 
 		return result.Interface()
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -956,7 +947,6 @@ func (g *Chainable) Filter(callback interface{}) IChainable {
 
 		return _filterSlice(err, dataValue, dataType, dataValueKind, dataValueLen, callback)
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1118,7 +1108,6 @@ func (g *Chainable) Find(predicate interface{}, args ...int) IChainable {
 
 		return nil
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1188,7 +1177,6 @@ func (g *Chainable) FindIndex(predicate interface{}, args ...int) IChainable {
 
 		return result
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1270,7 +1258,6 @@ func (g *Chainable) FindLast(predicate interface{}, args ...int) IChainable {
 
 		return nil
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1343,7 +1330,6 @@ func (g *Chainable) FindLastIndex(predicate interface{}, args ...int) IChainable
 
 		return result
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1371,7 +1357,6 @@ func (g *Chainable) First() IChainable {
 
 	err := (error)(nil)
 	result := _first(&err, g.data)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1387,7 +1372,6 @@ func (g *Chainable) Head() IChainable {
 
 	err := (error)(nil)
 	result := _first(&err, g.data)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1484,7 +1468,6 @@ func (g *Chainable) FromPairs() IChainable {
 
 		return result
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1561,7 +1544,6 @@ func (g *Chainable) GroupBy(callback interface{}) IChainable {
 
 		return result.Interface()
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -1815,7 +1797,6 @@ func (g *Chainable) IndexOf(search interface{}, args ...int) IChainableIndexOfRe
 
 		return result
 	}(&err)
-
 	if err != nil {
 		return &resultIndexOf{chainable: g.markError(result, err)}
 	}
@@ -1823,11 +1804,23 @@ func (g *Chainable) IndexOf(search interface{}, args ...int) IChainableIndexOfRe
 	return &resultIndexOf{chainable: g.markResult(result)}
 }
 
-// ================================================================ RAW
+// ============================================== Initial
 
-func Initial(data interface{}) (interface{}, error) {
-	var err error
+const (
+	OperationInitial = "Initial()"
+)
 
+type IChainableInitial interface {
+	Initial(interface{}) IChainable
+}
+
+func (g *Chainable) Initial(callback interface{}) IChainable {
+	g.lastOperation = OperationInitial
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
@@ -1847,91 +1840,136 @@ func Initial(data interface{}) (interface{}, error) {
 
 		return dataValue.Slice(0, dataValueLen-1).Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Intersection(data interface{}, dataIntersects ...interface{}) (interface{}, error) {
-	var err error
+// ============================================== Intersection
 
-	result := func(err *error) interface{} {
-		defer catch(err)
+const (
+	OperationIntersection     = "Intersection()"
+	OperationIntersectionMany = "IntersectionMany()"
+)
 
-		if !isNonNilData(err, "data", data) {
+type IChainableIntersection interface {
+	Intersection(interface{}) IChainable
+	IntersectionMany(data ...interface{}) IChainable
+}
+
+func (g *Chainable) Intersection(dataIntersect interface{}) IChainable {
+	g.lastOperation = OperationIntersection
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _intersection(&err, g.data, dataIntersect)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func (g *Chainable) IntersectionMany(dataIntersects ...interface{}) IChainable {
+	g.lastOperation = OperationIntersection
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	if len(dataIntersects) == 0 {
+		return g.markError(nil, errors.New("data intersects cannot be nil"))
+	}
+
+	err := (error)(nil)
+	result := _intersection(&err, g.data, dataIntersects...)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+// ================================================================ RAW
+
+func _intersection(err *error, data interface{}, dataIntersects ...interface{}) interface{} {
+	defer catch(err)
+
+	if !isNonNilData(err, "data", data) {
+		return nil
+	}
+
+	dataValue, dataType, _, dataValueLen := inspectData(data)
+
+	if !isSlice(err, "data", dataValue) {
+		return nil
+	}
+
+	type CompareMap struct {
+		Value reflect.Value
+		Len   int
+	}
+	compareValueInReflect := make([]CompareMap, 0)
+
+	for _, compare := range dataIntersects {
+		eachValue, _, _, eachValueLen := inspectData(compare)
+
+		if isSlice(err, "data", eachValue) {
+			compareValueInReflect = append(compareValueInReflect, CompareMap{
+				Value: eachValue,
+				Len:   eachValueLen,
+			})
+		} else {
+			*err = errors.New("All data should be slice")
 			return nil
 		}
+	}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+	result := makeSlice(dataType)
 
-		if !isSlice(err, "data", dataValue) {
-			return nil
-		}
-
-		type CompareMap struct {
-			Value reflect.Value
-			Len   int
-		}
-		compareValueInReflect := make([]CompareMap, 0)
-
-		for _, compare := range dataIntersects {
-			eachValue, _, _, eachValueLen := inspectData(compare)
-
-			if isSlice(err, "data", eachValue) {
-				compareValueInReflect = append(compareValueInReflect, CompareMap{
-					Value: eachValue,
-					Len:   eachValueLen,
-				})
-			} else {
-				*err = errors.New("All data should be slice")
-				return nil
-			}
-		}
-
-		result := makeSlice(dataType)
-
-		if dataValueLen == 0 {
-			return result.Interface()
-		}
-
-		resultMap := make(map[interface{}]bool)
-
-		forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
-			eachActualValue := each.Interface()
-
-			isValueExists := true
-			isJustStarted := true
-
-			for _, eachCompare := range compareValueInReflect {
-				isInnerExists := false
-
-				forEachSliceStoppable(eachCompare.Value, eachCompare.Len, func(inner reflect.Value, j int) bool {
-					if eachActualValue == inner.Interface() {
-						isInnerExists = true
-						return false
-					}
-
-					return true
-				})
-
-				if isJustStarted {
-					isValueExists = isInnerExists
-				} else {
-					isValueExists = isValueExists && isInnerExists
-				}
-			}
-
-			if isValueExists {
-				if _, ok := resultMap[eachActualValue]; !ok {
-					resultMap[eachActualValue] = true
-					result = reflect.Append(result, each)
-				}
-			}
-		})
-
+	if dataValueLen == 0 {
 		return result.Interface()
-	}(&err)
+	}
 
-	return result, err
+	resultMap := make(map[interface{}]bool)
+
+	forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
+		eachActualValue := each.Interface()
+
+		isValueExists := true
+		isJustStarted := true
+
+		for _, eachCompare := range compareValueInReflect {
+			isInnerExists := false
+
+			forEachSliceStoppable(eachCompare.Value, eachCompare.Len, func(inner reflect.Value, j int) bool {
+				if eachActualValue == inner.Interface() {
+					isInnerExists = true
+					return false
+				}
+
+				return true
+			})
+
+			if isJustStarted {
+				isValueExists = isInnerExists
+			} else {
+				isValueExists = isValueExists && isInnerExists
+			}
+		}
+
+		if isValueExists {
+			if _, ok := resultMap[eachActualValue]; !ok {
+				resultMap[eachActualValue] = true
+				result = reflect.Append(result, each)
+			}
+		}
+	})
+
+	return result.Interface()
 }
 
 func Join(data interface{}, separator string) (string, error) {
