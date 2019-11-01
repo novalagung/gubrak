@@ -20,6 +20,9 @@ type IChainable interface {
 	IChainableDifference
 	IChainableDrop
 	IChainableEach
+	IChainableFill
+	IChainableFilter
+	IChainableFind
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}
