@@ -7,7 +7,7 @@ type IChainableEachResult interface {
 
 type resultEach struct {
 	chainable *Chainable
-	IChainableCountResult
+	IChainableEachResult
 }
 
 func (g *resultEach) Error() error {

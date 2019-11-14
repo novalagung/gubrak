@@ -9,7 +9,7 @@ type IChainableJoinResult interface {
 
 type resultJoin struct {
 	chainable *Chainable
-	IChainableIncludesResult
+	IChainableJoinResult
 }
 
 func (g *resultJoin) ResultAndError() (string, error) {
