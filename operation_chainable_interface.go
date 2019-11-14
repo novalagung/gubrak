@@ -102,12 +102,12 @@ type IChainableOperation interface {
 	GroupBy(interface{}) IChainable
 	Includes(interface{}, ...int) IChainableIncludesResult
 	IndexOf(interface{}, ...int) IChainableIndexOfResult
-	Initial(interface{}) IChainable
+	Initial() IChainable
 	Intersection(interface{}) IChainable
 	IntersectionMany(data ...interface{}) IChainable
 	Join(string) IChainableJoinResult
 	KeyBy(interface{}) IChainable
-	Last(interface{}) IChainable
+	Last() IChainable
 	LastIndexOf(interface{}, ...int) IChainableLastIndexOfResult
 	Map(interface{}) IChainable
 	Nth(int) IChainable
