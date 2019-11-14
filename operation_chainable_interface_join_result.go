@@ -8,7 +8,7 @@ type IChainableJoinResult interface {
 }
 
 type resultJoin struct {
-	chainable *Chainable
+	chainable *chainable
 	IChainableJoinResult
 }
 

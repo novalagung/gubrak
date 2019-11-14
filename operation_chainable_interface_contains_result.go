@@ -8,7 +8,7 @@ type IChainableContainsResult interface {
 }
 
 type resultContains struct {
-	chainable *Chainable
+	chainable *chainable
 	IChainableContainsResult
 }
 

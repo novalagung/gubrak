@@ -8,7 +8,7 @@ type IChainableCountResult interface {
 }
 
 type resultCount struct {
-	chainable *Chainable
+	chainable *chainable
 	IChainableCountResult
 }
 

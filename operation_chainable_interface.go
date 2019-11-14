@@ -1,8 +1,10 @@
 package gubrak
 
+// Operation represent the type of chainable operation
 type Operation string
 
 const (
+	OperationNone             = ""
 	OperationChunk            = "Chunk()"
 	OperationCompact          = "Compact()"
 	OperationConcatMany       = "ConcatMany()"
@@ -46,7 +48,6 @@ const (
 	OperationPartition        = "Partition()"
 	OperationReduce           = "Reduce()"
 	OperationReject           = "Reject()"
-	OperationRemove           = "Remove()"
 	OperationReverse          = "Reverse()"
 	OperationSample           = "Sample()"
 	OperationSampleSize       = "SampleSize()"
@@ -59,9 +60,7 @@ const (
 	OperationUnionMany        = "UnionMany()"
 )
 
-const OperationNone = ""
-
-type Chainable struct {
+type chainable struct {
 	data                 interface{}
 	lastOperation        Operation
 	lastSuccessOperation Operation
@@ -69,6 +68,8 @@ type Chainable struct {
 	lastErrorCaught      error
 }
 
+// IChainable is the base interface for chainable functions
+// It is contain the `IChainableOperation` interface (embedded), and result-related methods
 type IChainable interface {
 	IChainableOperation
 
@@ -78,6 +79,7 @@ type IChainable interface {
 	IsError() bool
 }
 
+// IChainableOperation is interface for chainable functions declaration
 type IChainableOperation interface {
 	Chunk(int) IChainable
 	Compact() IChainable
@@ -119,7 +121,6 @@ type IChainableOperation interface {
 	Partition(interface{}) IChainablePartitionResult
 	Reduce(interface{}, interface{}) IChainable
 	Reject(interface{}) IChainable
-	Remove(interface{}) IChainableRemoveResult
 	Reverse() IChainable
 	Sample() IChainable
 	SampleSize(int) IChainable
@@ -132,8 +133,10 @@ type IChainableOperation interface {
 	UnionMany(...interface{}) IChainable
 }
 
+// From is the initial function to use gubrak chainable operation.
+// This function requires one argument, the data that are going to be used in operations
 func From(data interface{}) IChainable {
-	g := new(Chainable)
+	g := new(chainable)
 	g.data = data
 	g.lastSuccessOperation = OperationNone
 	g.lastErrorOperation = OperationNone
@@ -142,35 +145,39 @@ func From(data interface{}) IChainable {
 	return g
 }
 
-func (g *Chainable) markError(data interface{}, err error) *Chainable {
+func (g *chainable) markError(data interface{}, err error) *chainable {
 	g.data = data
 	g.lastErrorCaught = err
 	g.lastErrorOperation = g.lastOperation
 	return g
 }
 
-func (g *Chainable) markResult(data interface{}) *Chainable {
+func (g *chainable) markResult(data interface{}) *chainable {
 	g.data = data
 	g.lastSuccessOperation = g.lastOperation
 	return g
 }
 
-func (g *Chainable) shouldReturn() bool {
+func (g *chainable) shouldReturn() bool {
 	return false
 }
 
-func (g *Chainable) ResultAndError() (interface{}, error) {
+// ResultAndError returns the result after operation, and error object
+func (g *chainable) ResultAndError() (interface{}, error) {
 	return g.Result(), g.Error()
 }
 
-func (g *Chainable) Result() interface{} {
+// Result returns the result after operation
+func (g *chainable) Result() interface{} {
 	return g.data
 }
 
-func (g *Chainable) Error() error {
+// Error returns the error object
+func (g *chainable) Error() error {
 	return g.lastErrorCaught
 }
 
-func (g *Chainable) IsError() bool {
+// IsError `true` on error, otherwise `false`
+func (g *chainable) IsError() bool {
 	return g.Error() != nil
 }

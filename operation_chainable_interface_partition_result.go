@@ -9,7 +9,7 @@ type IChainablePartitionResult interface {
 }
 
 type resultPartition struct {
-	chainable *Chainable
+	chainable *chainable
 	IChainablePartitionResult
 }
 

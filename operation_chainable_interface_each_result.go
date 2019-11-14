@@ -6,7 +6,7 @@ type IChainableEachResult interface {
 }
 
 type resultEach struct {
-	chainable *Chainable
+	chainable *chainable
 	IChainableEachResult
 }
 

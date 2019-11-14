@@ -8,7 +8,7 @@ type IChainableLastIndexOfResult interface {
 }
 
 type resultLastIndexOf struct {
-	chainable *Chainable
+	chainable *chainable
 	IChainableLastIndexOfResult
 }
 
