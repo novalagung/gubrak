@@ -12,6 +12,23 @@ import (
 
 // ============================================== Chunk
 
+// Chunk function creates a slice of elements split into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  size int // description: the length of each chunk
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // description: returns the new slice of chunks
+//  .ResultAndError() (interface{}, error) // description: returns the new slice of chunks, and error object
+//  .Error() error                         // description: returns error object
+//  .IsError() bool                        // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
 func (g *Chainable) Chunk(size int) IChainable {
 	g.lastOperation = OperationChunk
 	if g.IsError() || g.shouldReturn() {
@@ -69,6 +86,22 @@ func (g *Chainable) Chunk(size int) IChainable {
 
 // ============================================== Compact
 
+// Compact function creates a slice with all falsey values removed from the `data`. These values: `false`, `nil`, `0`, `""`, `(*string)(nil)`, and other nil-able types are considered to be falsey.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // description: returns the new slice of filtered values
+//  .ResultAndError() (interface{}, error) // description: returns the new slice of filtered values, and error object
+//  .Error() error                         // description: returns error object
+//  .IsError() bool                        // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
 func (g *Chainable) Compact() IChainable {
 	g.lastOperation = OperationCompact
 	if g.IsError() || g.shouldReturn() {
@@ -161,21 +194,23 @@ func (g *Chainable) Compact() IChainable {
 
 // ============================================== Concat
 
-func (g *Chainable) ConcatMany(slicesToConcat ...interface{}) IChainable {
-	g.lastOperation = OperationConcatMany
-	if g.IsError() || g.shouldReturn() {
-		return g
-	}
-
-	err := (error)(nil)
-	result := _concat(&err, g.data, slicesToConcat...)
-	if err != nil {
-		return g.markError(result, err)
-	}
-
-	return g.markResult(result)
-}
-
+// Concat function creates a new slice concatenating `data` with any additional slice.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  sliceToConcat interface{} // description: the slice to concatenate
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // description: returns the new concatenated slice
+//  .ResultAndError() (interface{}, error) // description: returns the new concatenated slice, and error object
+//  .Error() error                         // description: returns error object
+//  .IsError() bool                        // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
 func (g *Chainable) Concat(sliceToConcat interface{}) IChainable {
 	g.lastOperation = OperationConcat
 	if g.IsError() || g.shouldReturn() {
@@ -184,6 +219,41 @@ func (g *Chainable) Concat(sliceToConcat interface{}) IChainable {
 
 	err := (error)(nil)
 	result := _concat(&err, g.data, sliceToConcat)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+// ConcatMany function creates a new slice concatenating `data` with any additional slices (the 2nd parameter and rest).
+//
+// Parameters
+//
+// This function requires optional variadic parameters:
+//  sliceToConcat1 interface{} // description: the slice to concatenate
+//  sliceToConcat2 interface{} // description: the slice to concatenate
+//  sliceToConcat3 interface{} // description: the slice to concatenate
+//  ...
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // description: returns the new concatenated slice
+//  .ResultAndError() (interface{}, error) // description: returns the new concatenated slice, and error object
+//  .Error() error                         // description: returns error object
+//  .IsError() bool                        // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+func (g *Chainable) ConcatMany(slicesToConcat ...interface{}) IChainable {
+	g.lastOperation = OperationConcatMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _concat(&err, g.data, slicesToConcat...)
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -240,21 +310,22 @@ func _concat(err *error, data interface{}, slicesToConcat ...interface{}) interf
 
 // ============================================== Count
 
-func (g *Chainable) CountBy(predicate interface{}) IChainableCountResult {
-	g.lastOperation = OperationCountBy
-	if g.IsError() || g.shouldReturn() {
-		return &resultCount{chainable: g}
-	}
-
-	err := (error)(nil)
-	result := _count(&err, g.data, predicate)
-	if err != nil {
-		return &resultCount{chainable: g.markError(result, err)}
-	}
-
-	return &resultCount{chainable: g.markResult(result)}
-}
-
+// Count get the length of `data`.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // description: returns length of data
+//  .ResultAndError() (int, error) // description: returns length of data, and error object
+//  .Error() error                 // description: returns error object
+//  .IsError() bool                // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
 func (g *Chainable) Count() IChainableCountResult {
 	g.lastOperation = OperationCount
 	if g.IsError() || g.shouldReturn() {
@@ -263,6 +334,39 @@ func (g *Chainable) Count() IChainableCountResult {
 
 	err := (error)(nil)
 	result := _count(&err, g.data, nil)
+	if err != nil {
+		return &resultCount{chainable: g.markError(result, err)}
+	}
+
+	return &resultCount{chainable: g.markResult(result)}
+}
+
+// CountBy get the length of `data` filtered by `iteratee`.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  iteratee interface{} // type: func(each anyType, i int)bool or func(value anyType, key anyType, i int), description: the function invoked per iteration.
+//
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // description: returns length of data filtered by `iteratee`
+//  .ResultAndError() (int, error) // description: returns length of data filtered by `iteratee`, and error object
+//  .Error() error                 // description: returns error object
+//  .IsError() bool                // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+func (g *Chainable) CountBy(iteratee interface{}) IChainableCountResult {
+	g.lastOperation = OperationCountBy
+	if g.IsError() || g.shouldReturn() {
+		return &resultCount{chainable: g}
+	}
+
+	err := (error)(nil)
+	result := _count(&err, g.data, iteratee)
 	if err != nil {
 		return &resultCount{chainable: g.markError(result, err)}
 	}

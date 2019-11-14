@@ -324,3 +324,39 @@ func catchWithCustomErrorMessage(err *error, callback func(string) string) {
 		*err = errors.New(callback(fmt.Sprintf("%v", r)))
 	}
 }
+
+func typeIs(data interface{}, types ...reflect.Kind) bool {
+	if dataKind, ok := data.(reflect.Kind); ok {
+		for _, each := range types {
+			if dataKind == each {
+				return true
+			}
+		}
+	}
+
+	var err error
+
+	result := func(err *error) bool {
+		defer catch(err)
+
+		if !isNonNilData(err, "data", data) {
+			return false
+		}
+
+		dataKind := typeOf(data).Kind()
+
+		for _, each := range types {
+			if dataKind == each {
+				return true
+			}
+		}
+
+		return false
+	}(&err)
+
+	if err != nil {
+		return false
+	}
+
+	return result
+}

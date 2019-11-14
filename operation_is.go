@@ -5,46 +5,9 @@ import (
 	"time"
 )
 
-func _typeIs(data interface{}, types ...reflect.Kind) bool {
-
-	if dataKind, ok := data.(reflect.Kind); ok {
-		for _, each := range types {
-			if dataKind == each {
-				return true
-			}
-		}
-	}
-
-	var err error
-
-	result := func(err *error) bool {
-		defer catch(err)
-
-		if !isNonNilData(err, "data", data) {
-			return false
-		}
-
-		dataKind := typeOf(data).Kind()
-
-		for _, each := range types {
-			if dataKind == each {
-				return true
-			}
-		}
-
-		return false
-	}(&err)
-
-	if err != nil {
-		return false
-	}
-
-	return result
-}
-
 // IsArray will return true when type of the data is array/slice
 func IsArray(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Array,
 		reflect.Slice,
 	)
@@ -52,14 +15,14 @@ func IsArray(data interface{}) bool {
 
 // IsBool will return true when type of the data is boolean
 func IsBool(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Bool,
 	)
 }
 
 // IsChannel will return true when type of the data is channel
 func IsChannel(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Chan,
 	)
 }
@@ -129,7 +92,7 @@ func IsEmptyString(data interface{}) bool {
 
 // IsFloat will return true when type of the data is floating number
 func IsFloat(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Float32,
 		reflect.Float64,
 	)
@@ -137,14 +100,14 @@ func IsFloat(data interface{}) bool {
 
 // IsFunction will return true when type of the data is closure/function
 func IsFunction(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Func,
 	)
 }
 
 // IsInt will return true when type of the data is numeric integer
 func IsInt(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Int,
 		reflect.Int8,
 		reflect.Int16,
@@ -155,7 +118,7 @@ func IsInt(data interface{}) bool {
 
 // IsMap will return true when type of the data is hash map
 func IsMap(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Map,
 	)
 }
@@ -166,7 +129,7 @@ func IsNil(data interface{}) bool {
 		return true
 	}
 
-	isNillable := _typeIs(data,
+	isNillable := typeIs(data,
 		reflect.Chan,
 		reflect.Func,
 		reflect.Interface,
@@ -184,7 +147,7 @@ func IsNil(data interface{}) bool {
 
 // IsNumeric will return true when type of the data is numeric (float, uint, int)
 func IsNumeric(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Int,
 		reflect.Int8,
 		reflect.Int16,
@@ -202,7 +165,7 @@ func IsNumeric(data interface{}) bool {
 
 // IsPointer will return true when type of the data is pointer
 func IsPointer(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Ptr,
 	)
 }
@@ -214,14 +177,14 @@ func IsSlice(data interface{}) bool {
 
 // IsStructObject will return true when type of the data is object from struct
 func IsStructObject(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Struct,
 	)
 }
 
 // IsString will return true when type of the data is string
 func IsString(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.String,
 	)
 }
@@ -241,7 +204,7 @@ func IsTrue(data interface{}) bool {
 
 // IsUint will return true when type of the data is uint
 func IsUint(data interface{}) bool {
-	return _typeIs(data,
+	return typeIs(data,
 		reflect.Uint,
 		reflect.Uint8,
 		reflect.Uint16,

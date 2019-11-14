@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ExampleChunk_chunk1() {
+func ExampleIChainableChunk_chunk1() {
 	data := []int{1, 2, 3, 4, 5}
 	size := 2
 
@@ -15,7 +15,7 @@ func ExampleChunk_chunk1() {
 	// ===> [][]int{ { 1, 2 }, { 3, 4 }, { 5 } }
 }
 
-func ExampleChunk_chunk2() {
+func ExampleIChainableChunk_chunk2() {
 	data := []string{"a", "b", "c", "d", "e"}
 	size := 3
 
@@ -24,7 +24,7 @@ func ExampleChunk_chunk2() {
 	// ===> [][]string{ { "a", "b", "c" }, { "d", "e" } }
 }
 
-func ExampleChunk_chunk3() {
+func ExampleIChainableChunk_chunk3() {
 	data := []interface{}{
 		3.2, "a", -1,
 		make([]byte, 0),
