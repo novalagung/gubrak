@@ -306,6 +306,131 @@ func _concat(err *error, data interface{}, slicesToConcat ...interface{}) interf
 	return result.Interface()
 }
 
+// Contains function checks if value is in data. If data is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If `fromIndex` is negative, it's used as the offset from the end of data.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  search interface{} // ==> description: the value to search for.
+//  fromIndex int      // ==> optional
+//                     //     description: The index to search from
+//                     //     default value: 0
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() bool                  // ==> description: returns true if value is found, else false
+//  .ResultAndError() (bool, error) // ==> description: returns true if value is found, else false, and error object
+//  .Error() error                  // ==> description: returns error object
+//  .IsError() bool                 // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) Contains(search interface{}, args ...int) IChainableContainsResult {
+	g.lastOperation = OperationContains
+	if g.IsError() || g.shouldReturn() {
+		return &resultContains{chainable: g}
+	}
+
+	err := (error)(nil)
+	result := func(err *error) bool {
+		defer catch(err)
+
+		if dataValue, dataOK := g.data.(string); dataOK {
+			if searchValue, searchOK := search.(string); searchOK {
+				return strings.Contains(dataValue, searchValue)
+			}
+
+			return false
+		}
+
+		if !isNonNilData(err, "data", g.data) {
+			return false
+		}
+
+		dataValue, _, dataValueKind, dataValueLen := inspectData(g.data)
+
+		startIndex := 0
+		if len(args) > 0 {
+			startIndex = args[0]
+		}
+
+		if !isZeroOrPositiveNumber(err, "start index", startIndex) {
+			return false
+		}
+
+		if dataValueLen == 0 {
+			return false
+		}
+
+		if !isSlice(err, "data", dataValue) {
+			if dataValueKind == reflect.Map {
+				*err = nil
+				return _containsCollection(err, dataValue, search, startIndex)
+			}
+
+			*err = errors.New((*err).Error() + ", map, or a string")
+			return false
+		}
+
+		return _containsSlice(err, dataValue, dataValueLen, search, startIndex)
+	}(&err)
+	if err != nil {
+		return &resultContains{chainable: g.markError(result, err)}
+	}
+
+	return &resultContains{chainable: g.markResult(result)}
+}
+
+func _containsSlice(err *error, dataValue reflect.Value, dataValueLen int, search interface{}, startIndex int) bool {
+	isFound := false
+
+	forEachSliceStoppable(dataValue, dataValueLen, func(each reflect.Value, i int) bool {
+		if i < startIndex {
+			return true
+		}
+
+		eachActualValue := each.Interface()
+
+		if eachActualValue == search {
+			isFound = true
+			return false
+		}
+
+		return true
+	})
+
+	return isFound
+}
+
+func _containsCollection(err *error, dataValue reflect.Value, search interface{}, startIndex int) bool {
+	isFound := false
+	counter := 0
+
+	dataValueMapKeys := dataValue.MapKeys()
+	forEachCollectionStoppable(dataValue, dataValueMapKeys, func(value reflect.Value, key reflect.Value, i int) bool {
+		defer func() {
+			counter++
+		}()
+
+		if counter < startIndex {
+			return true
+		}
+
+		eachActualValue := value.Interface()
+
+		if eachActualValue == search && !isFound {
+			isFound = true
+			return false
+		}
+
+		return true
+	})
+
+	return isFound
+}
+
 // Count get the length of `data`.
 //
 // Parameters
@@ -928,6 +1053,231 @@ func _eachCollection(err *error, dataValue reflect.Value, dataValueType reflect.
 
 		return true
 	})
+}
+
+// Exclude function removes value from `data`.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  itemToExclude interface{} // ==> description: the item to exclude
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) Exclude(itemToExclude interface{}) IChainable {
+	g.lastOperation = OperationExclude
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _exclude(&err, g.data, itemToExclude)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+// ExcludeMany function removes all given values from `data`.
+//
+// Parameters
+//
+// This function requires optional variadic parameters:
+//  itemToExclude1 interface{} // ==> description: the item to exclude
+//  itemToExclude2 interface{} // ==> description: the item to exclude
+//  itemToExclude3 interface{} // ==> description: the item to exclude
+//  ...
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) ExcludeMany(itemsToExclude ...interface{}) IChainable {
+	g.lastOperation = OperationExcludeMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _exclude(&err, g.data, itemsToExclude...)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func _exclude(err *error, data interface{}, items ...interface{}) interface{} {
+	defer catch(err)
+
+	if !isNonNilData(err, "data", data) {
+		return nil
+	}
+
+	dataValue, valueType, _, dataValueLen := inspectData(data)
+
+	if !isSlice(err, "data", dataValue) {
+		return nil
+	}
+
+	if len(items) == 0 {
+		return data
+	}
+
+	result := makeSlice(valueType)
+
+	if dataValueLen == 0 {
+		return result.Interface()
+	}
+
+	forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
+		eachRealValue := each.Interface()
+		isFound := false
+
+		for _, item := range items {
+			if item == eachRealValue {
+				isFound = true
+			}
+		}
+
+		if !isFound {
+			result = reflect.Append(result, each)
+		}
+	})
+
+	return result.Interface()
+}
+
+// ExcludeAt function removes value by index from `data`.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  indexOfItemToExclude interface{} // ==> description: the index of item to exclude
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) ExcludeAt(indexOfItemToExclude int) IChainable {
+	g.lastOperation = OperationExcludeAt
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _excludeAt(&err, g.data, indexOfItemToExclude)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+// ExcludeAtMany function removes value by index from `data`.
+//
+// Parameters
+//
+// This function requires optional variadic parameters:
+//  indexOfItemToExclude1 interface{} // ==> description: the index of item to exclude
+//  indexOfItemToExclude2 interface{} // ==> description: the index of item to exclude
+//  indexOfItemToExclude3 interface{} // ==> description: the index of item to exclude
+//  ...
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) ExcludeAtMany(indexesOfItemToExclude ...int) IChainable {
+	g.lastOperation = OperationExcludeAtMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _excludeAt(&err, g.data, indexesOfItemToExclude...)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func _excludeAt(err *error, data interface{}, indexes ...int) interface{} {
+	defer catch(err)
+
+	if !isNonNilData(err, "data", data) {
+		return nil
+	}
+
+	dataValue, dataType, _, dataValueLen := inspectData(data)
+
+	if !isSlice(err, "data", dataValue) {
+		return nil
+	}
+
+	for _, index := range indexes {
+		if !isZeroOrPositiveNumber(err, "index", index) {
+			return data
+		}
+	}
+
+	if len(indexes) == 0 {
+		return data
+	}
+
+	result := makeSlice(dataType)
+
+	if dataValueLen == 0 {
+		return result.Interface()
+	}
+
+	forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
+		isFound := false
+
+		for _, index := range indexes {
+			if index == i {
+				isFound = true
+			}
+		}
+
+		if !isFound {
+			result = reflect.Append(result, each)
+		}
+	})
+
+	return result.Interface()
 }
 
 // Fill function fills elements of `data` with `value` from `start` up to, but not including, `end`.
@@ -1772,131 +2122,6 @@ func (g *Chainable) GroupBy(predicate interface{}) IChainable {
 	}
 
 	return g.markResult(result)
-}
-
-// Includes function checks if value is in data. If data is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If `fromIndex` is negative, it's used as the offset from the end of data.
-//
-// Parameters
-//
-// This function requires single mandatory parameter:
-//  search interface{} // ==> description: the value to search for.
-//  fromIndex int      // ==> optional
-//                     //     description: The index to search from
-//                     //     default value: 0
-//
-// Return values
-//
-// Chain with these methods to get result:
-//  .Result() bool                  // ==> description: returns true if value is found, else false
-//  .ResultAndError() (bool, error) // ==> description: returns true if value is found, else false, and error object
-//  .Error() error                  // ==> description: returns error object
-//  .IsError() bool                 // ==> description: return `true` on error, otherwise `false`
-//
-// Examples
-//
-// List of examples available:
-func (g *Chainable) Includes(search interface{}, args ...int) IChainableIncludesResult {
-	g.lastOperation = OperationIncludes
-	if g.IsError() || g.shouldReturn() {
-		return &resultIncludes{chainable: g}
-	}
-
-	err := (error)(nil)
-	result := func(err *error) bool {
-		defer catch(err)
-
-		if dataValue, dataOK := g.data.(string); dataOK {
-			if searchValue, searchOK := search.(string); searchOK {
-				return strings.Contains(dataValue, searchValue)
-			}
-
-			return false
-		}
-
-		if !isNonNilData(err, "data", g.data) {
-			return false
-		}
-
-		dataValue, _, dataValueKind, dataValueLen := inspectData(g.data)
-
-		startIndex := 0
-		if len(args) > 0 {
-			startIndex = args[0]
-		}
-
-		if !isZeroOrPositiveNumber(err, "start index", startIndex) {
-			return false
-		}
-
-		if dataValueLen == 0 {
-			return false
-		}
-
-		if !isSlice(err, "data", dataValue) {
-			if dataValueKind == reflect.Map {
-				*err = nil
-				return _includesCollection(err, dataValue, search, startIndex)
-			}
-
-			*err = errors.New((*err).Error() + ", map, or a string")
-			return false
-		}
-
-		return _includesSlice(err, dataValue, dataValueLen, search, startIndex)
-	}(&err)
-	if err != nil {
-		return &resultIncludes{chainable: g.markError(result, err)}
-	}
-
-	return &resultIncludes{chainable: g.markResult(result)}
-}
-
-func _includesSlice(err *error, dataValue reflect.Value, dataValueLen int, search interface{}, startIndex int) bool {
-	isFound := false
-
-	forEachSliceStoppable(dataValue, dataValueLen, func(each reflect.Value, i int) bool {
-		if i < startIndex {
-			return true
-		}
-
-		eachActualValue := each.Interface()
-
-		if eachActualValue == search {
-			isFound = true
-			return false
-		}
-
-		return true
-	})
-
-	return isFound
-}
-
-func _includesCollection(err *error, dataValue reflect.Value, search interface{}, startIndex int) bool {
-	isFound := false
-	counter := 0
-
-	dataValueMapKeys := dataValue.MapKeys()
-	forEachCollectionStoppable(dataValue, dataValueMapKeys, func(value reflect.Value, key reflect.Value, i int) bool {
-		defer func() {
-			counter++
-		}()
-
-		if counter < startIndex {
-			return true
-		}
-
-		eachActualValue := value.Interface()
-
-		if eachActualValue == search && !isFound {
-			isFound = true
-			return false
-		}
-
-		return true
-	})
-
-	return isFound
 }
 
 // IndexOf function gets the index at which the first occurrence of `search` is found in `data`. If `fromIndex` is negative, it's used as the offset from the end of `data`.
@@ -2898,8 +3123,28 @@ func _orderBy(err *error, data, callback interface{}, args ...bool) interface{} 
 	return _doSortSync(dataValue).Interface()
 }
 
-// ============================================== Partition
-
+// Partition function creates an array of elements split into two groups, the first of which contains elements predicate returns truthy for, the second of which contains elements predicate returns falsey for. The predicate is invoked with one argument: (value).
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  predicate interface{} // ==> type: `func(each anyType, i int)bool`
+//                        // ==> description: the function invoked per iteration.
+//                        //                  the 2nd argument represents index of each element, and it's optional.
+//                        //                  and both are optional.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .ResultTruthy() interface{}                         // ==> description: return slice of elements which predicate returns truthy for
+//  .ResultFalsey() interface{}                         // ==> description: return slice of elements which predicate returns falsey for
+//  .ResultAndError() (interface{}, interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                                      // ==> description: returns error object
+//  .IsError() bool                                     // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) Partition(callback interface{}) IChainablePartitionResult {
 	g.lastOperation = OperationPartition
 	if g.IsError() || g.shouldReturn() {
@@ -2959,157 +3204,6 @@ func (g *Chainable) Partition(callback interface{}) IChainablePartitionResult {
 	}
 
 	return &resultPartition{chainable: g.markResult([]interface{}{truhty, falsey})}
-}
-
-// ============================================== Pull
-
-func (g *Chainable) Pull(item interface{}) IChainable {
-	g.lastOperation = OperationPull
-	if g.IsError() || g.shouldReturn() {
-		return g
-	}
-
-	err := (error)(nil)
-	result := _pull(&err, g.data, item)
-	if err != nil {
-		return g.markError(result, err)
-	}
-
-	return g.markResult(result)
-}
-
-func (g *Chainable) PullMany(items ...interface{}) IChainable {
-	g.lastOperation = OperationPullMany
-	if g.IsError() || g.shouldReturn() {
-		return g
-	}
-
-	err := (error)(nil)
-	result := _pull(&err, g.data, items...)
-	if err != nil {
-		return g.markError(result, err)
-	}
-
-	return g.markResult(result)
-}
-
-func _pull(err *error, data interface{}, items ...interface{}) interface{} {
-	defer catch(err)
-
-	if !isNonNilData(err, "data", data) {
-		return nil
-	}
-
-	dataValue, valueType, _, dataValueLen := inspectData(data)
-
-	if !isSlice(err, "data", dataValue) {
-		return nil
-	}
-
-	if len(items) == 0 {
-		return data
-	}
-
-	result := makeSlice(valueType)
-
-	if dataValueLen == 0 {
-		return result.Interface()
-	}
-
-	forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
-		eachRealValue := each.Interface()
-		isFound := false
-
-		for _, item := range items {
-			if item == eachRealValue {
-				isFound = true
-			}
-		}
-
-		if !isFound {
-			result = reflect.Append(result, each)
-		}
-	})
-
-	return result.Interface()
-}
-
-// ============================================== Map
-
-func (g *Chainable) PullAt(index int) IChainable {
-	g.lastOperation = OperationPullAt
-	if g.IsError() || g.shouldReturn() {
-		return g
-	}
-
-	err := (error)(nil)
-	result := _pullAt(&err, g.data, index)
-	if err != nil {
-		return g.markError(result, err)
-	}
-
-	return g.markResult(result)
-}
-
-func (g *Chainable) PullAtMany(indexes ...int) IChainable {
-	g.lastOperation = OperationPullAtMany
-	if g.IsError() || g.shouldReturn() {
-		return g
-	}
-
-	err := (error)(nil)
-	result := _pullAt(&err, g.data, indexes...)
-	if err != nil {
-		return g.markError(result, err)
-	}
-
-	return g.markResult(result)
-}
-
-func _pullAt(err *error, data interface{}, indexes ...int) interface{} {
-	defer catch(err)
-
-	if !isNonNilData(err, "data", data) {
-		return nil
-	}
-
-	dataValue, dataType, _, dataValueLen := inspectData(data)
-
-	if !isSlice(err, "data", dataValue) {
-		return nil
-	}
-
-	for _, index := range indexes {
-		if !isZeroOrPositiveNumber(err, "index", index) {
-			return data
-		}
-	}
-
-	if len(indexes) == 0 {
-		return data
-	}
-
-	result := makeSlice(dataType)
-
-	if dataValueLen == 0 {
-		return result.Interface()
-	}
-
-	forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
-		isFound := false
-
-		for _, index := range indexes {
-			if index == i {
-				isFound = true
-			}
-		}
-
-		if !isFound {
-			result = reflect.Append(result, each)
-		}
-	})
-
-	return result.Interface()
 }
 
 // ============================================== Reduce

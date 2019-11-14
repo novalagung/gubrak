@@ -7,6 +7,7 @@ const (
 	OperationCompact          = "Compact()"
 	OperationConcatMany       = "ConcatMany()"
 	OperationConcat           = "Concat()"
+	OperationContains         = "Contains()"
 	OperationCountBy          = "CountBy()"
 	OperationCount            = "Count()"
 	OperationDifferenceMany   = "DifferenceMany()"
@@ -15,6 +16,10 @@ const (
 	OperationDropRight        = "DropRight()"
 	OperationEach             = "Each()"
 	OperationEachRight        = "EachRight()"
+	OperationExclude          = "Exclude()"
+	OperationExcludeMany      = "ExcludeMany()"
+	OperationExcludeAt        = "ExcludeAt()"
+	OperationExcludeAtMany    = "ExcludeAtMany()"
 	OperationForEach          = "ForEach()"
 	OperationForEachRight     = "ForEachRight()"
 	OperationFill             = "Fill()"
@@ -27,7 +32,6 @@ const (
 	OperationHead             = "Head()"
 	OperationFromPairs        = "FromPairs()"
 	OperationGroupBy          = "GroupBy()"
-	OperationIncludes         = "Includes()"
 	OperationIndexOf          = "IndexOf()"
 	OperationInitial          = "Initial()"
 	OperationIntersection     = "Intersection()"
@@ -40,10 +44,6 @@ const (
 	OperationNth              = "Nth()"
 	OperationOrderBy          = "OrderBy()"
 	OperationPartition        = "Partition()"
-	OperationPull             = "Pull()"
-	OperationPullMany         = "PullMany()"
-	OperationPullAt           = "PullAt()"
-	OperationPullAtMany       = "PullAtMany()"
 	OperationReduce           = "Reduce()"
 	OperationReject           = "Reject()"
 	OperationRemove           = "Remove()"
@@ -91,6 +91,10 @@ type IChainableOperation interface {
 	DropRight(int) IChainable
 	Each(interface{}) IChainableEachResult
 	EachRight(interface{}) IChainableEachResult
+	Exclude(interface{}) IChainable
+	ExcludeMany(...interface{}) IChainable
+	ExcludeAt(int) IChainable
+	ExcludeAtMany(...int) IChainable
 	Fill(interface{}, ...int) IChainable
 	Filter(interface{}) IChainable
 	Find(interface{}, ...int) IChainable
@@ -100,7 +104,7 @@ type IChainableOperation interface {
 	First() IChainable
 	FromPairs() IChainable
 	GroupBy(interface{}) IChainable
-	Includes(interface{}, ...int) IChainableIncludesResult
+	Contains(interface{}, ...int) IChainableContainsResult
 	IndexOf(interface{}, ...int) IChainableIndexOfResult
 	Initial() IChainable
 	Intersection(interface{}) IChainable
@@ -113,10 +117,6 @@ type IChainableOperation interface {
 	Nth(int) IChainable
 	OrderBy(interface{}, ...bool) IChainable
 	Partition(interface{}) IChainablePartitionResult
-	Pull(interface{}) IChainable
-	PullMany(...interface{}) IChainable
-	PullAt(int) IChainable
-	PullAtMany(...int) IChainable
 	Reduce(interface{}, interface{}) IChainable
 	Reject(interface{}) IChainable
 	Remove(interface{}) IChainableRemoveResult
