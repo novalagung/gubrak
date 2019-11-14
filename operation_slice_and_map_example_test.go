@@ -241,7 +241,7 @@ func ExampleDrop_drop1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	n := 1
 
-	result, err := Drop(data, n)
+	result, err := From(data).Drop(n).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -254,7 +254,7 @@ func ExampleDrop_drop2() {
 	data := []string{"a", "b", "c", "d", "e", "f"}
 	n := 3
 
-	result, err := Drop(data, n)
+	result, err := From(data).Drop(n).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -267,7 +267,7 @@ func ExampleDropRight_dropRight1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	n := 1
 
-	result, err := DropRight(data, n)
+	result, err := From(data).Drop(n).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -280,7 +280,7 @@ func ExampleDropRight_dropRight2() {
 	data := []string{"a", "b", "c", "d", "e", "f"}
 	n := 3
 
-	result, err := DropRight(data, n)
+	result, err := From(data).Drop(n).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -296,9 +296,11 @@ func ExampleEach_eachMap1() {
 		"gender": "male",
 	}
 
-	err := Each(data, func(value interface{}, key string) {
-		fmt.Printf("%s: %v \n", key, value)
-	})
+	err := From(data).
+		Each(func(value interface{}, key string) {
+			fmt.Printf("%s: %v \n", key, value)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -311,9 +313,11 @@ func ExampleEach_eachMap2() {
 		"gender": "male",
 	}
 
-	err := Each(data, func(value interface{}, key string, i int) {
-		fmt.Printf("key: %s, value: %v, index: %d \n", key, value, i)
-	})
+	err := From(data).
+		Each(func(value interface{}, key string, i int) {
+			fmt.Printf("key: %s, value: %v, index: %d \n", key, value, i)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -322,9 +326,11 @@ func ExampleEach_eachMap2() {
 func ExampleEach_eachSlice1() {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	err := Each(data, func(each string) {
-		fmt.Println(each)
-	})
+	err := From(data).
+		Each(func(each string) {
+			fmt.Println(each)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -333,9 +339,11 @@ func ExampleEach_eachSlice1() {
 func ExampleEach_eachSlice2() {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	err := Each(data, func(each string, i int) {
-		fmt.Printf("element %d: %s \n", i, each)
-	})
+	err := From(data).
+		Each(func(each string, i int) {
+			fmt.Printf("element %d: %s \n", i, each)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -353,9 +361,11 @@ func ExampleEach_eachSlice3() {
 		{Name: "cassandra", Age: 11},
 	}
 
-	err := Each(data, func(each Sample) {
-		fmt.Printf("name: %s, age: %d \n", each.Name, each.Age)
-	})
+	err := From(data).
+		Each(func(each Sample) {
+			fmt.Printf("name: %s, age: %d \n", each.Name, each.Age)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -364,14 +374,16 @@ func ExampleEach_eachSlice3() {
 func ExampleEach_eachSlice4() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "jason", "stephanie"}
 
-	err := Each(data, func(each string, i int) bool {
-		if i > 3 { // will stop after fourth loop
-			return false
-		}
+	err := From(data).
+		Each(func(each string, i int) bool {
+			if i > 3 { // will stop after fourth loop
+				return false
+			}
 
-		fmt.Println(each)
-		return true
-	})
+			fmt.Println(each)
+			return true
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -384,9 +396,11 @@ func ExampleEachRight_eachRightMap1() {
 		"gender": "male",
 	}
 
-	err := EachRight(data, func(value interface{}, key string) {
-		fmt.Printf("%s: %v \n", key, value)
-	})
+	err := From(data).
+		EachRight(func(value interface{}, key string) {
+			fmt.Printf("%s: %v \n", key, value)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -399,9 +413,11 @@ func ExampleEachRight_eachRightMap2() {
 		"gender": "male",
 	}
 
-	err := EachRight(data, func(value interface{}, key string, i int) {
-		fmt.Printf("key: %s, value: %v, index: %d \n", key, value, i)
-	})
+	err := From(data).
+		EachRight(func(value interface{}, key string, i int) {
+			fmt.Printf("key: %s, value: %v, index: %d \n", key, value, i)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -410,9 +426,11 @@ func ExampleEachRight_eachRightMap2() {
 func ExampleEachRight_eachRightSlice1() {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	err := EachRight(data, func(each string) {
-		fmt.Println(each)
-	})
+	err := From(data).
+		EachRight(func(each string) {
+			fmt.Println(each)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -421,9 +439,11 @@ func ExampleEachRight_eachRightSlice1() {
 func ExampleEachRight_eachRightSlice2() {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	err := EachRight(data, func(each string, i int) {
-		fmt.Printf("element %d: %s \n", i, each)
-	})
+	err := From(data).
+		EachRight(func(each string, i int) {
+			fmt.Printf("element %d: %s \n", i, each)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -441,9 +461,11 @@ func ExampleEachRight_eachRightSlice3() {
 		{Name: "cassandra", Age: 11},
 	}
 
-	err := EachRight(data, func(each Sample) {
-		fmt.Printf("name: %s, age: %d \n", each.Name, each.Age)
-	})
+	err := From(data).
+		EachRight(func(each Sample) {
+			fmt.Printf("name: %s, age: %d \n", each.Name, each.Age)
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -452,14 +474,16 @@ func ExampleEachRight_eachRightSlice3() {
 func ExampleEachRight_eachRightSlice4() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "jason", "stephanie"}
 
-	err := EachRight(data, func(each string, i int) bool {
-		if i > 3 { // will stop after fourth loop
-			return false
-		}
+	err := From(data).
+		EachRight(func(each string, i int) bool {
+			if i > 3 { // will stop after fourth loop
+				return false
+			}
 
-		fmt.Println(each)
-		return true
-	})
+			fmt.Println(each)
+			return true
+		}).
+		Error()
 	if err != nil {
 		log.Fatal(err.Error())
 	}

@@ -38,6 +38,11 @@ type IChainable interface {
 	IChainableNth
 	IChainableOrderBy
 	IChainablePartition
+	IChainablePull
+	IChainablePullAt
+	IChainableReduce
+	IChainableReject
+	IChainableRemove
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}

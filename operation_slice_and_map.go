@@ -2666,21 +2666,19 @@ func (g *resultPartition) ResultAndError() (interface{}, interface{}, error) {
 }
 
 func (g *resultPartition) ResultTruthy() interface{} {
-	v, _ := g.chainable.data.([]interface{})
-	if len(v) > 0 {
+	if v, _ := g.chainable.data.([]interface{}); len(v) > 0 {
 		return v[0]
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
 func (g *resultPartition) ResultFalsey() interface{} {
-	v, _ := g.chainable.data.([]interface{})
-	if len(v) > 1 {
+	if v, _ := g.chainable.data.([]interface{}); len(v) > 1 {
 		return v[1]
-	} else {
-		return nil
 	}
+
+	return nil
 }
 
 func (g *resultPartition) Error() error {
@@ -2752,33 +2750,88 @@ func (g *Chainable) Partition(callback interface{}) IChainablePartitionResult {
 	return &resultPartition{chainable: g.markResult([]interface{}{truhty, falsey})}
 }
 
-// ================================================================ RAW
+// ============================================== Pull
 
-func Partition(data, callback interface{}) (interface{}, interface{}, error) {
-	var truhty, falsey interface{}
-	var err error
+const (
+	OperationPull     = "Pull()"
+	OperationPullMany = "PullMany()"
+)
 
-	return truhty, falsey, err
+type IChainablePull interface {
+	Pull(interface{}) IChainable
+	PullMany(...interface{}) IChainable
 }
 
-func Pull(data interface{}, items ...interface{}) (interface{}, error) {
-	var err error
+func (g *Chainable) Pull(item interface{}) IChainable {
+	g.lastOperation = OperationPull
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
 
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, valueType, _, dataValueLen := inspectData(data)
+		dataValue, valueType, _, dataValueLen := inspectData(g.data)
+
+		if !isSlice(err, "data", dataValue) {
+			return nil
+		}
+
+		result := makeSlice(valueType)
+
+		if dataValueLen == 0 {
+			return result.Interface()
+		}
+
+		forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
+			eachRealValue := each.Interface()
+			isFound := false
+
+			if item == eachRealValue {
+				isFound = true
+			}
+
+			if !isFound {
+				result = reflect.Append(result, each)
+			}
+		})
+
+		return result.Interface()
+	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func (g *Chainable) PullMany(items ...interface{}) IChainable {
+	g.lastOperation = OperationPullMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := func(err *error) interface{} {
+		defer catch(err)
+
+		if !isNonNilData(err, "data", g.data) {
+			return nil
+		}
+
+		dataValue, valueType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
 		}
 
 		if len(items) == 0 {
-			return data
+			return g.data
 		}
 
 		result := makeSlice(valueType)
@@ -2804,51 +2857,61 @@ func Pull(data interface{}, items ...interface{}) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func PullAll(data interface{}, items interface{}) (interface{}, error) {
-	var err error
+// ============================================== Map
 
+const (
+	OperationPullAt     = "PullAt()"
+	OperationPullAtMany = "PullAtMany()"
+)
+
+type IChainablePullAt interface {
+	PullAt(int) IChainable
+	PullAtMany(...int) IChainable
+}
+
+func (g *Chainable) PullAt(index int) IChainable {
+	g.lastOperation = OperationPullAt
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, valueType, _, dataValueLen := inspectData(data)
-		itemsValue, _, _, itemsValueLen := inspectData(items)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
-		if !isSlice(err, "data", dataValue, itemsValue) {
+		if !isSlice(err, "data", dataValue) {
 			return nil
 		}
 
-		if itemsValueLen == 0 {
-			return data
+		if !isZeroOrPositiveNumber(err, "index", index) {
+			return g.data
 		}
 
-		result := makeSlice(valueType)
+		result := makeSlice(dataType)
 
 		if dataValueLen == 0 {
 			return result.Interface()
 		}
 
 		forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
-			eachRealValue := each.Interface()
 			isFound := false
 
-			forEachSliceStoppable(itemsValue, itemsValueLen, func(item reflect.Value, i int) bool {
-				itemRealValue := item.Interface()
-
-				if itemRealValue == eachRealValue {
-					isFound = true
-					return false
-				}
-
-				return true
-			})
+			if index == i {
+				isFound = true
+			}
 
 			if !isFound {
 				result = reflect.Append(result, each)
@@ -2857,21 +2920,28 @@ func PullAll(data interface{}, items interface{}) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func PullAt(data interface{}, indexes ...int) (interface{}, error) {
-	var err error
+func (g *Chainable) PullAtMany(indexes ...int) IChainable {
+	g.lastOperation = OperationPullAtMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
 
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -2879,12 +2949,12 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 
 		for _, index := range indexes {
 			if !isZeroOrPositiveNumber(err, "index", index) {
-				return data
+				return g.data
 			}
 		}
 
 		if len(indexes) == 0 {
-			return data
+			return g.data
 		}
 
 		result := makeSlice(dataType)
@@ -2909,21 +2979,38 @@ func PullAt(data interface{}, indexes ...int) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Reduce(data, callback, initial interface{}) (interface{}, error) {
-	var err error
+// ============================================== Reduce
 
+const (
+	OperationReduce = "Reduce()"
+)
+
+type IChainableReduce interface {
+	Reduce(interface{}, interface{}) IChainable
+}
+
+func (g *Chainable) Reduce(callback, initial interface{}) IChainable {
+	g.lastOperation = OperationReduce
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataValueType, dataValueKind, dataValueLen := inspectData(data)
+		dataValue, dataValueType, dataValueKind, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			if dataValueKind == reflect.Map {
@@ -2936,8 +3023,11 @@ func Reduce(data, callback, initial interface{}) (interface{}, error) {
 
 		return _reduceSlice(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback, initial)
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
 func _reduceCollection(err *error, dataValue reflect.Value, dataValueType reflect.Type, dataValueKind reflect.Kind, dataValueLen int, callback, initial interface{}) interface{} {
@@ -3041,17 +3131,31 @@ func _reduceSlice(err *error, dataValue reflect.Value, dataValueType reflect.Typ
 	return result.Interface()
 }
 
-func Reject(data, callback interface{}) (interface{}, error) {
-	var err error
+// ============================================== Reject
 
+const (
+	OperationReject = "Reject()"
+)
+
+type IChainableReject interface {
+	Reject(interface{}) IChainable
+}
+
+func (g *Chainable) Reject(callback interface{}) IChainable {
+	g.lastOperation = OperationReject
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -3087,24 +3191,80 @@ func Reject(data, callback interface{}) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Remove(data interface{}, predicate interface{}) (interface{}, interface{}, error) {
-	var result, removed interface{}
-	var err error
+// ============================================== Remove
 
-	func(err *error) {
+const (
+	OperationRemove = "Remove()"
+)
+
+type IChainableRemove interface {
+	Remove(interface{}) IChainableRemoveResult
+}
+
+type IChainableRemoveResult interface {
+	ResultAndError() (interface{}, interface{}, error)
+	ResultAfterRemoved() interface{}
+	ResultRemovedValues() interface{}
+	Error() error
+	IsError() bool
+}
+
+type resultRemove struct {
+	chainable *Chainable
+	IChainableRemoveResult
+}
+
+func (g *resultRemove) ResultAndError() (interface{}, interface{}, error) {
+	return g.ResultAfterRemoved(), g.ResultRemovedValues(), g.Error()
+}
+
+func (g *resultRemove) ResultAfterRemoved() interface{} {
+	if v, _ := g.chainable.data.([]interface{}); len(v) > 0 {
+		return v[0]
+	}
+
+	return nil
+}
+
+func (g *resultRemove) ResultRemovedValues() interface{} {
+	if v, _ := g.chainable.data.([]interface{}); len(v) > 1 {
+		return v[1]
+	}
+
+	return nil
+}
+
+func (g *resultRemove) Error() error {
+	return g.chainable.lastErrorCaught
+}
+
+func (g *resultRemove) IsError() bool {
+	return g.Error() != nil
+}
+
+func (g *Chainable) Remove(predicate interface{}) IChainableRemoveResult {
+	g.lastOperation = OperationRemove
+	if g.IsError() || g.shouldReturn() {
+		return &resultRemove{chainable: g}
+	}
+
+	var result, removed interface{} = g.data, nil
+	err := (error)(nil)
+	func(err *error, result, removed interface{}) {
 		defer catch(err)
 
-		result, removed = data, nil
-
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 		removed = makeSlice(dataType).Interface()
 
 		if !isSlice(err, "data", dataValue) {
@@ -3144,12 +3304,15 @@ func Remove(data interface{}, predicate interface{}) (interface{}, interface{}, 
 
 		result = resultSlice.Interface()
 		removed = removedSlice.Interface()
+	}(&err, &result, &removed)
+	if err != nil {
+		return &resultRemove{chainable: g.markError([]interface{}{result, removed}, err)}
+	}
 
-		return
-	}(&err)
-
-	return result, removed, err
+	return &resultRemove{chainable: g.markResult([]interface{}{result, removed})}
 }
+
+// ================================================================ RAW
 
 func Reverse(data interface{}) (interface{}, error) {
 	var err error
@@ -3490,8 +3653,4 @@ func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 
 func Uniq(data interface{}) (interface{}, error) {
 	return Union(data)
-}
-
-func Without(data interface{}, items ...interface{}) (interface{}, error) {
-	return Pull(data, items...)
 }
