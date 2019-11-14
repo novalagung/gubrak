@@ -10,8 +10,6 @@ import (
 	"time"
 )
 
-// ============================================== Chunk
-
 // Chunk function creates a slice of elements split into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
 //
 // Parameters
@@ -84,8 +82,6 @@ func (g *Chainable) Chunk(size int) IChainable {
 
 	return g.markResult(result)
 }
-
-// ============================================== Compact
 
 // Compact function creates a slice with all falsey values removed from the `data`. These values: `false`, `nil`, `0`, `""`, `(*string)(nil)`, and other nil-able types are considered to be falsey.
 //
@@ -193,8 +189,6 @@ func (g *Chainable) Compact() IChainable {
 
 	return g.markResult(result)
 }
-
-// ============================================== Concat
 
 // Concat function creates a new slice concatenating `data` with any additional slice.
 //
@@ -311,8 +305,6 @@ func _concat(err *error, data interface{}, slicesToConcat ...interface{}) interf
 
 	return result.Interface()
 }
-
-// ============================================== Count
 
 // Count get the length of `data`.
 //
@@ -489,8 +481,6 @@ func _countCollection(err *error, dataValue reflect.Value, dataValueType reflect
 	return resultCounter
 }
 
-// ============================================== Difference
-
 // Difference function creates a slice of `data` that values not included in the other given slice. The order and references of result values are determined by the first slice.
 //
 // Parameters
@@ -624,8 +614,6 @@ func _difference(err *error, data interface{}, dataToCompare ...interface{}) int
 
 	return result.Interface()
 }
-
-// ============================================== Drop
 
 // Drop function creates a slice of `data` with `n` elements dropped from the beginning.
 //
@@ -762,8 +750,6 @@ func (g *Chainable) DropRight(size int) IChainable {
 
 	return g.markResult(result)
 }
-
-// ============================================== Each
 
 // Each iterates over elements of `data` and invokes `iteratee` for each element. Iteratee functions may exit iteration early by explicitly returning false
 //
@@ -944,8 +930,6 @@ func _eachCollection(err *error, dataValue reflect.Value, dataValueType reflect.
 	})
 }
 
-// ============================================== Fill
-
 // Fill function fills elements of `data` with `value` from `start` up to, but not including, `end`.
 //
 // Parameters
@@ -1042,8 +1026,6 @@ func (g *Chainable) Fill(value interface{}, args ...int) IChainable {
 
 	return g.markResult(result)
 }
-
-// ============================================== Filter
 
 // Filter function iterates over elements of slice or struct object or map, returning an array of all elements predicate returns truthy for. The predicate is invoked with two arguments: (value, index).
 //
@@ -1167,22 +1149,20 @@ func _filterCollection(err *error, dataValue reflect.Value, dataValueType reflec
 	return result.Interface()
 }
 
-// ============================================== Find
-
 // Find function iterates over elements of collection, returning the first element predicate returns truthy for.
 //
 // Parameters
 //
 // This function requires single mandatory parameter:
-//  iteratee interface{} // ==> type: `func(each anyType, i int)bool` or
-//                       //           `func(value anyType, key anyType, i int)bool`
-//                       // ==> description: the function invoked per iteration.
-//                       //                  for slice, the 2nd argument represents index of each element, and it's optional.
-//                       //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
-//                       //                  and both are optional.
-//  fromIndex int        // ==> optional
-//                       //     description: The index to search from
-//                       //     default value: 0
+//  predicate interface{} // ==> type: `func(each anyType, i int)bool` or
+//                        //           `func(value anyType, key anyType, i int)bool`
+//                        // ==> description: the function invoked per iteration.
+//                        //                  for slice, the 2nd argument represents index of each element, and it's optional.
+//                        //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
+//                        //                  and both are optional.
+//  fromIndex int         // ==> optional
+//                        //     description: The index to search from
+//                        //     default value: 0
 //
 // Return values
 //
@@ -1280,15 +1260,15 @@ func (g *Chainable) Find(predicate interface{}, args ...int) IChainable {
 // Parameters
 //
 // This function requires single mandatory parameter:
-//  iteratee interface{} // ==> type: `func(each anyType, i int)bool` or
-//                       //           `func(value anyType, key anyType, i int)bool`
-//                       // ==> description: the function invoked per iteration.
-//                       //                  for slice, the 2nd argument represents index of each element, and it's optional.
-//                       //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
-//                       //                  and both are optional.
-//  fromIndex int        // ==> optional
-//                       //     description: The index to search from
-//                       //     default value: 0
+//  predicate interface{} // ==> type: `func(each anyType, i int)bool` or
+//                        //           `func(value anyType, key anyType, i int)bool`
+//                        // ==> description: the function invoked per iteration.
+//                        //                  for slice, the 2nd argument represents index of each element, and it's optional.
+//                        //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
+//                        //                  and both are optional.
+//  fromIndex int         // ==> optional
+//                        //     description: The index to search from
+//                        //     default value: 0
 //
 // Return values
 //
@@ -1375,15 +1355,15 @@ func (g *Chainable) FindIndex(predicate interface{}, args ...int) IChainable {
 // Parameters
 //
 // This function requires single mandatory parameter:
-//  iteratee interface{} // ==> type: `func(each anyType, i int)bool` or
-//                       //           `func(value anyType, key anyType, i int)bool`
-//                       // ==> description: the function invoked per iteration.
-//                       //                  for slice, the 2nd argument represents index of each element, and it's optional.
-//                       //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
-//                       //                  and both are optional.
-//  fromIndex int        // ==> optional
-//                       //     description: The index to search from
-//                       //     default value: len(data) - 1
+//  predicate interface{} // ==> type: `func(each anyType, i int)bool` or
+//                        //           `func(value anyType, key anyType, i int)bool`
+//                        // ==> description: the function invoked per iteration.
+//                        //                  for slice, the 2nd argument represents index of each element, and it's optional.
+//                        //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
+//                        //                  and both are optional.
+//  fromIndex int         // ==> optional
+//                        //     description: The index to search from
+//                        //     default value: len(data) - 1
 //
 // Return values
 //
@@ -1482,15 +1462,15 @@ func (g *Chainable) FindLast(predicate interface{}, args ...int) IChainable {
 // Parameters
 //
 // This function requires single mandatory parameter:
-//  iteratee interface{} // ==> type: `func(each anyType, i int)bool` or
-//                       //           `func(value anyType, key anyType, i int)bool`
-//                       // ==> description: the function invoked per iteration.
-//                       //                  for slice, the 2nd argument represents index of each element, and it's optional.
-//                       //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
-//                       //                  and both are optional.
-//  fromIndex int        // ==> optional
-//                       //     description: The index to search from
-//                       //     default value: len(data) - 1
+//  predicate interface{} // ==> type: `func(each anyType, i int)bool` or
+//                        //           `func(value anyType, key anyType, i int)bool`
+//                        // ==> description: the function invoked per iteration.
+//                        //                  for slice, the 2nd argument represents index of each element, and it's optional.
+//                        //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
+//                        //                  and both are optional.
+//  fromIndex int         // ==> optional
+//                        //     description: The index to search from
+//                        //     default value: len(data) - 1
 //
 // Return values
 //
@@ -1575,8 +1555,23 @@ func (g *Chainable) FindLastIndex(predicate interface{}, args ...int) IChainable
 	return g.markResult(result)
 }
 
-// ============================================== First
-
+// First function gets the first element of `data`.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) First() IChainable {
 	g.lastOperation = OperationFirst
 	if g.IsError() || g.shouldReturn() {
@@ -1610,8 +1605,23 @@ func (g *Chainable) First() IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== FromPairs
-
+// FromPairs function returns an object composed from key-value `data`.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) FromPairs() IChainable {
 	g.lastOperation = OperationFromPairs
 	if g.IsError() || g.shouldReturn() {
@@ -1678,9 +1688,27 @@ func (g *Chainable) FromPairs() IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== GroupBy
-
-func (g *Chainable) GroupBy(callback interface{}) IChainable {
+// GroupBy function creates an object composed of keys generated from the results of running each element of collection thru iteratee. The order of grouped values is determined by the order they occur in collection. The corresponding value of each key is an array of elements responsible for generating the key.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  predicate interface{} // ==> type: `func(each anyType, i int)<any type>`
+//                        // ==> description: the function invoked per iteration.
+//                        //                  the 2nd argument represents index of each element, and it's optional.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) GroupBy(predicate interface{}) IChainable {
 	g.lastOperation = OperationGroupBy
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1700,7 +1728,7 @@ func (g *Chainable) GroupBy(callback interface{}) IChainable {
 			return nil
 		}
 
-		callbackValue, callbackType := inspectFunc(err, callback)
+		callbackValue, callbackType := inspectFunc(err, predicate)
 		if *err != nil {
 			return nil
 		}
@@ -1746,8 +1774,27 @@ func (g *Chainable) GroupBy(callback interface{}) IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Includes
-
+// Includes function checks if value is in data. If data is a string, it's checked for a substring of value, otherwise SameValueZero is used for equality comparisons. If `fromIndex` is negative, it's used as the offset from the end of data.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  search interface{} // ==> description: the value to search for.
+//  fromIndex int      // ==> optional
+//                     //     description: The index to search from
+//                     //     default value: 0
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() bool                  // ==> description: returns true if value is found, else false
+//  .ResultAndError() (bool, error) // ==> description: returns true if value is found, else false, and error object
+//  .Error() error                  // ==> description: returns error object
+//  .IsError() bool                 // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) Includes(search interface{}, args ...int) IChainableIncludesResult {
 	g.lastOperation = OperationIncludes
 	if g.IsError() || g.shouldReturn() {
