@@ -29,6 +29,7 @@ import (
 //
 // Examples
 //
+// List of examples available:
 func (g *Chainable) Chunk(size int) IChainable {
 	g.lastOperation = OperationChunk
 	if g.IsError() || g.shouldReturn() {
@@ -102,6 +103,7 @@ func (g *Chainable) Chunk(size int) IChainable {
 //
 // Examples
 //
+// List of examples available:
 func (g *Chainable) Compact() IChainable {
 	g.lastOperation = OperationCompact
 	if g.IsError() || g.shouldReturn() {
@@ -211,6 +213,7 @@ func (g *Chainable) Compact() IChainable {
 //
 // Examples
 //
+// List of examples available:
 func (g *Chainable) Concat(sliceToConcat interface{}) IChainable {
 	g.lastOperation = OperationConcat
 	if g.IsError() || g.shouldReturn() {
@@ -246,6 +249,7 @@ func (g *Chainable) Concat(sliceToConcat interface{}) IChainable {
 //
 // Examples
 //
+// List of examples available:
 func (g *Chainable) ConcatMany(slicesToConcat ...interface{}) IChainable {
 	g.lastOperation = OperationConcatMany
 	if g.IsError() || g.shouldReturn() {
@@ -326,6 +330,7 @@ func _concat(err *error, data interface{}, slicesToConcat ...interface{}) interf
 //
 // Examples
 //
+// List of examples available:
 func (g *Chainable) Count() IChainableCountResult {
 	g.lastOperation = OperationCount
 	if g.IsError() || g.shouldReturn() {
@@ -360,6 +365,7 @@ func (g *Chainable) Count() IChainableCountResult {
 //
 // Examples
 //
+// List of examples available:
 func (g *Chainable) CountBy(iteratee interface{}) IChainableCountResult {
 	g.lastOperation = OperationCountBy
 	if g.IsError() || g.shouldReturn() {
