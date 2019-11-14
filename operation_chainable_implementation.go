@@ -346,7 +346,8 @@ func (g *Chainable) Count() IChainableCountResult {
 // Parameters
 //
 // This function requires single mandatory parameter:
-//  iteratee interface{} // type: func(each anyType, i int)bool or func(value anyType, key anyType, i int), description: the function invoked per iteration.
+//  iteratee interface{} // type: func(each anyType, i int)bool or func(value anyType, key anyType, i int)
+//                       // description: the function invoked per iteration
 //
 //
 // Return values

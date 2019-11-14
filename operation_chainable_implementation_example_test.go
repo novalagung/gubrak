@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func ExampleIChainableChunk_chunk1() {
+func ExampleChainable_Chunk_chunk1() {
 	data := []int{1, 2, 3, 4, 5}
 	size := 2
 
@@ -15,7 +15,7 @@ func ExampleIChainableChunk_chunk1() {
 	// ===> [][]int{ { 1, 2 }, { 3, 4 }, { 5 } }
 }
 
-func ExampleIChainableChunk_chunk2() {
+func ExampleChainable_Chunk_chunk2() {
 	data := []string{"a", "b", "c", "d", "e"}
 	size := 3
 
@@ -24,7 +24,7 @@ func ExampleIChainableChunk_chunk2() {
 	// ===> [][]string{ { "a", "b", "c" }, { "d", "e" } }
 }
 
-func ExampleIChainableChunk_chunk3() {
+func ExampleChainable_Chunk_chunk3() {
 	data := []interface{}{
 		3.2, "a", -1,
 		make([]byte, 0),
@@ -48,7 +48,7 @@ func ExampleIChainableChunk_chunk3() {
 	*/
 }
 
-func ExampleCompact_compact1() {
+func ExampleChainable_Compact_compact1() {
 	data := []int{-2, -1, 0, 1, 2}
 
 	result := From(data).Compact().Result()
@@ -56,7 +56,7 @@ func ExampleCompact_compact1() {
 	// ===> []int{ -2, -1, 1, 2 }
 }
 
-func ExampleCompact_compact2() {
+func ExampleChainable_Compact_compact2() {
 	data := []string{"a", "b", "", "d"}
 
 	result := From(data).Compact().Result()
@@ -64,7 +64,7 @@ func ExampleCompact_compact2() {
 	// ===> []string{ "a", "b", "d" }
 }
 
-func ExampleCompact_compact3() {
+func ExampleChainable_Compact_compact3() {
 	data := []interface{}{-2, 0, 1, 2, false, true, "", "hello", nil}
 
 	result := From(data).Compact().Result()
@@ -72,7 +72,7 @@ func ExampleCompact_compact3() {
 	// ===> []interface{}{ -2, 1, 2, true, "hello" }
 }
 
-func ExampleCompact_compact4() {
+func ExampleChainable_Compact_compact4() {
 	item1, item2, item3 := "a", "b", "c"
 	data := []*string{&item1, nil, &item2, nil, &item3}
 
@@ -85,7 +85,7 @@ func ExampleCompact_compact4() {
 	// ===> []*string{ (*string)(0xc42000e1e0), (*string)(0xc42000e1f0), (*string)(0xc42000e200) }
 }
 
-func ExampleConcatMany_concat1() {
+func ExampleChainable_ConcatMany_concat1() {
 	data := []int{1, 2, 3, 4}
 	dataConcat1 := []int{4, 6, 7}
 	dataConcat2 := []int{8, 9}
@@ -95,7 +95,7 @@ func ExampleConcatMany_concat1() {
 	// ===> []int{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 }
 
-func ExampleConcatMany_concat2() {
+func ExampleChainable_ConcatMany_concat2() {
 	data := []string{"my"}
 	dataConcat1 := []string{"name", "is"}
 	dataConcat2 := []string{"jason", "todd"}
@@ -109,7 +109,7 @@ func ExampleConcatMany_concat2() {
 	// ===> []string{ "my", "name", "is", "jason", "todd" }
 }
 
-func ExampleConcat_concat1() {
+func ExampleChainable_Concat_concat1() {
 	data := []int{1, 2, 3, 4}
 	dataConcat := []int{4, 6, 7}
 
@@ -118,7 +118,7 @@ func ExampleConcat_concat1() {
 	// ===> []int{ 1, 2, 3, 4, 5, 6, 7 }
 }
 
-func ExampleCount_countMap1() {
+func ExampleChainable_Count_countMap1() {
 	data := map[string]interface{}{
 		"name":   "jason",
 		"age":    12,
@@ -129,7 +129,7 @@ func ExampleCount_countMap1() {
 	// ===> 3
 }
 
-func ExampleCountBy_countMap2() {
+func ExampleChainable_CountBy_countMap2() {
 	data := map[string]interface{}{
 		"name":   "jason",
 		"age":    12,
@@ -145,7 +145,7 @@ func ExampleCountBy_countMap2() {
 	// ===> 2
 }
 
-func ExampleCountBy_countMap3() {
+func ExampleChainable_CountBy_countMap3() {
 	data := map[string]interface{}{
 		"name":   "jason",
 		"age":    12,
@@ -161,14 +161,14 @@ func ExampleCountBy_countMap3() {
 	// ===> 1
 }
 
-func ExampleCount_countSlice1() {
+func ExampleChainable_Count_countSlice1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	result := From(data).Count().Result()
 	fmt.Println(result)
 	// ===> 3
 }
 
-func ExampleCountBy_countSlice2() {
+func ExampleChainable_CountBy_countSlice2() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	result := From(data).
@@ -180,7 +180,7 @@ func ExampleCountBy_countSlice2() {
 	// ===> 2
 }
 
-func ExampleCountBy_countSlice3() {
+func ExampleChainable_CountBy_countSlice3() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	result, err := From(data).
@@ -196,7 +196,7 @@ func ExampleCountBy_countSlice3() {
 	// ===> 1
 }
 
-func ExampleDifference_difference1() {
+func ExampleChainable_Difference_difference1() {
 	data := []int{1, 2, 3, 4, 4, 6, 7}
 	dataDiff := []int{2, 7}
 
@@ -209,7 +209,7 @@ func ExampleDifference_difference1() {
 	// ===> []int{ 1, 3, 4, 4, 6 }
 }
 
-func ExampleDifferenceMany_difference2() {
+func ExampleChainable_DifferenceMany_difference2() {
 	data := []string{"a", "b", "b", "c", "d", "e", "f", "g", "h"}
 	dataDiff1 := []string{"b", "d"}
 	dataDiff2 := []string{"e", "f", "h"}
@@ -223,7 +223,7 @@ func ExampleDifferenceMany_difference2() {
 	// ===> []string{ "a", "c", "g" }
 }
 
-func ExampleDifferenceMany_difference3() {
+func ExampleChainable_DifferenceMany_difference3() {
 	data := []float64{1.1, 1.11, 1.2, 2.3, 3.0, 3, 4.0, 4.00000, 4.000000001}
 	dataDiff1 := []float64{1.1, 3}
 	dataDiff2 := []float64{4.000000001}
@@ -237,7 +237,7 @@ func ExampleDifferenceMany_difference3() {
 	// ===> []float64{ 1.11, 1.2, 2.3, 4, 4 }
 }
 
-func ExampleDrop_drop1() {
+func ExampleChainable_Drop_drop1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	n := 1
 
@@ -250,7 +250,7 @@ func ExampleDrop_drop1() {
 	// ===> []int{ 2, 3, 4, 4, 5, 6 }
 }
 
-func ExampleDrop_drop2() {
+func ExampleChainable_Drop_drop2() {
 	data := []string{"a", "b", "c", "d", "e", "f"}
 	n := 3
 
@@ -263,7 +263,7 @@ func ExampleDrop_drop2() {
 	// ===> []string{ "d", "e", "f" }
 }
 
-func ExampleDropRight_dropRight1() {
+func ExampleChainable_DropRight_dropRight1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	n := 1
 
@@ -276,7 +276,7 @@ func ExampleDropRight_dropRight1() {
 	// ===> []int{ 1, 2, 3, 4, 4, 5 }
 }
 
-func ExampleDropRight_dropRight2() {
+func ExampleChainable_DropRight_dropRight2() {
 	data := []string{"a", "b", "c", "d", "e", "f"}
 	n := 3
 
@@ -289,7 +289,7 @@ func ExampleDropRight_dropRight2() {
 	// ===> []string{ "a", "b", "c" }
 }
 
-func ExampleEach_eachMap1() {
+func ExampleChainable_Each_eachMap1() {
 	data := map[string]interface{}{
 		"name":   "damian",
 		"age":    17,
@@ -306,7 +306,7 @@ func ExampleEach_eachMap1() {
 	}
 }
 
-func ExampleEach_eachMap2() {
+func ExampleChainable_Each_eachMap2() {
 	data := map[string]interface{}{
 		"name":   "damian",
 		"age":    17,
@@ -323,7 +323,7 @@ func ExampleEach_eachMap2() {
 	}
 }
 
-func ExampleEach_eachSlice1() {
+func ExampleChainable_Each_eachSlice1() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	err := From(data).
@@ -336,7 +336,7 @@ func ExampleEach_eachSlice1() {
 	}
 }
 
-func ExampleEach_eachSlice2() {
+func ExampleChainable_Each_eachSlice2() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	err := From(data).
@@ -349,7 +349,7 @@ func ExampleEach_eachSlice2() {
 	}
 }
 
-func ExampleEach_eachSlice3() {
+func ExampleChainable_Each_eachSlice3() {
 	type Sample struct {
 		Name string
 		Age  int
@@ -371,7 +371,7 @@ func ExampleEach_eachSlice3() {
 	}
 }
 
-func ExampleEach_eachSlice4() {
+func ExampleChainable_Each_eachSlice4() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "jason", "stephanie"}
 
 	err := From(data).
@@ -389,7 +389,7 @@ func ExampleEach_eachSlice4() {
 	}
 }
 
-func ExampleEachRight_eachRightMap1() {
+func ExampleChainable_EachRight_eachRightMap1() {
 	data := map[string]interface{}{
 		"name":   "damian",
 		"age":    17,
@@ -406,7 +406,7 @@ func ExampleEachRight_eachRightMap1() {
 	}
 }
 
-func ExampleEachRight_eachRightMap2() {
+func ExampleChainable_EachRight_eachRightMap2() {
 	data := map[string]interface{}{
 		"name":   "damian",
 		"age":    17,
@@ -423,7 +423,7 @@ func ExampleEachRight_eachRightMap2() {
 	}
 }
 
-func ExampleEachRight_eachRightSlice1() {
+func ExampleChainable_EachRight_eachRightSlice1() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	err := From(data).
@@ -436,7 +436,7 @@ func ExampleEachRight_eachRightSlice1() {
 	}
 }
 
-func ExampleEachRight_eachRightSlice2() {
+func ExampleChainable_EachRight_eachRightSlice2() {
 	data := []string{"damian", "grayson", "cassandra"}
 
 	err := From(data).
@@ -449,7 +449,7 @@ func ExampleEachRight_eachRightSlice2() {
 	}
 }
 
-func ExampleEachRight_eachRightSlice3() {
+func ExampleChainable_EachRight_eachRightSlice3() {
 	type Sample struct {
 		Name string
 		Age  int
@@ -471,7 +471,7 @@ func ExampleEachRight_eachRightSlice3() {
 	}
 }
 
-func ExampleEachRight_eachRightSlice4() {
+func ExampleChainable_EachRight_eachRightSlice4() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "jason", "stephanie"}
 
 	err := From(data).
@@ -489,7 +489,7 @@ func ExampleEachRight_eachRightSlice4() {
 	}
 }
 
-func ExampleFill_fill1() {
+func ExampleChainable_Fill_fill1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	replacement := 9
 
@@ -502,7 +502,7 @@ func ExampleFill_fill1() {
 	// ===> []int{ 9, 9, 9, 9, 9, 9, 9 }
 }
 
-func ExampleFill_fill2() {
+func ExampleChainable_Fill_fill2() {
 	data := []string{"grayson", "jason", "tim", "damian"}
 	replacement := "alfred"
 	start := 2
@@ -516,7 +516,7 @@ func ExampleFill_fill2() {
 	// ===> []int{ "grayson", "jason", "alfred", "alfred" }
 }
 
-func ExampleFill_fill3() {
+func ExampleChainable_Fill_fill3() {
 	data := []float64{1, 2.2, 3.0002, 4, 4, 5.12, 6}
 	replacement := float64(9)
 	start, end := 3, 5
@@ -530,7 +530,7 @@ func ExampleFill_fill3() {
 	// ===> []float64{ 1, 2.2, 3.0002, 9, 9, 5.12, 6 }
 }
 
-func ExampleFilter_filterMap() {
+func ExampleChainable_Filter_filterMap() {
 	data := map[string]int{
 		"clean code":       10000,
 		"rework":           12000,
@@ -553,7 +553,7 @@ func ExampleFilter_filterMap() {
 	*/
 }
 
-func ExampleFilter_filterSlice() {
+func ExampleChainable_Filter_filterSlice() {
 	type Sample struct {
 		EbookName      string
 		DailyDownloads int
@@ -581,7 +581,7 @@ func ExampleFilter_filterSlice() {
 	*/
 }
 
-func ExampleFind_find1() {
+func ExampleChainable_Find_find1() {
 	type Sample struct {
 		EbookName      string
 		DailyDownloads int
@@ -604,7 +604,7 @@ func ExampleFind_find1() {
 	// ===> Sample { EbookName: "rework", DailyDownloads: 12000 }
 }
 
-func ExampleFind_find2() {
+func ExampleChainable_Find_find2() {
 	data := []string{"clean code", "rework", "detective comics"}
 
 	result, err := Find(data, func(each string, i int) bool {
@@ -618,7 +618,7 @@ func ExampleFind_find2() {
 	// ===> "detective comics"
 }
 
-func ExampleFindIndex_findIndex1() {
+func ExampleChainable_FindIndex_findIndex1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 	predicate := func(each string) bool {
 		return each == "tim"
@@ -633,7 +633,7 @@ func ExampleFindIndex_findIndex1() {
 	// ===> 3
 }
 
-func ExampleFindIndex_findIndex2() {
+func ExampleChainable_FindIndex_findIndex2() {
 	data := []int{-2, -1, 0, 1, 2}
 
 	result, err := FindIndex(data, func(each int) bool {
@@ -647,7 +647,7 @@ func ExampleFindIndex_findIndex2() {
 	// ===> -1
 }
 
-func ExampleFindIndex_findIndex3() {
+func ExampleChainable_FindIndex_findIndex3() {
 	data := []float64{1, 1.1, 1.2, 1.200001, 1.2000000001, 1.3}
 
 	result, err := FindIndex(data, func(each float64) bool {
@@ -661,7 +661,7 @@ func ExampleFindIndex_findIndex3() {
 	// ===> 4
 }
 
-func ExampleFindIndex_findIndex4() {
+func ExampleChainable_FindIndex_findIndex4() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -677,7 +677,7 @@ func ExampleFindIndex_findIndex4() {
 	// ===> 2
 }
 
-func ExampleFindIndex_findIndex5() {
+func ExampleChainable_FindIndex_findIndex5() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -693,7 +693,7 @@ func ExampleFindIndex_findIndex5() {
 	// ===> 3
 }
 
-func ExampleFindLast_findLast1() {
+func ExampleChainable_FindLast_findLast1() {
 	type Sample struct {
 		EbookName      string
 		DailyDownloads int
@@ -716,7 +716,7 @@ func ExampleFindLast_findLast1() {
 	// ===> Sample { EbookName: "detective comics", DailyDownloads: 11500 }
 }
 
-func ExampleFindLast_findLast2() {
+func ExampleChainable_FindLast_findLast2() {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
 	result, err := FindLast(data, func(each string, i int) bool {
@@ -730,7 +730,7 @@ func ExampleFindLast_findLast2() {
 	// ===> "detective comics"
 }
 
-func ExampleFindLast_findLast3() {
+func ExampleChainable_FindLast_findLast3() {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
 	result, err := FindLast(data, func(each string, i int) bool {
@@ -744,7 +744,7 @@ func ExampleFindLast_findLast3() {
 	// ===> "coco"
 }
 
-func ExampleFindLastIndex_findLastIndex1() {
+func ExampleChainable_FindLastIndex_findLastIndex1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 
 	result, err := FindLastIndex(data, func(each string) bool {
@@ -758,7 +758,7 @@ func ExampleFindLastIndex_findLastIndex1() {
 	// ===> 4
 }
 
-func ExampleFindLastIndex_findLastIndex2() {
+func ExampleChainable_FindLastIndex_findLastIndex2() {
 	data := []int{1, 2, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -774,7 +774,7 @@ func ExampleFindLastIndex_findLastIndex2() {
 	// ===> 4
 }
 
-func ExampleFindLastIndex_findLastIndex3() {
+func ExampleChainable_FindLastIndex_findLastIndex3() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -790,7 +790,7 @@ func ExampleFindLastIndex_findLastIndex3() {
 	// ===> 3
 }
 
-func ExampleFindLastIndex_findLastIndex4() {
+func ExampleChainable_FindLastIndex_findLastIndex4() {
 	data := []int{1, 2, 3, 3, 4, 5}
 	predicate := func(each int) bool {
 		return each == 3
@@ -806,7 +806,7 @@ func ExampleFindLastIndex_findLastIndex4() {
 	// ===> -1
 }
 
-func ExampleFirst_first1() {
+func ExampleChainable_First_first1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	result, err := First(data)
 
@@ -818,7 +818,7 @@ func ExampleFirst_first1() {
 	// ===> "damian"
 }
 
-func ExampleFirst_first2() {
+func ExampleChainable_First_first2() {
 	data := []string{}
 	result, err := First(data)
 
@@ -830,7 +830,7 @@ func ExampleFirst_first2() {
 	// ===> nil
 }
 
-func ExampleFromPairs_fromPairs1() {
+func ExampleChainable_FromPairs_fromPairs1() {
 	data := []interface{}{
 		[]interface{}{"a", 1},
 		[]interface{}{"b", 2},
@@ -850,7 +850,7 @@ func ExampleFromPairs_fromPairs1() {
 	*/
 }
 
-func ExampleFromPairs_fromPairs2() {
+func ExampleChainable_FromPairs_fromPairs2() {
 	data := []interface{}{
 		[]interface{}{true, []int{1, 2, 3}},
 		[]interface{}{false, []string{"damian", "grayson"}},
@@ -870,7 +870,7 @@ func ExampleFromPairs_fromPairs2() {
 	*/
 }
 
-func ExampleGroupBy_groupBy1() {
+func ExampleChainable_GroupBy_groupBy1() {
 	type Sample struct {
 		Ebook    string
 		Category string
@@ -911,7 +911,7 @@ func ExampleGroupBy_groupBy1() {
 	*/
 }
 
-func ExampleGroupBy_groupBy2() {
+func ExampleChainable_GroupBy_groupBy2() {
 	data := []int{1, 2, 3, 5, 6, 4, 2, 5, 2}
 
 	result, err := GroupBy(data, func(each int) int {
@@ -934,7 +934,7 @@ func ExampleGroupBy_groupBy2() {
 	*/
 }
 
-func ExampleIncludes_includesMap1() {
+func ExampleChainable_Includes_includesMap1() {
 	data := map[string]string{
 		"name":  "grayson",
 		"hobby": "helping people",
@@ -949,7 +949,7 @@ func ExampleIncludes_includesMap1() {
 	// ===> true
 }
 
-func ExampleIncludes_includesMap2() {
+func ExampleChainable_Includes_includesMap2() {
 	data := map[string]string{
 		"name":  "grayson",
 		"hobby": "helping people",
@@ -964,7 +964,7 @@ func ExampleIncludes_includesMap2() {
 	// ===> false
 }
 
-func ExampleIncludes_includesSlice1() {
+func ExampleChainable_Includes_includesSlice1() {
 	data := []string{"damian", "tim", "jason", "grayson"}
 	result, err := Includes(data, "tim")
 	if err != nil {
@@ -975,7 +975,7 @@ func ExampleIncludes_includesSlice1() {
 	// ===> true
 }
 
-func ExampleIncludes_includesSlice2() {
+func ExampleChainable_Includes_includesSlice2() {
 	data := []string{"damian", "tim", "jason", "grayson"}
 	result, err := Includes(data, "tim", 2)
 	if err != nil {
@@ -986,7 +986,7 @@ func ExampleIncludes_includesSlice2() {
 	// ===> false
 }
 
-func ExampleIncludes_includesSlice3() {
+func ExampleChainable_Includes_includesSlice3() {
 	data := []string{"damian", "tim", "jason", "grayson"}
 	result, err := Includes(data, "cassandra")
 	if err != nil {
@@ -997,7 +997,7 @@ func ExampleIncludes_includesSlice3() {
 	// ===> false
 }
 
-func ExampleIncludes_includesSlice4() {
+func ExampleChainable_Includes_includesSlice4() {
 	data := []interface{}{"name", 12, true}
 
 	Includes(data, "name") // ===> true
@@ -1005,11 +1005,11 @@ func ExampleIncludes_includesSlice4() {
 	Includes(data, true)   // ===> true
 }
 
-func ExampleIncludes_includesSlice5() {
+func ExampleChainable_Includes_includesSlice5() {
 	Includes("damian", "an") // ===> true
 }
 
-func ExampleIndexOf_indexOf1() {
+func ExampleChainable_IndexOf_indexOf1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 	IndexOf(data, "duke")    // ===> -1
 	IndexOf(data, "tim")     // ===> 3
@@ -1019,7 +1019,7 @@ func ExampleIndexOf_indexOf1() {
 	IndexOf(data, "tim", -2) // ===> -1
 }
 
-func ExampleIndexOf_indexOf2() {
+func ExampleChainable_IndexOf_indexOf2() {
 	data := []float64{2.1, 2.2, 3, 3.00000, 3.1, 3.9, 3.95}
 	IndexOf(data, 2.2)           // ===> 1
 	IndexOf(data, 3)             // ===> -1
@@ -1028,13 +1028,13 @@ func ExampleIndexOf_indexOf2() {
 	IndexOf(data, float64(3), 3) // ===> 3
 }
 
-func ExampleIndexOf_indexOf3() {
+func ExampleChainable_IndexOf_indexOf3() {
 	data := []interface{}{"jason", 24, true}
 	IndexOf(data, 24)     // ===> 1
 	IndexOf(data, 24, -1) // ===> -1
 }
 
-func ExampleInitial_initial1() {
+func ExampleChainable_Initial_initial1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	result, err := Initial(data)
 
@@ -1046,7 +1046,7 @@ func ExampleInitial_initial1() {
 	// ===> []string{ "damian", "grayson" }
 }
 
-func ExampleInitial_initial2() {
+func ExampleChainable_Initial_initial2() {
 	data := []int{1, 2, 3, 4, 5}
 	result, err := Initial(data)
 
@@ -1058,7 +1058,7 @@ func ExampleInitial_initial2() {
 	// ===> []int{ 1, 2, 3, 4 }
 }
 
-func ExampleInitial_initial3() {
+func ExampleChainable_Initial_initial3() {
 	data := []map[string]string{{"name": "jason"}}
 	result, err := Initial(data)
 
@@ -1070,7 +1070,7 @@ func ExampleInitial_initial3() {
 	// ===> []map[string]string{}
 }
 
-func ExampleInitial_initial4() {
+func ExampleChainable_Initial_initial4() {
 	data := []float64{}
 	result, err := Initial(data)
 
@@ -1082,7 +1082,7 @@ func ExampleInitial_initial4() {
 	// ===> []float64{}
 }
 
-func ExampleIntersection_intersection1() {
+func ExampleChainable_Intersection_intersection1() {
 	result, err := Intersection(
 		[]string{"damian", "grayson", "cassandra", "tim", "tim", "jason"},
 		[]string{"cassandra", "tim", "jason"},
@@ -1097,7 +1097,7 @@ func ExampleIntersection_intersection1() {
 	// ===> []string{ "cassandra", "jason" }
 }
 
-func ExampleIntersection_intersection2() {
+func ExampleChainable_Intersection_intersection2() {
 	result, err := Intersection(
 		[]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.1001, 1.2, 1.33, 1.4},
 		[]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.2, 1.33},
@@ -1114,7 +1114,7 @@ func ExampleIntersection_intersection2() {
 	// ===> []float64{ 0.8001, 0.999, 1.33 }
 }
 
-func ExampleJoin_join1() {
+func ExampleChainable_Join_join1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	separator := " - "
 
@@ -1127,7 +1127,7 @@ func ExampleJoin_join1() {
 	// ===> "damian - grayson - cassandra"
 }
 
-func ExampleJoin_join2() {
+func ExampleChainable_Join_join2() {
 	data := []int{1, 2, 3, 4}
 	separator := ", "
 
@@ -1140,7 +1140,7 @@ func ExampleJoin_join2() {
 	// ===> "1, 2, 3, 4"
 }
 
-func ExampleKeyBy_keyBy() {
+func ExampleChainable_KeyBy_keyBy() {
 	type HashMap map[string]string
 
 	data := []HashMap{
@@ -1168,7 +1168,7 @@ func ExampleKeyBy_keyBy() {
 	*/
 }
 
-func ExampleLast_last1() {
+func ExampleChainable_Last_last1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	result, err := Last(data)
 
@@ -1180,7 +1180,7 @@ func ExampleLast_last1() {
 	// ===> "cassandra"
 }
 
-func ExampleLast_last2() {
+func ExampleChainable_Last_last2() {
 	data := []int{1}
 	result, err := Last(data)
 
@@ -1192,7 +1192,7 @@ func ExampleLast_last2() {
 	// ===> 1
 }
 
-func ExampleLast_last3() {
+func ExampleChainable_Last_last3() {
 	data := []string{}
 	result, err := Last(data)
 
@@ -1204,7 +1204,7 @@ func ExampleLast_last3() {
 	// ===> nil
 }
 
-func ExampleLastIndexOf_lastIndexOf1() {
+func ExampleChainable_LastIndexOf_lastIndexOf1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 
 	LastIndexOf(data, "duke")    // ===> -1
@@ -1215,7 +1215,7 @@ func ExampleLastIndexOf_lastIndexOf1() {
 	LastIndexOf(data, "tim", -2) // ===> 4
 }
 
-func ExampleLastIndexOf_lastIndexOf2() {
+func ExampleChainable_LastIndexOf_lastIndexOf2() {
 	data := []float64{2.1, 2.2, 3, 3.00000, 3.1, 3.9, 3.95}
 
 	LastIndexOf(data, 2.2)           // ===> 1
@@ -1225,14 +1225,14 @@ func ExampleLastIndexOf_lastIndexOf2() {
 	LastIndexOf(data, float64(3), 3) // ===> 3
 }
 
-func ExampleLastIndexOf_lastIndexOf3() {
+func ExampleChainable_LastIndexOf_lastIndexOf3() {
 	data := []interface{}{"jason", 24, true}
 
 	LastIndexOf(data, 24)     // ===> 1
 	LastIndexOf(data, 24, -1) // ===> 1
 }
 
-func ExampleMap_map1() {
+func ExampleChainable_Map_map1() {
 	type Sample struct {
 		EbookName      string
 		DailyDownloads int
@@ -1255,7 +1255,7 @@ func ExampleMap_map1() {
 	// ===> []string{ "clean code", "rework", "detective comics" }
 }
 
-func ExampleMap_map2() {
+func ExampleChainable_Map_map2() {
 	type SampleOne struct {
 		EbookName      string
 		DailyDownloads int
@@ -1299,7 +1299,7 @@ func ExampleMap_map2() {
 	*/
 }
 
-func ExampleNth_nth1() {
+func ExampleChainable_Nth_nth1() {
 	data := []string{"grayson", "jason", "tim", "damian"}
 
 	Nth(data, 1)  // ===> "jason"
@@ -1307,7 +1307,7 @@ func ExampleNth_nth1() {
 	Nth(data, -1) // ===> "damian"
 }
 
-func ExampleNth_nth2() {
+func ExampleChainable_Nth_nth2() {
 	data := []int{1, 2, 3, 4, 5}
 	result, err := Nth(data, 4)
 
@@ -1319,7 +1319,7 @@ func ExampleNth_nth2() {
 	// ===> 5
 }
 
-func ExampleOrderBy_orderBy1() {
+func ExampleChainable_OrderBy_orderBy1() {
 	type HashMap map[string]string
 
 	data := []HashMap{
@@ -1347,7 +1347,7 @@ func ExampleOrderBy_orderBy1() {
 	*/
 }
 
-func ExampleOrderBy_orderBy2() {
+func ExampleChainable_OrderBy_orderBy2() {
 	type HashMap map[string]interface{}
 
 	data := []HashMap{
@@ -1375,7 +1375,7 @@ func ExampleOrderBy_orderBy2() {
 	*/
 }
 
-func ExampleOrderBy_orderBy3() {
+func ExampleChainable_OrderBy_orderBy3() {
 	type HashMap map[string]interface{}
 
 	data := []HashMap{
@@ -1403,7 +1403,7 @@ func ExampleOrderBy_orderBy3() {
 	*/
 }
 
-func ExampleOrderBy_orderBy4() {
+func ExampleChainable_OrderBy_orderBy4() {
 	type HashMap map[string]interface{}
 
 	data := []HashMap{
@@ -1431,7 +1431,7 @@ func ExampleOrderBy_orderBy4() {
 	*/
 }
 
-func ExamplePartition_partition() {
+func ExampleChainable_Partition_partition() {
 	type HashMap map[string]interface{}
 
 	data := []HashMap{
@@ -1473,7 +1473,7 @@ func ExamplePartition_partition() {
 	*/
 }
 
-func ExamplePull_pull1() {
+func ExampleChainable_Pull_pull1() {
 	data := []int{1, 2, 3, 4, 5, 6}
 	result, err := Pull(data, 3)
 
@@ -1485,7 +1485,7 @@ func ExamplePull_pull1() {
 	// ===> []int{ 1, 2, 4, 5, 6 }
 }
 
-func ExamplePull_pull2() {
+func ExampleChainable_Pull_pull2() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 	result, err := Pull(data, 2.1, 3.2, 6.3)
 
@@ -1497,7 +1497,7 @@ func ExamplePull_pull2() {
 	// ===> []float64{ 1.1, 4.2, 5.2 }
 }
 
-func ExamplePull_pull3() {
+func ExampleChainable_Pull_pull3() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
 	result, err := Pull(data, "grayson", "tim")
 
@@ -1509,7 +1509,7 @@ func ExamplePull_pull3() {
 	// ===> []string{ "damian", "cassandra", "jason", "stephanie" }
 }
 
-func ExamplePullAll_pullAll1() {
+func ExampleChainable_PullAll_pullAll1() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 	exclude := []float64{2.1, 3.2, 6.3}
 
@@ -1522,7 +1522,7 @@ func ExamplePullAll_pullAll1() {
 	// ===> []float64{ 1.1, 4.2, 5.2 }
 }
 
-func ExamplePullAll_pullAll2() {
+func ExampleChainable_PullAll_pullAll2() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
 	exclude := []string{"grayson", "tim"}
 
@@ -1535,7 +1535,7 @@ func ExamplePullAll_pullAll2() {
 	// ===> []string{ "damian", "cassandra", "jason", "stephanie" }
 }
 
-func ExamplePullAt_pullAt() {
+func ExampleChainable_PullAt_pullAt() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 
 	result, err := PullAt(data, 1, 3)
@@ -1547,7 +1547,7 @@ func ExamplePullAt_pullAt() {
 	// ===> []float64{ 1.1, 3.2, 5.2, 6.3 }
 }
 
-func ExampleReduce_reduceMap1() {
+func ExampleChainable_Reduce_reduceMap1() {
 	type HashMap map[string]interface{}
 
 	data := HashMap{
@@ -1573,7 +1573,7 @@ func ExampleReduce_reduceMap1() {
 	// ===> "name: grayson, age: 21, isMale: true"
 }
 
-func ExampleReduce_reduceSlice1() {
+func ExampleChainable_Reduce_reduceSlice1() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 	result, err := Reduce(data, func(accumulator, each int) int {
@@ -1587,7 +1587,7 @@ func ExampleReduce_reduceSlice1() {
 	// ===> 55
 }
 
-func ExampleReduce_reduceSlice2() {
+func ExampleChainable_Reduce_reduceSlice2() {
 	type HashMap map[string]interface{}
 
 	data := [][]interface{}{
@@ -1614,7 +1614,7 @@ func ExampleReduce_reduceSlice2() {
 	*/
 }
 
-func ExampleReject_rejectMap() {
+func ExampleChainable_Reject_rejectMap() {
 	data := map[string]int{
 		"clean code":       10000,
 		"rework":           12000,
@@ -1632,7 +1632,7 @@ func ExampleReject_rejectMap() {
 	// ===> map[string]int{ "clean code": 10000 }
 }
 
-func ExampleReject_rejectSlice() {
+func ExampleChainable_Reject_rejectSlice() {
 	type Book struct {
 		EbookName      string
 		DailyDownloads int
@@ -1659,7 +1659,7 @@ func ExampleReject_rejectSlice() {
 	*/
 }
 
-func ExampleRemove_remove1() {
+func ExampleChainable_Remove_remove1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	result, removed, err := Remove(data, func(each string) bool {
 		return strings.Contains(each, "m")
@@ -1673,7 +1673,7 @@ func ExampleRemove_remove1() {
 	fmt.Println(removed) // ===> []string{ "damian", "tim" }
 }
 
-func ExampleRemove_remove2() {
+func ExampleChainable_Remove_remove2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	result, removed, err := Remove(data, func(each int) bool {
 		return each%2 == 0
@@ -1687,7 +1687,7 @@ func ExampleRemove_remove2() {
 	fmt.Println(removed) // ===> []int{ 2, 4, 6, 8 }
 }
 
-func ExampleReverse_reverse1() {
+func ExampleChainable_Reverse_reverse1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	result, err := Reverse(data)
 
@@ -1699,7 +1699,7 @@ func ExampleReverse_reverse1() {
 	// ===> []string{ "tim", "grayson", "damian", "jason" }
 }
 
-func ExampleReverse_reverse2() {
+func ExampleChainable_Reverse_reverse2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	result, err := Reverse(data)
 
@@ -1711,7 +1711,7 @@ func ExampleReverse_reverse2() {
 	// ===> []int{ 9, 8, 7, 6, 5, 4, 3, 2, 1 }
 }
 
-func ExampleSample_sample() {
+func ExampleChainable_Sample_sample() {
 	type Book struct {
 		EbookName      string
 		DailyDownloads int
@@ -1741,7 +1741,7 @@ func ExampleSample_sample() {
 	*/
 }
 
-func ExampleSampleSize_sampleSize() {
+func ExampleChainable_SampleSize_sampleSize() {
 	type Book struct {
 		EbookName      string
 		DailyDownloads int
@@ -1780,7 +1780,7 @@ func ExampleSampleSize_sampleSize() {
 	*/
 }
 
-func ExampleShuffle_shuffle1() {
+func ExampleChainable_Shuffle_shuffle1() {
 	data := []int{1, 2, 3, 4}
 	result, err := Shuffle(data)
 	if err != nil {
@@ -1805,7 +1805,7 @@ func ExampleShuffle_shuffle1() {
 	*/
 }
 
-func ExampleShuffle_shuffle2() {
+func ExampleChainable_Shuffle_shuffle2() {
 	type Book struct {
 		EbookName      string
 		DailyDownloads int
@@ -1847,12 +1847,12 @@ func ExampleShuffle_shuffle2() {
 	*/
 }
 
-func ExampleSize_sizeSlice() {
+func ExampleChainable_Size_sizeSlice() {
 	Size([]int{1, 2, 3, 4, 5}) // ===> 5
 	Size("bruce")              // ===> 5
 }
 
-func ExampleSize_sizeMap() {
+func ExampleChainable_Size_sizeMap() {
 	data := map[string]interface{}{
 		"name":   "noval",
 		"age":    24,
@@ -1868,7 +1868,7 @@ func ExampleSize_sizeMap() {
 	// ===> 3
 }
 
-func ExampleTail_tail1() {
+func ExampleChainable_Tail_tail1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	result, err := Tail(data)
 
@@ -1880,7 +1880,7 @@ func ExampleTail_tail1() {
 	// ===> []string{ "damian", "grayson", "tim" }
 }
 
-func ExampleTail_tail2() {
+func ExampleChainable_Tail_tail2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	result, err := Tail(data)
 
@@ -1892,7 +1892,7 @@ func ExampleTail_tail2() {
 	// ===> []int{ 2, 3, 4, 5, 6, 7, 8, 9 }
 }
 
-func ExampleTake_take1() {
+func ExampleChainable_Take_take1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	take := 2
 
@@ -1905,7 +1905,7 @@ func ExampleTake_take1() {
 	// ===> []string{ "jason", "damian" }
 }
 
-func ExampleTake_take2() {
+func ExampleChainable_Take_take2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	take := 5
 
@@ -1918,7 +1918,7 @@ func ExampleTake_take2() {
 	// ===> []int{ 1, 2, 3, 4, 5 }
 }
 
-func ExampleTakeRight_takeRight1() {
+func ExampleChainable_TakeRight_takeRight1() {
 	data := []string{"jason", "damian", "grayson", "tim"}
 	take := 2
 
@@ -1931,7 +1931,7 @@ func ExampleTakeRight_takeRight1() {
 	// ===> []string{ "grayson", "tim" }
 }
 
-func ExampleTakeRight_takeRight2() {
+func ExampleChainable_TakeRight_takeRight2() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	take := 5
 
@@ -1944,7 +1944,7 @@ func ExampleTakeRight_takeRight2() {
 	// ===> []int{ 5, 6, 7, 8, 9 }
 }
 
-func ExampleUnion_union1() {
+func ExampleChainable_Union_union1() {
 	result, err := Union(
 		[]string{"damian", "grayson", "grayson", "cassandra"},
 		[]string{"tim", "grayson", "jason", "stephanie"},
@@ -1959,7 +1959,7 @@ func ExampleUnion_union1() {
 	// ===> []string{ "damian", "grayson", "cassandra", "tim", "jason", "stephanie", "duke" }
 }
 
-func ExampleUnion_union2() {
+func ExampleChainable_Union_union2() {
 	result, err := Union(
 		[]int{1, 2, 3},
 		[]int{2, 3, 4, 5, 6},
@@ -1975,7 +1975,7 @@ func ExampleUnion_union2() {
 	// ===> []int{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 }
 
-func ExampleUniq_uniq1() {
+func ExampleChainable_Uniq_uniq1() {
 	data := []string{"damian", "grayson", "grayson", "cassandra"}
 	result, err := Uniq(data)
 
@@ -1987,7 +1987,7 @@ func ExampleUniq_uniq1() {
 	// ===> []string{ "damian", "grayson", "cassandra" }
 }
 
-func ExampleUniq_uniq2() {
+func ExampleChainable_Uniq_uniq2() {
 	data := []float64{1.1, 3.00000, 3.1, 2.2000000, 3, 2.2, 3.0}
 	result, err := Uniq(data)
 
@@ -1999,7 +1999,7 @@ func ExampleUniq_uniq2() {
 	// ===> []float64{ 1.1, 3, 3.1, 2.2 }
 }
 
-func ExampleWithout_without1() {
+func ExampleChainable_Without_without1() {
 	data := []int{1, 2, 3, 4, 5, 6}
 	exclude := []int{3}
 
@@ -2012,7 +2012,7 @@ func ExampleWithout_without1() {
 	// ===> []int{ 1, 2, 4, 5, 6 }
 }
 
-func ExampleWithout_without2() {
+func ExampleChainable_Without_without2() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 	exclude := []float64{2.1, 3.2, 6.3}
 
@@ -2025,7 +2025,7 @@ func ExampleWithout_without2() {
 	// ===> []float64{ 1.1, 4.2, 5.2 }
 }
 
-func ExampleWithout_without3() {
+func ExampleChainable_Without_without3() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
 	exclude := []string{"grayson", "tim"}
 
