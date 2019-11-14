@@ -2487,8 +2487,29 @@ func (g *Chainable) LastIndexOf(search interface{}, args ...int) IChainableLastI
 	return &resultLastIndexOf{chainable: g.markResult(result)}
 }
 
-// ============================================== Map
-
+// Map function creates an array of values by running each element in `data` thru iteratee.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  callback interface{} // ==> type: `func(each anyType, i int)<any type>` or
+//                       //           `func(value anyType, key anyType, i int)<any type>`
+//                       // ==> description: the function invoked per iteration.
+//                       //                  for slice, the 2nd argument represents index of each element, and it's optional.
+//                       //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
+//                       //                  and both are optional.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) Map(callback interface{}) IChainable {
 	g.lastOperation = OperationMap
 	if g.IsError() || g.shouldReturn() {
@@ -2544,9 +2565,25 @@ func (g *Chainable) Map(callback interface{}) IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Nth
-
-func (g *Chainable) Nth(i int) IChainable {
+// Nth function gets the element at index `n` of `data`. If `n` is negative, the nth element from the end is returned.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  index int // ==> description: the index of the element to return
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) Nth(index int) IChainable {
 	g.lastOperation = OperationNth
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2571,12 +2608,12 @@ func (g *Chainable) Nth(i int) IChainable {
 			return nil
 		}
 
-		if i < 0 {
-			i = dataValueLen + i
+		if index < 0 {
+			index = dataValueLen + index
 		}
 
-		if i < dataValueLen {
-			return dataValue.Index(i).Interface()
+		if index < dataValueLen {
+			return dataValue.Index(index).Interface()
 		}
 
 		return nil
@@ -2588,16 +2625,43 @@ func (g *Chainable) Nth(i int) IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== OrderBy
-
-func (g *Chainable) OrderBy(callback interface{}, args ...bool) IChainable {
+// OrderBy sort slices. If orders is unspecified, all values are sorted in ascending order. Otherwise, specify an order of "desc" for descending or "asc" for ascending sort order of corresponding values. The algorithm used is merge sort, as per savigo's post on https://sagivo.com/go-sort-faster-4869bdabc670
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  predicate interface{} // ==> type: `func(each anyType, i int)<any type>` or
+//                        //           `func(value anyType, key anyType, i int)<any type>`
+//                        // ==> description: the function invoked per iteration.
+//                        //                  for slice, the 2nd argument represents index of each element, and it's optional.
+//                        //                  for struct object/map, the 2nd and 3rd arguments represent key and index of each item respectively,
+//                        //                  and both are optional.
+//  isAscending bool      // ==> optional
+//                        //     description: the sort order. `true` for ascending, and `false` for descending.
+//                        //     default value: true
+//  isAsync bool          // ==> optional
+//                        //     description: concurrent sort. set to `true` to enable pararel sorting (faster for certain data structure)
+//                        //     default value: false
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) OrderBy(predicate interface{}, args ...bool) IChainable {
 	g.lastOperation = OperationOrderBy
 	if g.IsError() || g.shouldReturn() {
 		return g
 	}
 
 	err := (error)(nil)
-	result := _orderBy(&err, g.data, callback, args...)
+	result := _orderBy(&err, g.data, predicate, args...)
 	if err != nil {
 		return g.markError(result, err)
 	}
