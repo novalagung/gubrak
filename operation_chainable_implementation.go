@@ -3206,9 +3206,32 @@ func (g *Chainable) Partition(callback interface{}) IChainablePartitionResult {
 	return &resultPartition{chainable: g.markResult([]interface{}{truhty, falsey})}
 }
 
-// ============================================== Reduce
-
-func (g *Chainable) Reduce(callback, initial interface{}) IChainable {
+// Reduce function reduces collection to a value which is the accumulated result of running each element in collection thru iteratee, where each successive invocation is supplied the return value of the previous. If accumulator is not given, the first element of collection is used as the initial value.
+//
+// Parameters
+//
+// This function require two mandatory parameters:
+//  iteratee interface{} // ==> type: `func(accumulator <any type>, each anyType, i int)<any type>` or
+//                       //           `func(accumulator <any type>, value anyType, key anyType, i int)<any type>`
+//                       // ==> description: the function invoked per iteration.
+//                       //                  the 1st argument is the accumulator. at first the value is coming from `initial`
+//                       //                  for slice, the 3rd argument represents index of each element, and it's optional.
+//                       //                  for struct object/map, the 3rd and 4th arguments represent key and index of each item respectively,
+//                       //                  and both are optional.
+//  initial interface{}  // ==> description: the initial value.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) Reduce(iteratee, initial interface{}) IChainable {
 	g.lastOperation = OperationReduce
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3227,13 +3250,13 @@ func (g *Chainable) Reduce(callback, initial interface{}) IChainable {
 		if !isSlice(err, "data", dataValue) {
 			if dataValueKind == reflect.Map {
 				*err = nil
-				return _reduceCollection(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback, initial)
+				return _reduceCollection(err, dataValue, dataValueType, dataValueKind, dataValueLen, iteratee, initial)
 			}
 
 			return nil
 		}
 
-		return _reduceSlice(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback, initial)
+		return _reduceSlice(err, dataValue, dataValueType, dataValueKind, dataValueLen, iteratee, initial)
 	}(&err)
 	if err != nil {
 		return g.markError(result, err)
