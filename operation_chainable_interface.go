@@ -91,8 +91,6 @@ type IChainableOperation interface {
 	DropRight(int) IChainable
 	Each(interface{}) IChainableEachResult
 	EachRight(interface{}) IChainableEachResult
-	ForEach(interface{}) IChainableEachResult
-	ForEachRight(interface{}) IChainableEachResult
 	Fill(interface{}, ...int) IChainable
 	Filter(interface{}) IChainable
 	Find(interface{}, ...int) IChainable

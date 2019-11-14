@@ -351,9 +351,8 @@ func (g *Chainable) Count() IChainableCountResult {
 // Parameters
 //
 // This function requires single mandatory parameter:
-//  iteratee interface{} // type: func(each anyType, i int)bool or func(value anyType, key anyType, i int)
+//  iteratee interface{} // type: `func(each anyType, i int)bool` or `func(value anyType, key anyType, i int)`
 //                       // description: the function invoked per iteration
-//
 //
 // Return values
 //
@@ -491,6 +490,60 @@ func _countCollection(err *error, dataValue reflect.Value, dataValueType reflect
 
 // ============================================== Difference
 
+// Difference function creates a slice of `data` that values not included in the other given slice. The order and references of result values are determined by the first slice.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  dataToCompare interface{} // description: the slice to differentiate
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // description: returns the new slice of filtered values
+//  .ResultAndError() (int, error) // description: returns the new slice of filtered values, and error object
+//  .Error() error                 // description: returns error object
+//  .IsError() bool                // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) Difference(dataToCompare interface{}) IChainable {
+	g.lastOperation = OperationDifferenceMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := _difference(&err, g.data, dataToCompare)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+// DifferenceMany function creates a slice of `data` that values not included in the other given slices. The order and references of result values are determined by the first slice.
+//
+// Parameters
+//
+// This function requires optional variadic parameters:
+//  datasToCompare1 interface{} // description: the slice to differentiate
+//  datasToCompare2 interface{} // description: the slice to differentiate
+//  datasToCompare3 interface{} // description: the slice to differentiate
+//  ...
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // description: returns the new slice of filtered values
+//  .ResultAndError() (int, error) // description: returns the new slice of filtered values, and error object
+//  .Error() error                 // description: returns error object
+//  .IsError() bool                // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) DifferenceMany(datasToCompare ...interface{}) IChainable {
 	g.lastOperation = OperationDifferenceMany
 	if g.IsError() || g.shouldReturn() {
@@ -503,21 +556,6 @@ func (g *Chainable) DifferenceMany(datasToCompare ...interface{}) IChainable {
 
 	err := (error)(nil)
 	result := _difference(&err, g.data, datasToCompare...)
-	if err != nil {
-		return g.markError(result, err)
-	}
-
-	return g.markResult(result)
-}
-
-func (g *Chainable) Difference(dataToCompare interface{}) IChainable {
-	g.lastOperation = OperationDifferenceMany
-	if g.IsError() || g.shouldReturn() {
-		return g
-	}
-
-	err := (error)(nil)
-	result := _difference(&err, g.data, dataToCompare)
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -588,6 +626,24 @@ func _difference(err *error, data interface{}, dataToCompare ...interface{}) int
 
 // ============================================== Drop
 
+// Drop function creates a slice of `data` with `n` elements dropped from the beginning.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  size int // description: the number of elements to drop
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // description: returns the new slice of filtered values
+//  .ResultAndError() (int, error) // description: returns the new slice of filtered values, and error object
+//  .Error() error                 // description: returns error object
+//  .IsError() bool                // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) Drop(size int) IChainable {
 	g.lastOperation = OperationDrop
 	if g.IsError() || g.shouldReturn() {
@@ -639,6 +695,24 @@ func (g *Chainable) Drop(size int) IChainable {
 	return g.markResult(result)
 }
 
+// DropRight function creates a slice of `data` with `n` elements dropped from the end.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  size int // description: the number of elements to drop
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // description: returns the new slice of filtered values
+//  .ResultAndError() (int, error) // description: returns the new slice of filtered values, and error object
+//  .Error() error                 // description: returns error object
+//  .IsError() bool                // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *Chainable) DropRight(size int) IChainable {
 	g.lastOperation = OperationDropRight
 	if g.IsError() || g.shouldReturn() {
@@ -690,14 +764,33 @@ func (g *Chainable) DropRight(size int) IChainable {
 
 // ============================================== Each
 
-func (g *Chainable) Each(callback interface{}) IChainableEachResult {
+// Each iterates over elements of `data` and invokes `iteratee` for each element. Iteratee functions may exit iteration early by explicitly returning false
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  iteratee interface{} // type: `func(each anyType, i int)bool` or `func(value anyType, key anyType, i int)`
+//                       // description: the function invoked per iteration.
+//                       //              for slice, the 2nd argument represents index of each element, and it's optional.
+//                       //              for collection/map, the 2nd and 3rd arguments represent key and index of each item respectively, and both are optional.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Error() error  // description: returns error object
+//  .IsError() bool // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) Each(iteratee interface{}) IChainableEachResult {
 	g.lastOperation = OperationEach
 	if g.IsError() || g.shouldReturn() {
 		return &resultEach{chainable: g}
 	}
 
 	err := (error)(nil)
-	_each(&err, g.data, callback, true)
+	_each(&err, g.data, iteratee, true)
 	if err != nil {
 		return &resultEach{chainable: g.markError(nil, err)}
 	}
@@ -705,14 +798,33 @@ func (g *Chainable) Each(callback interface{}) IChainableEachResult {
 	return &resultEach{chainable: g.markResult(nil)}
 }
 
-func (g *Chainable) EachRight(callback interface{}) IChainableEachResult {
+// EachRight iterates over elements of `data` from tail to head, and invokes `iteratee` for each element. Iteratee functions may exit iteration early by explicitly returning false
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  iteratee interface{} // type: `func(each anyType, i int)bool` or `func(value anyType, key anyType, i int)`
+//                       // description: the function invoked per iteration.
+//                       //              for slice, the 2nd argument represents index of each element, and it's optional.
+//                       //              for collection/map, the 2nd and 3rd arguments represent key and index of each item respectively, and both are optional.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Error() error  // description: returns error object
+//  .IsError() bool // description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *Chainable) EachRight(iteratee interface{}) IChainableEachResult {
 	g.lastOperation = OperationEachRight
 	if g.IsError() || g.shouldReturn() {
 		return &resultEach{chainable: g}
 	}
 
 	err := (error)(nil)
-	_each(&err, g.data, callback, true)
+	_each(&err, g.data, iteratee, true)
 	if err != nil {
 		return &resultEach{chainable: g.markError(nil, err)}
 	}
@@ -720,15 +832,7 @@ func (g *Chainable) EachRight(callback interface{}) IChainableEachResult {
 	return &resultEach{chainable: g.markResult(nil)}
 }
 
-func (g *Chainable) ForEach(callback interface{}) IChainableEachResult {
-	return g.Each(callback)
-}
-
-func (g *Chainable) ForEachRight(callback interface{}) IChainableEachResult {
-	return g.EachRight(callback)
-}
-
-func _each(err *error, data, callback interface{}, isForward bool) {
+func _each(err *error, data, iteratee interface{}, isForward bool) {
 	defer catch(err)
 
 	if !isNonNilData(err, "data", data) {
@@ -740,13 +844,13 @@ func _each(err *error, data, callback interface{}, isForward bool) {
 	if !isSlice(err, "data", dataValue) {
 		if dataValueKind == reflect.Map {
 			*err = nil
-			_eachCollection(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback, isForward)
+			_eachCollection(err, dataValue, dataValueType, dataValueKind, dataValueLen, iteratee, isForward)
 		}
 
 		return
 	}
 
-	_eachSlice(err, dataValue, dataValueType, dataValueKind, dataValueLen, callback, isForward)
+	_eachSlice(err, dataValue, dataValueType, dataValueKind, dataValueLen, iteratee, isForward)
 }
 
 func _eachSlice(err *error, dataValue reflect.Value, dataValueType reflect.Type, dataValueKind reflect.Kind, dataValueLen int, callback interface{}, isLoopIncremental bool) {
