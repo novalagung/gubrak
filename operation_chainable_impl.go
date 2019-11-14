@@ -3312,19 +3312,31 @@ func (g *Chainable) Remove(predicate interface{}) IChainableRemoveResult {
 	return &resultRemove{chainable: g.markResult([]interface{}{result, removed})}
 }
 
-// ================================================================ RAW
+// ============================================== Reverse
 
-func Reverse(data interface{}) (interface{}, error) {
-	var err error
+const (
+	OperationReverse = "Reverse()"
+)
 
+type IChainableReverse interface {
+	Reverse() IChainable
+}
+
+func (g *Chainable) Reverse() IChainable {
+	g.lastOperation = OperationReverse
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -3342,21 +3354,40 @@ func Reverse(data interface{}) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Sample(data interface{}) (interface{}, error) {
-	var err error
+// ============================================== Sample
 
+const (
+	OperationSample     = "Sample()"
+	OperationSampleSize = "SampleSize()"
+)
+
+type IChainableSample interface {
+	Sample() IChainable
+	SampleSize(int) IChainable
+}
+
+func (g *Chainable) Sample() IChainable {
+	g.lastOperation = OperationSample
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -3368,21 +3399,28 @@ func Sample(data interface{}) (interface{}, error) {
 
 		return dataValue.Index(RandomInt(0, dataValueLen-1)).Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func SampleSize(data interface{}, take int) (interface{}, error) {
-	var err error
+func (g *Chainable) SampleSize(take int) IChainable {
+	g.lastOperation = OperationSampleSize
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
 
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -3400,7 +3438,7 @@ func SampleSize(data interface{}, take int) (interface{}, error) {
 		}
 
 		if take >= dataValueLen {
-			return data
+			return g.data
 		}
 
 		for result.Len() < take {
@@ -3416,20 +3454,38 @@ func SampleSize(data interface{}, take int) (interface{}, error) {
 		return result.Interface()
 	}(&err)
 
-	return result, err
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
 }
 
-func Shuffle(data interface{}) (interface{}, error) {
-	var err error
+// ============================================== Shuffle
 
+const (
+	OperationShuffle = "Shuffle()"
+)
+
+type IChainableShuffle interface {
+	Shuffle() IChainable
+}
+
+func (g *Chainable) Shuffle() IChainable {
+	g.lastOperation = OperationShuffle
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, _, _, dataValueLen := inspectData(data)
+		dataValue, _, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -3448,26 +3504,43 @@ func Shuffle(data interface{}) (interface{}, error) {
 
 		return dataValue.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Size(data interface{}) (int, error) {
-	var err error
+// ============================================== Size
 
+const (
+	OperationSize = "Size()"
+)
+
+type IChainableSize interface {
+	Size() IChainable
+}
+
+func (g *Chainable) Size() IChainable {
+	g.lastOperation = OperationSize
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) int {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return 0
 		}
 
-		dataValue, _, dataValueKind, dataValueLen := inspectData(data)
+		dataValue, _, dataValueKind, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			if dataValueKind == reflect.String {
 				*err = nil
-				return len(data.(string))
+				return len(g.data.(string))
 			} else if dataValueKind == reflect.Map {
 				*err = nil
 				return dataValueLen
@@ -3478,21 +3551,38 @@ func Size(data interface{}) (int, error) {
 
 		return dataValueLen
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Tail(data interface{}) (interface{}, error) {
-	var err error
+// ============================================== Tail
 
+const (
+	OperationTail = "Tail()"
+)
+
+type IChainableTail interface {
+	Tail() IChainable
+}
+
+func (g *Chainable) Tail() IChainable {
+	g.lastOperation = OperationTail
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -3505,28 +3595,47 @@ func Tail(data interface{}) (interface{}, error) {
 		result := dataValue.Slice(1, dataValueLen)
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Take(data interface{}, size int) (interface{}, error) {
-	var err error
+// ============================================== Take
 
+const (
+	OperationTake      = "Take()"
+	OperationTakeRight = "TakeRight()"
+)
+
+type IChainableTake interface {
+	Take(int) IChainable
+	TakeRight(int) IChainable
+}
+
+func (g *Chainable) Take(size int) IChainable {
+	g.lastOperation = OperationTake
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
 		}
 
 		if !isZeroOrPositiveNumber(err, "size", size) {
-			return data
+			return g.data
 		}
 
 		result := makeSlice(dataType)
@@ -3543,28 +3652,35 @@ func Take(data interface{}, size int) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func TakeRight(data interface{}, size int) (interface{}, error) {
-	var err error
+func (g *Chainable) TakeRight(size int) IChainable {
+	g.lastOperation = OperationTakeRight
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
 
+	err := (error)(nil)
 	result := func(err *error) interface{} {
 		defer catch(err)
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
 		}
 
 		if !isZeroOrPositiveNumber(err, "size", size) {
-			return data
+			return g.data
 		}
 
 		result := makeSlice(dataType)
@@ -3581,13 +3697,32 @@ func TakeRight(data interface{}, size int) (interface{}, error) {
 
 		return result.Interface()
 	}(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
+	return g.markResult(result)
 }
 
-func Union(data interface{}, slices ...interface{}) (interface{}, error) {
-	var err error
+// ============================================== Union
 
+const (
+	OperationUniq      = "Uniq()"
+	OperationUnionMany = "UnionMany()"
+)
+
+type IChainableUnion interface {
+	Uniq(interface{}) IChainable
+	UnionMany(...interface{}) IChainable
+}
+
+func (g *Chainable) Uniq(slice interface{}) IChainable {
+	g.lastOperation = OperationUniq
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
 	result := (func(err *error) interface{} {
 		defer catchWithCustomErrorMessage(err, func(errorMessage string) string {
 			if strings.Contains(errorMessage, "is not assignable") {
@@ -3597,11 +3732,82 @@ func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 			return errorMessage
 		})
 
-		if !isNonNilData(err, "data", data) {
+		if !isNonNilData(err, "data", g.data) {
 			return nil
 		}
 
-		dataValue, dataType, _, dataValueLen := inspectData(data)
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
+
+		if !isSlice(err, "data", dataValue) {
+			return nil
+		}
+
+		result := makeSlice(dataType)
+		resultMap := make(map[interface{}]bool, 0)
+
+		forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
+			eachRealValue := each.Interface()
+
+			if _, ok := resultMap[eachRealValue]; !ok {
+				resultMap[eachRealValue] = true
+				result = reflect.Append(result, each)
+			}
+		})
+
+		targetValue, _, _, targetValueLen := inspectData(slice)
+
+		if !isSlice(err, "data", targetValue) {
+			return nil
+		}
+
+		if targetValueLen > 0 {
+
+			forEachSliceStoppable(targetValue, targetValueLen, func(inner reflect.Value, j int) bool {
+				if *err != nil {
+					return false
+				}
+
+				targetEachRealValue := inner.Interface()
+
+				if _, ok := resultMap[targetEachRealValue]; !ok {
+					resultMap[targetEachRealValue] = true
+					result = reflect.Append(result, inner)
+				}
+
+				return true
+			})
+		}
+
+		return result.Interface()
+	})(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
+
+	return g.markResult(result)
+}
+
+func (g *Chainable) UnionMany(slices ...interface{}) IChainable {
+	g.lastOperation = OperationUnionMany
+	if g.IsError() || g.shouldReturn() {
+		return g
+	}
+
+	err := (error)(nil)
+	result := (func(err *error) interface{} {
+		defer catchWithCustomErrorMessage(err, func(errorMessage string) string {
+			if strings.Contains(errorMessage, "is not assignable") {
+				return "data type of each elements between slice must be same"
+			}
+
+			return errorMessage
+		})
+
+		if !isNonNilData(err, "data", g.data) {
+			return nil
+		}
+
+		dataValue, dataType, _, dataValueLen := inspectData(g.data)
 
 		if !isSlice(err, "data", dataValue) {
 			return nil
@@ -3647,10 +3853,9 @@ func Union(data interface{}, slices ...interface{}) (interface{}, error) {
 
 		return result.Interface()
 	})(&err)
+	if err != nil {
+		return g.markError(result, err)
+	}
 
-	return result, err
-}
-
-func Uniq(data interface{}) (interface{}, error) {
-	return Union(data)
+	return g.markResult(result)
 }

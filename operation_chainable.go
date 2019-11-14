@@ -43,6 +43,13 @@ type IChainable interface {
 	IChainableReduce
 	IChainableReject
 	IChainableRemove
+	IChainableReverse
+	IChainableSample
+	IChainableShuffle
+	IChainableSize
+	IChainableTail
+	IChainableTake
+	IChainableUnion
 
 	ResultAndError() (interface{}, error)
 	Result() interface{}
