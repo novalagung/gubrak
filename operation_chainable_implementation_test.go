@@ -287,7 +287,6 @@ func TestCompactInt(t *testing.T) {
 
 	assert.Empty(t, err)
 	assert.Len(t, resultParsed, 4)
-
 	assert.Equal(t, []int{-2, -1, 1, 2}, resultParsed)
 
 	/* ===> [-2, -1, 1, 2] */
@@ -301,7 +300,6 @@ func TestCompactString(t *testing.T) {
 
 	assert.Empty(t, err)
 	assert.Len(t, resultParsed, 3)
-
 	assert.Equal(t, []string{"a", "b", "d"}, resultParsed)
 
 	/* ===> []string{"a", "b", "d"} */
@@ -408,9 +406,11 @@ func TestCountSlice(t *testing.T) {
 func TestCountBySliceWithPredicate(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	result, err := From(data).CountBy(func(each string) bool {
-		return strings.Contains(each, "d")
-	}).ResultAndError()
+	result, err := From(data).
+		CountBy(func(each string) bool {
+			return strings.Contains(each, "d")
+		}).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 2, result)
@@ -421,9 +421,11 @@ func TestCountBySliceWithPredicate(t *testing.T) {
 func TestCountBySliceWithPredicate2(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	result, err := From(data).CountBy(func(each string, i int) bool {
-		return len(each) > 6 && i > 1
-	}).ResultAndError()
+	result, err := From(data).
+		CountBy(func(each string, i int) bool {
+			return len(each) > 6 && i > 1
+		}).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 1, result)
@@ -544,103 +546,113 @@ func TestDifferenceWithNilDiffData(t *testing.T) {
 func TestDropZeroSize(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 0
-	result, err := Drop(data, size)
-	// ===> []int{1, 2, 3, 4, 4, 5, 6}
+	result, err := From(data).Drop(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 5, 6}, result)
+
+	// ===> []int{1, 2, 3, 4, 4, 5, 6}
 }
 
 func TestDropZeroSizeOne(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 1
-	result, err := Drop(data, size)
-	// ===> []int{2, 3, 4, 4, 5, 6}
+	result, err := From(data).Drop(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{2, 3, 4, 4, 5, 6}, result)
+
+	// ===> []int{2, 3, 4, 4, 5, 6}
 }
 
 func TestDropZeroSizeThree(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 3
-	result, err := Drop(data, size)
-	// ===> []int{4, 4, 5, 6}
+	result, err := From(data).Drop(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{4, 4, 5, 6}, result)
+
+	// ===> []int{4, 4, 5, 6}
 }
 
 func TestDropZeroSizeTen(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 10
-	result, err := Drop(data, size)
-	// ===> []int{}
+	result, err := From(data).Drop(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{}, result)
+
+	// ===> []int{}
 }
 
 func TestDropZeroSizeNegative(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := -2
-	result, err := Drop(data, size)
-	// ===> []int{}
+	result, err := From(data).Drop(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "size must not be negative number")
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 5, 6}, result)
+
+	// ===> []int{}
 }
 
 func TestDropRightZeroSize(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 0
-	result, err := DropRight(data, size)
-	// ===> []int{1, 2, 3, 4, 4, 5, 6}
+	result, err := From(data).DropRight(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 5, 6}, result)
+
+	// ===> []int{1, 2, 3, 4, 4, 5, 6}
 }
 
 func TestDropRightZeroSizeOne(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 1
-	result, err := DropRight(data, size)
-	// ===> []int{1, 2, 3, 4, 4, 5}
+	result, err := From(data).DropRight(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 5}, result)
+
+	// ===> []int{1, 2, 3, 4, 4, 5}
 }
 
 func TestDropRightZeroSizeThree(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 3
-	result, err := DropRight(data, size)
-	// ===> []int{1, 2, 3, 4}
+	result, err := From(data).DropRight(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 2, 3, 4}, result)
+
+	// ===> []int{1, 2, 3, 4}
 }
 
 func TestDropRightZeroSizeTen(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := 10
-	result, err := DropRight(data, size)
-	// ===> []int{}
+	result, err := From(data).DropRight(size).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{}, result)
+
+	// ===> []int{}
 }
 
 func TestDropRightZeroSizeNegative(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	size := -2
-	result, err := DropRight(data, size)
-	// ===> []int{}
+	result, err := From(data).DropRight(size).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "size must not be negative number")
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 5, 6}, result)
+
+	// ===> []int{}
 }
 
 func TestEachSlice(t *testing.T) {
@@ -648,13 +660,15 @@ func TestEachSlice(t *testing.T) {
 	separator := ","
 	joinedString := ""
 
-	err := Each(data, func(each string) {
-		if joinedString == "" {
-			joinedString = each
-		} else {
-			joinedString = joinedString + separator + each
-		}
-	})
+	err := From(data).
+		Each(func(each string) {
+			if joinedString == "" {
+				joinedString = each
+			} else {
+				joinedString = joinedString + separator + each
+			}
+		}).
+		Error()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "damian,grayson,cassandra", joinedString)
@@ -665,13 +679,15 @@ func TestEachSliceWithIndex(t *testing.T) {
 	separator := ","
 	joinedString := ""
 
-	err := Each(data, func(each string, i int) {
-		if i == 0 {
-			joinedString = each
-		} else {
-			joinedString = joinedString + separator + each
-		}
-	})
+	err := From(data).
+		Each(func(each string, i int) {
+			if i == 0 {
+				joinedString = each
+			} else {
+				joinedString = joinedString + separator + each
+			}
+		}).
+		Error()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "damian,grayson,cassandra", joinedString)
@@ -683,19 +699,21 @@ func TestEachSliceStoppable(t *testing.T) {
 	separator := ","
 	joinedString := ""
 
-	err := Each(data, func(each string, i int) bool {
-		if i >= take {
-			return false
-		}
+	err := From(data).
+		Each(func(each string, i int) bool {
+			if i >= take {
+				return false
+			}
 
-		if i == 0 {
-			joinedString = each
-		} else {
-			joinedString = joinedString + separator + each
-		}
+			if i == 0 {
+				joinedString = each
+			} else {
+				joinedString = joinedString + separator + each
+			}
 
-		return true
-	})
+			return true
+		}).
+		Error()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "damian,grayson,cassandra,tim", joinedString)
@@ -704,9 +722,11 @@ func TestEachSliceStoppable(t *testing.T) {
 func TestEachSliceWrongLoopParamType(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
 
-	err := Each(data, func(each map[string]interface{}) {
-		// do something
-	})
+	err := From(data).
+		Each(func(each map[string]interface{}) {
+			// do something
+		}).
+		Error()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "callback 1st parameter's data type should be same with slice element data type")
@@ -726,13 +746,15 @@ func TestEachSliceSliceStructData(t *testing.T) {
 	separator := ","
 	joinedString := ""
 
-	err := Each(data, func(each Sample, i int) {
-		if i == 0 {
-			joinedString = each.Name
-		} else {
-			joinedString = joinedString + separator + each.Name
-		}
-	})
+	err := From(data).
+		Each(func(each Sample, i int) {
+			if i == 0 {
+				joinedString = each.Name
+			} else {
+				joinedString = joinedString + separator + each.Name
+			}
+		}).
+		Error()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "damian,grayson,cassandra", joinedString)
@@ -747,14 +769,16 @@ func TestEachCollection(t *testing.T) {
 	separator := ","
 	joinedString := ""
 
-	err := Each(data, func(value interface{}, key string) {
-		each := fmt.Sprintf("%s: %v", key, value)
-		if joinedString == "" {
-			joinedString = each
-		} else {
-			joinedString = joinedString + separator + each
-		}
-	})
+	err := From(data).
+		Each(func(value interface{}, key string) {
+			each := fmt.Sprintf("%s: %v", key, value)
+			if joinedString == "" {
+				joinedString = each
+			} else {
+				joinedString = joinedString + separator + each
+			}
+		}).
+		Error()
 
 	assert.Nil(t, err)
 
@@ -777,16 +801,18 @@ func TestEachCollectionWithCallbackKeyOnly(t *testing.T) {
 		"gender": "male",
 	}
 
-	err := Each(data, func(value interface{}, key string) {
-		switch key {
-		case "name":
-		case "age":
-		case "gender":
-			break
-		default:
-			assert.Fail(t, "Each function is buggy if used to loop map data")
-		}
-	})
+	err := From(data).
+		Each(func(value interface{}, key string) {
+			switch key {
+			case "name":
+			case "age":
+			case "gender":
+				break
+			default:
+				assert.Fail(t, "Each function is buggy if used to loop map data")
+			}
+		}).
+		Error()
 
 	assert.Nil(t, err)
 }
@@ -796,13 +822,15 @@ func TestEachRightSlice(t *testing.T) {
 	separator := ","
 	joinedString := ""
 
-	err := EachRight(data, func(each string) {
-		if joinedString == "" {
-			joinedString = each
-		} else {
-			joinedString = joinedString + separator + each
-		}
-	})
+	err := From(data).
+		EachRight(func(each string) {
+			if joinedString == "" {
+				joinedString = each
+			} else {
+				joinedString = joinedString + separator + each
+			}
+		}).
+		Error()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "cassandra,grayson,damian", joinedString)
@@ -811,33 +839,36 @@ func TestEachRightSlice(t *testing.T) {
 func TestFillWithANumber(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	replacement := 9
-	result, err := Fill(data, replacement)
-	// ===> []int{9, 9, 9, 9, 9, 9, 9}
+	result, err := From(data).Fill(replacement).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{9, 9, 9, 9, 9, 9, 9}, result)
+
+	// ===> []int{9, 9, 9, 9, 9, 9, 9}
 }
 
 func TestFillWithStartIndex(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	replacement := 9
 	startIndex := 2
-	result, err := Fill(data, replacement, startIndex)
-	// ===> []int{1, 2, 9, 9, 9, 9, 9}
+	result, err := From(data).Fill(replacement, startIndex).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []int{1, 2, 9, 9, 9, 9, 9}, result)
+
+	// ===> []int{1, 2, 9, 9, 9, 9, 9}
 }
 
 func TestFillWithAStringAndStartIndex(t *testing.T) {
 	data := []string{"grayson", "jason", "tim", "damian"}
 	replacement := "alfred"
 	startIndex := 2
-	result, err := Fill(data, replacement, startIndex)
-	// ===> []int{"grayson", "jason", "alfred", "alfred"}
+	result, err := From(data).Fill(replacement, startIndex).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []string{"grayson", "jason", "alfred", "alfred"}, result)
+
+	// ===> []int{"grayson", "jason", "alfred", "alfred"}
 }
 
 func TestFillWithStartIndexAndLastIndex(t *testing.T) {
@@ -845,23 +876,25 @@ func TestFillWithStartIndexAndLastIndex(t *testing.T) {
 	replacement := float64(9)
 	startIndex := 3
 	lastIndex := 5
-	result, err := Fill(data, replacement, startIndex, lastIndex)
-	// ===> []float64{1, 2.2, 3.0002, 9, 9, 5.12, 6}
+	result, err := From(data).Fill(replacement, startIndex, lastIndex).ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, []float64{1, 2.2, 3.0002, 9, 9, 5.12, 6}, result)
+
+	// ===> []float64{1, 2.2, 3.0002, 9, 9, 5.12, 6}
 }
 
 func TestFillWithNegativeStartIndex(t *testing.T) {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	replacement := 9
 	startIndex := -1
-	result, err := Fill(data, replacement, startIndex)
-	// ===> []int{1, 2, 3, 4, 4, 5, 6}
+	result, err := From(data).Fill(replacement, startIndex).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "start index must not be negative number")
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 5, 6}, result)
+
+	// ===> []int{1, 2, 3, 4, 4, 5, 6}
 }
 
 func TestFillWithNegativeLastIndex(t *testing.T) {
@@ -869,12 +902,13 @@ func TestFillWithNegativeLastIndex(t *testing.T) {
 	replacement := 9
 	startIndex := 2
 	lastIndex := -1
-	result, err := Fill(data, replacement, startIndex, lastIndex)
-	// ===> []int{1, 2, 3, 4, 4, 5, 6}
+	result, err := From(data).Fill(replacement, startIndex, lastIndex).ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "last index must not be negative number")
 	assert.EqualValues(t, []int{1, 2, 3, 4, 4, 5, 6}, result)
+
+	// ===> []int{1, 2, 3, 4, 4, 5, 6}
 }
 
 func TestFilterSlice(t *testing.T) {
@@ -889,18 +923,17 @@ func TestFilterSlice(t *testing.T) {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	result, err := Filter(data, func(each Sample) bool {
-		return each.DailyDownloads > 11000
-	})
-
-	err = Each(result.([]Sample), func(each Sample) {
-		if each.EbookName == "clean code" {
-			t.Fail()
-		}
-	})
+	err := From(data).
+		Filter(func(each Sample) bool {
+			return each.DailyDownloads > 11000
+		}).
+		Each(func(each Sample) {
+			if each.EbookName == "clean code" {
+				t.Fail()
+			}
+		})
 
 	assert.Nil(t, err)
-	assert.Len(t, result, 2)
 }
 
 func TestFilterZeroMatch(t *testing.T) {
@@ -915,9 +948,11 @@ func TestFilterZeroMatch(t *testing.T) {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	result, err := Filter(data, func(each Sample) bool {
-		return each.DailyDownloads > 15000
-	})
+	result, err := From(data).
+		Filter(func(each Sample) bool {
+			return each.DailyDownloads > 15000
+		}).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.Len(t, result, 0)
@@ -935,9 +970,11 @@ func TestFilterInvalidLoopEach(t *testing.T) {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	_, err := Filter(data, func(each Sample) int {
-		return each.DailyDownloads
-	})
+	_, err := From(data).
+		Filter(func(each Sample) int {
+			return each.DailyDownloads
+		}).
+		ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "callback return value should be one variable with bool type")
@@ -955,18 +992,18 @@ func TestFilterCollection(t *testing.T) {
 		"detective comics": 11500,
 	}
 
-	result, err := Filter(data, func(value int, key string) bool {
-		return value > 11000
-	})
-
-	err = Each(result.(map[string]int), func(value int, key string) {
-		if key == "clean code" {
-			t.Fail()
-		}
-	})
+	err := From(data).
+		Filter(func(value int, key string) bool {
+			return value > 11000
+		}).
+		Each(func(value int, key string) {
+			if key == "clean code" {
+				t.Fail()
+			}
+		}).
+		Error()
 
 	assert.Nil(t, err)
-	assert.Len(t, result, 2)
 }
 
 func TestFind(t *testing.T) {
@@ -981,9 +1018,11 @@ func TestFind(t *testing.T) {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	row, err := Find(data, func(each Sample) bool {
-		return each.EbookName == "rework"
-	})
+	row, err := From(data).
+		Find(func(each Sample) bool {
+			return each.EbookName == "rework"
+		}).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.NotNil(t, row)
@@ -1002,9 +1041,11 @@ func TestFindWrongClause(t *testing.T) {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	row, err := Find(data, func(each Sample, i int) bool {
-		return each.EbookName == "red hood and the outlaws"
-	})
+	row, err := From(data).
+		Find(func(each Sample, i int) bool {
+			return each.EbookName == "red hood and the outlaws"
+		}).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.Nil(t, row)
@@ -1013,9 +1054,11 @@ func TestFindWrongClause(t *testing.T) {
 func TestFindWithFromIndex(t *testing.T) {
 	data := []string{"clean code", "rework", "detective comics"}
 
-	row, err := Find(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 1)
+	row, err := From(data).
+		Find(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 1).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "detective comics", row)
@@ -1023,9 +1066,11 @@ func TestFindWithFromIndex(t *testing.T) {
 
 func TestFindIndex(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindIndex(data, func(each string) bool {
-		return each == "tim"
-	})
+	result, err := From(data).
+		FindIndex(func(each string) bool {
+			return each == "tim"
+		}).
+		ResultAndError()
 	// ===> 3
 
 	assert.Nil(t, err)
@@ -1034,9 +1079,11 @@ func TestFindIndex(t *testing.T) {
 
 func TestFindIndexFloat64(t *testing.T) {
 	data := []float64{1, 1.1, 1.2, 1.200001, 1.2000000001, 1.3}
-	result, err := FindIndex(data, func(each float64) bool {
-		return each == 1.2000000001
-	})
+	result, err := From(data).
+		FindIndex(func(each float64) bool {
+			return each == 1.2000000001
+		}).
+		ResultAndError()
 	// ===> 4
 
 	assert.Nil(t, err)
@@ -1045,9 +1092,11 @@ func TestFindIndexFloat64(t *testing.T) {
 
 func TestFindIndexWithWrongData(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindIndex(data, func(each string) bool {
-		return each == "hello"
-	})
+	result, err := From(data).
+		FindIndex(func(each string) bool {
+			return each == "hello"
+		}).
+		ResultAndError()
 	// ===> -1
 
 	assert.Nil(t, err)
@@ -1056,9 +1105,11 @@ func TestFindIndexWithWrongData(t *testing.T) {
 
 func TestFindIndexWithWrongCallbackReturnType(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindIndex(data, func(each string) int {
-		return 12
-	})
+	result, err := From(data).
+		FindIndex(func(each string) int {
+			return 12
+		}).
+		ResultAndError()
 	// ===> -1
 
 	assert.NotNil(t, err)
@@ -1068,44 +1119,55 @@ func TestFindIndexWithWrongCallbackReturnType(t *testing.T) {
 
 func TestFindIndexWithWrongCallbackParameter(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindIndex(data, func(each int) bool {
-		return each == 12
-	})
-	// ===> -1
+	result, err := From(data).
+		FindIndex(func(each int) bool {
+			return each == 12
+		}).
+		ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "callback 1st parameter's data type should be same with slice element data type")
 	assert.Equal(t, -1, result)
+
+	// ===> -1
 }
 
 func TestFindIndexWithFromIndex(t *testing.T) {
 	data := []int{1, 2, 3, 3, 4, 5}
-	result, err := FindIndex(data, func(each int) bool {
-		return each == 3
-	}, 2)
-	// ===> 2
+	result, err := From(data).
+		FindIndex(func(each int) bool {
+			return each == 3
+		}, 2).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.Equal(t, 2, result)
+
+	// ===> 2
 }
 
 func TestFindIndexWithAnotherFromIndex(t *testing.T) {
 	data := []int{1, 2, 3, 3, 4, 5}
-	result, err := FindIndex(data, func(each int) bool {
-		return each == 3
-	}, 3)
-	// ===> 3
+	result, err := From(data).
+		FindIndex(func(each int) bool {
+			return each == 3
+		}, 3).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.Equal(t, 3, result)
+
+	// ===> 3
 }
 
 func TestFindLast(t *testing.T) {
 	data := []string{"clean code", "rework", "detective comics"}
 
-	row, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	})
+	row, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "detective comics", row)
@@ -1114,9 +1176,11 @@ func TestFindLast(t *testing.T) {
 func TestFindLastWithFromIndex0(t *testing.T) {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
-	row, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 0)
+	row, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 0).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "clean code", row)
@@ -1125,9 +1189,11 @@ func TestFindLastWithFromIndex0(t *testing.T) {
 func TestFindLastWithFromIndex1(t *testing.T) {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
-	row, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 1)
+	row, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 1).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "clean code", row)
@@ -1136,9 +1202,11 @@ func TestFindLastWithFromIndex1(t *testing.T) {
 func TestFindLastWithFromIndex2(t *testing.T) {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
-	row, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 2)
+	row, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 2).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "detective comics", row)
@@ -1147,9 +1215,11 @@ func TestFindLastWithFromIndex2(t *testing.T) {
 func TestFindLastWithFromIndex3(t *testing.T) {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
-	row, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 3)
+	row, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 3).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "coco", row)
@@ -1158,9 +1228,11 @@ func TestFindLastWithFromIndex3(t *testing.T) {
 func TestFindLastWithFromIndex4(t *testing.T) {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
-	row, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 4)
+	row, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 4).
+		ResultAndError()
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, "coco", row)
@@ -1168,9 +1240,11 @@ func TestFindLastWithFromIndex4(t *testing.T) {
 
 func TestFindLastIndex(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindLastIndex(data, func(each string) bool {
-		return each == "tim"
-	})
+	result, err := From(data).
+		FindLastIndex(func(each string) bool {
+			return each == "tim"
+		}).
+		ResultAndError()
 	// ===> 4
 
 	assert.Nil(t, err)
@@ -1179,9 +1253,11 @@ func TestFindLastIndex(t *testing.T) {
 
 func TestFindLastIndexWithWrongData(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindLastIndex(data, func(each string) bool {
-		return each == "hello"
-	})
+	result, err := From(data).
+		FindLastIndex(func(each string) bool {
+			return each == "hello"
+		}).
+		ResultAndError()
 	// ===> -1
 
 	assert.Nil(t, err)
@@ -1190,9 +1266,11 @@ func TestFindLastIndexWithWrongData(t *testing.T) {
 
 func TestFindLastIndexWithWrongCallbackReturnType(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindLastIndex(data, func(each string) int {
-		return 12
-	})
+	result, err := From(data).
+		FindLastIndex(func(each string) int {
+			return 12
+		}).
+		ResultAndError()
 	// ===> -1
 
 	assert.NotNil(t, err)
@@ -1202,9 +1280,11 @@ func TestFindLastIndexWithWrongCallbackReturnType(t *testing.T) {
 
 func TestFindLastIndexWithWrongCallbackParameter(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := FindLastIndex(data, func(each int) bool {
-		return each == 12
-	})
+	result, err := From(data).
+		FindLastIndex(func(each int) bool {
+			return each == 12
+		}).
+		ResultAndError()
 	// ===> -1
 
 	assert.NotNil(t, err)
@@ -1214,9 +1294,11 @@ func TestFindLastIndexWithWrongCallbackParameter(t *testing.T) {
 
 func TestLastFindIndexWithFromIndex(t *testing.T) {
 	data := []int{1, 2, 2, 3, 3, 4, 5}
-	result, err := FindLastIndex(data, func(each int) bool {
-		return each == 3
-	})
+	result, err := From(data).
+		FindLastIndex(func(each int) bool {
+			return each == 3
+		}).
+		ResultAndError()
 	// ===> 4
 
 	assert.Nil(t, err)
@@ -1225,9 +1307,11 @@ func TestLastFindIndexWithFromIndex(t *testing.T) {
 
 func TestLastFindIndexWithAnotherFromIndex(t *testing.T) {
 	data := []int{1, 2, 2, 3, 3, 4, 5}
-	result, err := FindLastIndex(data, func(each int) bool {
-		return each == 3
-	}, 3)
+	result, err := From(data).
+		FindLastIndex(func(each int) bool {
+			return each == 3
+		}, 3).
+		ResultAndError()
 	// ===> 3
 
 	assert.Nil(t, err)
@@ -1236,9 +1320,11 @@ func TestLastFindIndexWithAnotherFromIndex(t *testing.T) {
 
 func TestLastFindIndexWithYetAnotherFromIndex(t *testing.T) {
 	data := []int{1, 2, 2, 3, 3, 4, 5}
-	result, err := FindLastIndex(data, func(each int) bool {
-		return each == 3
-	}, 2)
+	result, err := From(data).
+		FindLastIndex(func(each int) bool {
+			return each == 3
+		}, 2).
+		ResultAndError()
 	// ===> -1
 
 	assert.Nil(t, err)
@@ -1247,7 +1333,7 @@ func TestLastFindIndexWithYetAnotherFromIndex(t *testing.T) {
 
 func TestFirst(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := First(data)
+	result, err := From(data).First().ResultAndError()
 	// ===> "damian"
 
 	assert.Nil(t, err)
@@ -1256,7 +1342,7 @@ func TestFirst(t *testing.T) {
 
 func TestFirstWithEmptyData(t *testing.T) {
 	data := []string{}
-	result, err := First(data)
+	result, err := From(data).First().ResultAndError()
 	// ===> nil
 
 	assert.Nil(t, err)
@@ -1264,7 +1350,7 @@ func TestFirstWithEmptyData(t *testing.T) {
 }
 
 func TestFirstWithNilData(t *testing.T) {
-	result, err := First(nil)
+	result, err := From(nil).First().ResultAndError()
 	// ===> nil
 
 	assert.NotNil(t, err)
@@ -1277,7 +1363,7 @@ func TestFromPairsWithDataStringInt(t *testing.T) {
 		[]interface{}{"a", 1},
 		[]interface{}{"b", 2},
 	}
-	result, err := FromPairs(data)
+	result, err := From(data).FromPairs().ResultAndError()
 
 	assert.Nil(t, err)
 	assert.Equal(t, map[interface{}]interface{}{
@@ -1291,7 +1377,7 @@ func TestFromPairsWithDataBoolSlice(t *testing.T) {
 		[]interface{}{true, []int{1, 2, 3}},
 		[]interface{}{false, []string{"damian", "grayson"}},
 	}
-	result, err := FromPairs(data)
+	result, err := From(data).FromPairs().ResultAndError()
 
 	assert.Nil(t, err)
 	assert.Equal(t, map[interface{}]interface{}{
@@ -1305,7 +1391,7 @@ func TestFromPairsWithDataSliceInterface(t *testing.T) {
 		[]interface{}{[]int{1, 2, 3}, "hello"},
 		[]interface{}{[]string{"damian", "grayson"}, "hello"},
 	}
-	result, err := FromPairs(data)
+	result, err := From(data).FromPairs().ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "runtime error: hash of unhashable type []int")
@@ -1314,7 +1400,7 @@ func TestFromPairsWithDataSliceInterface(t *testing.T) {
 
 func TestFromPairsWithInvalidType(t *testing.T) {
 	data := []string{"a", "b", "c"}
-	result, err := FromPairs(data)
+	result, err := From(data).FromPairs().ResultAndError()
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "supported type only []interface{}")
@@ -1336,9 +1422,11 @@ func TestGroupBy(t *testing.T) {
 		{Ebook: "one piece", Category: "manga"},
 	}
 
-	result, err := GroupBy(data, func(each Sample) string {
-		return each.Category
-	})
+	result, err := From(data).
+		GroupBy(func(each Sample) string {
+			return each.Category
+		}).
+		ResultAndError()
 	resultParsed := result.(map[string][]Sample)
 
 	assert.Nil(t, err)
@@ -1346,21 +1434,27 @@ func TestGroupBy(t *testing.T) {
 	for key, val := range resultParsed {
 		switch key {
 		case "productivity":
-			currResult, err := Filter(val, func(each Sample) bool {
-				return each.Ebook == "clean code" || each.Ebook == "rework"
-			})
+			currResult, err := From(val).
+				Filter(func(each Sample) bool {
+					return each.Ebook == "clean code" || each.Ebook == "rework"
+				}).
+				ResultAndError()
 			assert.Nil(t, err)
 			assert.Equal(t, true, len(currResult.([]Sample)) > 0, "grouped data has invalid items")
 		case "comics":
-			currResult, err := Filter(val, func(each Sample) bool {
-				return each.Ebook == "detective comics" || each.Ebook == "injustice 2"
-			})
+			currResult, err := From(val).
+				Filter(func(each Sample) bool {
+					return each.Ebook == "detective comics" || each.Ebook == "injustice 2"
+				}).
+				ResultAndError()
 			assert.Nil(t, err)
 			assert.Equal(t, true, len(currResult.([]Sample)) > 0, "grouped data has invalid items")
 		case "manga":
-			currResult, err := Filter(val, func(each Sample) bool {
-				return each.Ebook == "dragon ball" || each.Ebook == "one piece"
-			})
+			currResult, err := From(val).
+				Filter(func(each Sample) bool {
+					return each.Ebook == "dragon ball" || each.Ebook == "one piece"
+				}).
+				ResultAndError()
 			assert.Nil(t, err)
 			assert.Equal(t, true, len(currResult.([]Sample)) > 0, "grouped data has invalid items")
 		default:
@@ -1372,9 +1466,11 @@ func TestGroupBy(t *testing.T) {
 func TestGroupByWithFlatDataInt(t *testing.T) {
 	data := []int{1, 2, 3, 5, 6, 4, 2, 5, 2}
 
-	result, err := GroupBy(data, func(each int) int {
-		return each
-	})
+	result, err := From(data).
+		GroupBy(func(each int) int {
+			return each
+		}).
+		ResultAndError()
 	resultParsed := result.(map[int][]int)
 
 	assert.Nil(t, err)
