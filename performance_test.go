@@ -98,9 +98,11 @@ func TestPerformanceFilterUsingOurLibrary(t *testing.T) {
 	time.Sleep(time.Second * 2)
 	defer TimeBenchmarker(t, time.Now())
 
-	result, err := Filter(dataCSV, func(row Data) bool {
-		return row.TLD == tldSearch
-	})
+	result, err := From(dataCSV).
+		Filter(func(row Data) bool {
+			return row.TLD == tldSearch
+		}).
+		ResultAndError()
 	if err != nil {
 		t.Fatal("error", err.Error())
 		return
