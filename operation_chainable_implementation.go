@@ -3446,8 +3446,23 @@ func (g *chainable) Reject(predicate interface{}) IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Reverse
-
+// Reverse function reverses `data` so that the first element becomes the last, the second element becomes the second to last, and so on.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) Reverse() IChainable {
 	g.lastOperation = OperationReverse
 	if g.IsError() || g.shouldReturn() {
@@ -3487,8 +3502,23 @@ func (g *chainable) Reverse() IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Sample
-
+// Sample function gets a random element from `data`.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) Sample() IChainable {
 	g.lastOperation = OperationSample
 	if g.IsError() || g.shouldReturn() {
@@ -3522,6 +3552,24 @@ func (g *chainable) Sample() IChainable {
 	return g.markResult(result)
 }
 
+// SampleSize function gets slice of random elements from `data`.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  take int // ==> description: the length of each chunk
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) SampleSize(take int) IChainable {
 	g.lastOperation = OperationSampleSize
 	if g.IsError() || g.shouldReturn() {
@@ -3577,8 +3625,23 @@ func (g *chainable) SampleSize(take int) IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Shuffle
-
+// Shuffle function creates a slice of shuffled values, using a version of the Fisher-Yates shuffle.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) Shuffle() IChainable {
 	g.lastOperation = OperationShuffle
 	if g.IsError() || g.shouldReturn() {
@@ -3619,8 +3682,23 @@ func (g *chainable) Shuffle() IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Size
-
+// Size function gets the size of slice or struct object/map by returning its length for array-like values or the number of own enumerable string keyed properties for objects.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // ==> description: returns the length of data
+//  .ResultAndError() (int, error) // ==> description: returns the length of data, and error object
+//  .Error() error                 // ==> description: returns error object
+//  .IsError() bool                // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) Size() IChainable {
 	g.lastOperation = OperationSize
 	if g.IsError() || g.shouldReturn() {
@@ -3658,8 +3736,23 @@ func (g *chainable) Size() IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Tail
-
+// Tail function gets all but the first element of `data`.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() int                  // ==> description: returns the length of data
+//  .ResultAndError() (int, error) // ==> description: returns the length of data, and error object
+//  .Error() error                 // ==> description: returns error object
+//  .IsError() bool                // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) Tail() IChainable {
 	g.lastOperation = OperationTail
 	if g.IsError() || g.shouldReturn() {
@@ -3694,8 +3787,24 @@ func (g *chainable) Tail() IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Take
-
+// Take function creates a slice of `data` with `size` elements taken from the beginning.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  size int // ==> description: the length of each chunk
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) Take(size int) IChainable {
 	g.lastOperation = OperationTake
 	if g.IsError() || g.shouldReturn() {
@@ -3741,6 +3850,24 @@ func (g *chainable) Take(size int) IChainable {
 	return g.markResult(result)
 }
 
+// TakeRight function creates a slice of `data` with `size` elements taken from the end.
+//
+// Parameters
+//
+// This function requires single mandatory parameter:
+//  size int // ==> description: the length of each chunk
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
 func (g *chainable) TakeRight(size int) IChainable {
 	g.lastOperation = OperationTakeRight
 	if g.IsError() || g.shouldReturn() {
@@ -3786,16 +3913,31 @@ func (g *chainable) TakeRight(size int) IChainable {
 	return g.markResult(result)
 }
 
-// ============================================== Union
-
-func (g *chainable) Uniq(slice interface{}) IChainable {
+// Uniq create slice of unique values from it.
+//
+// Parameters
+//
+// This function does not requires any parameter.
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *chainable) Uniq() IChainable {
 	g.lastOperation = OperationUniq
 	if g.IsError() || g.shouldReturn() {
 		return g
 	}
 
 	err := (error)(nil)
-	result := _union(&err, g.data, slice)
+	result := _union(&err, g.data)
 	if err != nil {
 		return g.markError(result, err)
 	}
@@ -3803,14 +3945,35 @@ func (g *chainable) Uniq(slice interface{}) IChainable {
 	return g.markResult(result)
 }
 
-func (g *chainable) UnionMany(slices ...interface{}) IChainable {
+// Union function combines all slices presented on the parameters, then create slice of unique values from it. All slice must have same data type.
+//
+// Parameters
+//
+// This function requires optional variadic parameters:
+//  sliceToUnion1 interface{} // ==> description: the index of item to exclude
+//  sliceToUnion2 interface{} // ==> description: the index of item to exclude
+//  sliceToUnion3 interface{} // ==> description: the index of item to exclude
+//  ...
+//
+// Return values
+//
+// Chain with these methods to get result:
+//  .Result() interface{}                  // ==> description: returns the result after operation
+//  .ResultAndError() (interface{}, error) // ==> description: returns the result after operation, and error object
+//  .Error() error                         // ==> description: returns error object
+//  .IsError() bool                        // ==> description: return `true` on error, otherwise `false`
+//
+// Examples
+//
+// List of examples available:
+func (g *chainable) UnionMany(sliceToUnion ...interface{}) IChainable {
 	g.lastOperation = OperationUnionMany
 	if g.IsError() || g.shouldReturn() {
 		return g
 	}
 
 	err := (error)(nil)
-	result := _union(&err, g.data, slices...)
+	result := _union(&err, g.data, sliceToUnion...)
 	if err != nil {
 		return g.markError(result, err)
 	}

@@ -129,7 +129,7 @@ type IChainableOperation interface {
 	Tail() IChainable
 	Take(int) IChainable
 	TakeRight(int) IChainable
-	Uniq(interface{}) IChainable
+	Uniq() IChainable
 	UnionMany(...interface{}) IChainable
 }
 
@@ -181,3 +181,15 @@ func (g *chainable) Error() error {
 func (g *chainable) IsError() bool {
 	return g.Error() != nil
 }
+
+// func (g *chainable) LastSuccessOperation() Operation {
+// 	return g.lastSuccessOperation
+// }
+
+// func (g *chainable) LastErrorOperation() Operation {
+// 	return g.lastErrorOperation
+// }
+
+// func (g *chainable) LastOperation() Operation {
+// 	return g.lastOperation
+// }

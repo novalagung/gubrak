@@ -493,7 +493,7 @@ func ExampleChainable_Fill_fill1() {
 	data := []int{1, 2, 3, 4, 4, 5, 6}
 	replacement := 9
 
-	result, err := Fill(data, replacement)
+	result, err := From(data).Fill(replacement).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -507,7 +507,7 @@ func ExampleChainable_Fill_fill2() {
 	replacement := "alfred"
 	start := 2
 
-	result, err := Fill(data, replacement, start)
+	result, err := From(data).Fill(replacement, start).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -521,7 +521,7 @@ func ExampleChainable_Fill_fill3() {
 	replacement := float64(9)
 	start, end := 3, 5
 
-	result, err := Fill(data, replacement, start, end)
+	result, err := From(data).Fill(replacement, start, end).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -537,9 +537,11 @@ func ExampleChainable_Filter_filterMap() {
 		"detective comics": 11500,
 	}
 
-	result, err := Filter(data, func(value int, key string) bool {
-		return value > 11000
-	})
+	result, err := From(data).
+		Filter(func(value int, key string) bool {
+			return value > 11000
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -565,9 +567,11 @@ func ExampleChainable_Filter_filterSlice() {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	result, err := Filter(data, func(each Sample) bool {
-		return each.DailyDownloads > 11000
-	})
+	result, err := From(data).
+		Filter(func(each Sample) bool {
+			return each.DailyDownloads > 11000
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -593,9 +597,11 @@ func ExampleChainable_Find_find1() {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	result, err := Find(data, func(each Sample) bool {
-		return each.EbookName == "rework"
-	})
+	result, err := From(data).
+		Find(func(each Sample) bool {
+			return each.EbookName == "rework"
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -607,9 +613,11 @@ func ExampleChainable_Find_find1() {
 func ExampleChainable_Find_find2() {
 	data := []string{"clean code", "rework", "detective comics"}
 
-	result, err := Find(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 1)
+	result, err := From(data).
+		Find(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 1).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -624,7 +632,9 @@ func ExampleChainable_FindIndex_findIndex1() {
 		return each == "tim"
 	}
 
-	result, err := FindIndex(data, predicate)
+	result, err := From(data).
+		FindIndex(predicate).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -636,9 +646,11 @@ func ExampleChainable_FindIndex_findIndex1() {
 func ExampleChainable_FindIndex_findIndex2() {
 	data := []int{-2, -1, 0, 1, 2}
 
-	result, err := FindIndex(data, func(each int) bool {
-		return each == 4
-	})
+	result, err := From(data).
+		FindIndex(func(each int) bool {
+			return each == 4
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -650,9 +662,11 @@ func ExampleChainable_FindIndex_findIndex2() {
 func ExampleChainable_FindIndex_findIndex3() {
 	data := []float64{1, 1.1, 1.2, 1.200001, 1.2000000001, 1.3}
 
-	result, err := FindIndex(data, func(each float64) bool {
-		return each == 1.2000000001
-	})
+	result, err := From(data).
+		FindIndex(func(each float64) bool {
+			return each == 1.2000000001
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -668,7 +682,9 @@ func ExampleChainable_FindIndex_findIndex4() {
 	}
 	fromIndex := 2
 
-	result, err := FindIndex(data, predicate, fromIndex)
+	result, err := From(data).
+		FindIndex(predicate, fromIndex).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -684,7 +700,9 @@ func ExampleChainable_FindIndex_findIndex5() {
 	}
 	fromIndex := 3
 
-	result, err := FindIndex(data, predicate, fromIndex)
+	result, err := From(data).
+		FindIndex(predicate, fromIndex).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -705,9 +723,11 @@ func ExampleChainable_FindLast_findLast1() {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	result, err := FindLast(data, func(each Sample) bool {
-		return strings.Contains(each.EbookName, "co")
-	})
+	result, err := From(data).
+		FindLast(func(each Sample) bool {
+			return strings.Contains(each.EbookName, "co")
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -719,9 +739,11 @@ func ExampleChainable_FindLast_findLast1() {
 func ExampleChainable_FindLast_findLast2() {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
-	result, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 2)
+	result, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 2).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -733,9 +755,11 @@ func ExampleChainable_FindLast_findLast2() {
 func ExampleChainable_FindLast_findLast3() {
 	data := []string{"clean code", "rework", "detective comics", "coco"}
 
-	result, err := FindLast(data, func(each string, i int) bool {
-		return strings.Contains(each, "co")
-	}, 3)
+	result, err := From(data).
+		FindLast(func(each string, i int) bool {
+			return strings.Contains(each, "co")
+		}, 3).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -747,9 +771,11 @@ func ExampleChainable_FindLast_findLast3() {
 func ExampleChainable_FindLastIndex_findLastIndex1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 
-	result, err := FindLastIndex(data, func(each string) bool {
-		return each == "tim"
-	})
+	result, err := From(data).
+		FindLastIndex(func(each string) bool {
+			return each == "tim"
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -765,7 +791,9 @@ func ExampleChainable_FindLastIndex_findLastIndex2() {
 	}
 	fromIndex := 4
 
-	result, err := FindLastIndex(data, predicate, fromIndex)
+	result, err := From(data).
+		FindLastIndex(predicate, fromIndex).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -781,7 +809,9 @@ func ExampleChainable_FindLastIndex_findLastIndex3() {
 	}
 	fromIndex := 3
 
-	result, err := FindLastIndex(data, predicate, fromIndex)
+	result, err := From(data).
+		FindLastIndex(predicate, fromIndex).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -797,7 +827,9 @@ func ExampleChainable_FindLastIndex_findLastIndex4() {
 	}
 	fromIndex := 2
 
-	result, err := FindLastIndex(data, predicate, fromIndex)
+	result, err := From(data).
+		FindLastIndex(predicate, fromIndex).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -808,11 +840,7 @@ func ExampleChainable_FindLastIndex_findLastIndex4() {
 
 func ExampleChainable_First_first1() {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := First(data)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).First().Result()
 
 	fmt.Println(result)
 	// ===> "damian"
@@ -820,11 +848,7 @@ func ExampleChainable_First_first1() {
 
 func ExampleChainable_First_first2() {
 	data := []string{}
-	result, err := First(data)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).First().Result()
 
 	fmt.Println(result)
 	// ===> nil
@@ -836,7 +860,7 @@ func ExampleChainable_FromPairs_fromPairs1() {
 		[]interface{}{"b", 2},
 	}
 
-	result, err := FromPairs(data)
+	result, err := From(data).FromPairs().ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -856,7 +880,7 @@ func ExampleChainable_FromPairs_fromPairs2() {
 		[]interface{}{false, []string{"damian", "grayson"}},
 	}
 
-	result, err := FromPairs(data)
+	result, err := From(data).FromPairs().ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -885,9 +909,11 @@ func ExampleChainable_GroupBy_groupBy1() {
 		{Ebook: "one piece", Category: "manga"},
 	}
 
-	result, err := GroupBy(data, func(each Sample) string {
-		return each.Category
-	})
+	result, err := From(data).
+		GroupBy(func(each Sample) string {
+			return each.Category
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -914,9 +940,11 @@ func ExampleChainable_GroupBy_groupBy1() {
 func ExampleChainable_GroupBy_groupBy2() {
 	data := []int{1, 2, 3, 5, 6, 4, 2, 5, 2}
 
-	result, err := GroupBy(data, func(each int) int {
-		return each
-	})
+	result, err := From(data).
+		GroupBy(func(each int) int {
+			return each
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -934,113 +962,101 @@ func ExampleChainable_GroupBy_groupBy2() {
 	*/
 }
 
-func ExampleChainable_Includes_includesMap1() {
+func ExampleChainable_Contains_includesMap1() {
 	data := map[string]string{
 		"name":  "grayson",
 		"hobby": "helping people",
 	}
 
-	result, err := Includes(data, "grayson")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Contains("grayson").Result()
 
 	fmt.Println(result)
 	// ===> true
 }
 
-func ExampleChainable_Includes_includesMap2() {
+func ExampleChainable_Contains_includesMap2() {
 	data := map[string]string{
 		"name":  "grayson",
 		"hobby": "helping people",
 	}
 
-	result, err := Includes(data, "batmobile")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Contains("batmobile").Result()
 
 	fmt.Println(result)
 	// ===> false
 }
 
-func ExampleChainable_Includes_includesSlice1() {
+func ExampleChainable_Contains_includesSlice1() {
 	data := []string{"damian", "tim", "jason", "grayson"}
-	result, err := Includes(data, "tim")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+
+	result := From(data).Contains("tim").Result()
 
 	fmt.Println(result)
 	// ===> true
 }
 
-func ExampleChainable_Includes_includesSlice2() {
+func ExampleChainable_Contains_includesSlice2() {
 	data := []string{"damian", "tim", "jason", "grayson"}
-	result, err := Includes(data, "tim", 2)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+
+	result := From(data).Contains("tim", 2).Result()
 
 	fmt.Println(result)
 	// ===> false
 }
 
-func ExampleChainable_Includes_includesSlice3() {
+func ExampleChainable_Contains_includesSlice3() {
 	data := []string{"damian", "tim", "jason", "grayson"}
-	result, err := Includes(data, "cassandra")
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+
+	result := From(data).Contains("cassandra").Result()
 
 	fmt.Println(result)
 	// ===> false
 }
 
-func ExampleChainable_Includes_includesSlice4() {
+func ExampleChainable_Contains_includesSlice4() {
 	data := []interface{}{"name", 12, true}
 
-	Includes(data, "name") // ===> true
-	Includes(data, 12)     // ===> true
-	Includes(data, true)   // ===> true
+	From(data).Contains("name").Result() // ===> true
+	From(data).Contains(12).Result()     // ===> true
+	From(data).Contains(true).Result()   // ===> true
 }
 
-func ExampleChainable_Includes_includesSlice5() {
-	Includes("damian", "an") // ===> true
+func ExampleChainable_Contains_includesSlice5() {
+	From("damian").Contains("an").Result() // ===> true
 }
 
 func ExampleChainable_IndexOf_indexOf1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
-	IndexOf(data, "duke")    // ===> -1
-	IndexOf(data, "tim")     // ===> 3
-	IndexOf(data, "tim", 4)  // ===> 4
-	IndexOf(data, "tim", -4) // ===> 3
-	IndexOf(data, "tim", -3) // ===> 4
-	IndexOf(data, "tim", -2) // ===> -1
+
+	From(data).IndexOf("duke").Result()    // ===> -1
+	From(data).IndexOf("tim").Result()     // ===> 3
+	From(data).IndexOf("tim", 4).Result()  // ===> 4
+	From(data).IndexOf("tim", -4).Result() // ===> 3
+	From(data).IndexOf("tim", -3).Result() // ===> 4
+	From(data).IndexOf("tim", -2).Result() // ===> -1
 }
 
 func ExampleChainable_IndexOf_indexOf2() {
 	data := []float64{2.1, 2.2, 3, 3.00000, 3.1, 3.9, 3.95}
-	IndexOf(data, 2.2)           // ===> 1
-	IndexOf(data, 3)             // ===> -1
-	IndexOf(data, float64(3))    // ===> 2 (because 3 is detected as int32, not float64)
-	IndexOf(data, float64(3), 2) // ===> 2
-	IndexOf(data, float64(3), 3) // ===> 3
+
+	From(data).IndexOf(2.2).Result()           // ===> 1
+	From(data).IndexOf(3).Result()             // ===> -1
+	From(data).IndexOf(float64(3)).Result()    // ===> 2 (because 3 is detected as int32, not float64)
+	From(data).IndexOf(float64(3), 2).Result() // ===> 2
+	From(data).IndexOf(float64(3), 3).Result() // ===> 3
 }
 
 func ExampleChainable_IndexOf_indexOf3() {
 	data := []interface{}{"jason", 24, true}
-	IndexOf(data, 24)     // ===> 1
-	IndexOf(data, 24, -1) // ===> -1
+
+	From(data).IndexOf(24).Result()     // ===> 1
+	From(data).IndexOf(24, -1).Result() // ===> -1
 }
 
 func ExampleChainable_Initial_initial1() {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := Initial(data)
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Initial().Result()
 
 	fmt.Println(result)
 	// ===> []string{ "damian", "grayson" }
@@ -1048,11 +1064,8 @@ func ExampleChainable_Initial_initial1() {
 
 func ExampleChainable_Initial_initial2() {
 	data := []int{1, 2, 3, 4, 5}
-	result, err := Initial(data)
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Initial().Result()
 
 	fmt.Println(result)
 	// ===> []int{ 1, 2, 3, 4 }
@@ -1060,11 +1073,8 @@ func ExampleChainable_Initial_initial2() {
 
 func ExampleChainable_Initial_initial3() {
 	data := []map[string]string{{"name": "jason"}}
-	result, err := Initial(data)
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Initial().Result()
 
 	fmt.Println(result)
 	// ===> []map[string]string{}
@@ -1072,43 +1082,31 @@ func ExampleChainable_Initial_initial3() {
 
 func ExampleChainable_Initial_initial4() {
 	data := []float64{}
-	result, err := Initial(data)
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Initial().Result()
 
 	fmt.Println(result)
 	// ===> []float64{}
 }
 
 func ExampleChainable_Intersection_intersection1() {
-	result, err := Intersection(
-		[]string{"damian", "grayson", "cassandra", "tim", "tim", "jason"},
-		[]string{"cassandra", "tim", "jason"},
-		[]string{"cassandra", "jason"},
-	)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From([]string{"damian", "grayson", "cassandra", "tim", "tim", "jason"}).
+		Intersection([]string{"cassandra", "tim", "jason"}).
+		Result()
 
 	fmt.Println(result)
-	// ===> []string{ "cassandra", "jason" }
+	// ===> []string{ "cassandra", "tim", "jason" }
 }
 
 func ExampleChainable_Intersection_intersection2() {
-	result, err := Intersection(
-		[]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.1001, 1.2, 1.33, 1.4},
-		[]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.2, 1.33},
-		[]float64{1.1000000, 1.2, 0.8001, 0.999, 1.33, 1, 1.0, 1.000001},
-		[]float64{1.2, 0.8001, 0.999, 1.33, 1.000092},
-		[]float64{0.8001, 0.999, 1.33, 1.400001},
-	)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From([]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.1001, 1.2, 1.33, 1.4}).
+		IntersectionMany(
+			[]float64{0.8, 0.8001, 0.999, 1, 1.0, 1.000001, 1.1000000, 1.2, 1.33},
+			[]float64{1.1000000, 1.2, 0.8001, 0.999, 1.33, 1, 1.0, 1.000001},
+			[]float64{1.2, 0.8001, 0.999, 1.33, 1.000092},
+			[]float64{0.8001, 0.999, 1.33, 1.400001},
+		).
+		Result()
 
 	fmt.Println(result)
 	// ===> []float64{ 0.8001, 0.999, 1.33 }
@@ -1118,10 +1116,7 @@ func ExampleChainable_Join_join1() {
 	data := []string{"damian", "grayson", "cassandra"}
 	separator := " - "
 
-	result, err := Join(data, separator)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Join(separator).Result()
 
 	fmt.Println(result)
 	// ===> "damian - grayson - cassandra"
@@ -1131,10 +1126,7 @@ func ExampleChainable_Join_join2() {
 	data := []int{1, 2, 3, 4}
 	separator := ", "
 
-	result, err := Join(data, separator)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Join(separator).Result()
 
 	fmt.Println(result)
 	// ===> "1, 2, 3, 4"
@@ -1150,12 +1142,11 @@ func ExampleChainable_KeyBy_keyBy() {
 		{"name": "damian", "hobby": "getting angry"},
 	}
 
-	result, err := KeyBy(data, func(each HashMap) string {
-		return each["name"]
-	})
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result, err := From(data).
+		KeyBy(func(each HashMap) string {
+			return each["name"]
+		}).
+		ResultAndError()
 
 	fmt.Println(result)
 	/*
@@ -1170,11 +1161,8 @@ func ExampleChainable_KeyBy_keyBy() {
 
 func ExampleChainable_Last_last1() {
 	data := []string{"damian", "grayson", "cassandra"}
-	result, err := Last(data)
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Last().Result()
 
 	fmt.Println(result)
 	// ===> "cassandra"
@@ -1182,11 +1170,8 @@ func ExampleChainable_Last_last1() {
 
 func ExampleChainable_Last_last2() {
 	data := []int{1}
-	result, err := Last(data)
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Last().Result()
 
 	fmt.Println(result)
 	// ===> 1
@@ -1194,11 +1179,8 @@ func ExampleChainable_Last_last2() {
 
 func ExampleChainable_Last_last3() {
 	data := []string{}
-	result, err := Last(data)
 
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	result := From(data).Last().Result()
 
 	fmt.Println(result)
 	// ===> nil
@@ -1207,29 +1189,29 @@ func ExampleChainable_Last_last3() {
 func ExampleChainable_LastIndexOf_lastIndexOf1() {
 	data := []string{"damian", "grayson", "cass", "tim", "tim", "jason", "steph"}
 
-	LastIndexOf(data, "duke")    // ===> -1
-	LastIndexOf(data, "tim")     // ===> 4
-	LastIndexOf(data, "tim", 4)  // ===> 4
-	LastIndexOf(data, "tim", -4) // ===> 3
-	LastIndexOf(data, "tim", -3) // ===> 4
-	LastIndexOf(data, "tim", -2) // ===> 4
+	From(data).LastIndexOf("duke").Result()    // ===> -1
+	From(data).LastIndexOf("tim").Result()     // ===> 4
+	From(data).LastIndexOf("tim", 4).Result()  // ===> 4
+	From(data).LastIndexOf("tim", -4).Result() // ===> 3
+	From(data).LastIndexOf("tim", -3).Result() // ===> 4
+	From(data).LastIndexOf("tim", -2).Result() // ===> 4
 }
 
 func ExampleChainable_LastIndexOf_lastIndexOf2() {
 	data := []float64{2.1, 2.2, 3, 3.00000, 3.1, 3.9, 3.95}
 
-	LastIndexOf(data, 2.2)           // ===> 1
-	LastIndexOf(data, 3)             // ===> -1 (because 3 is detected as int32, not float64)
-	LastIndexOf(data, float64(3))    // ===> 3
-	LastIndexOf(data, float64(3), 2) // ===> 2
-	LastIndexOf(data, float64(3), 3) // ===> 3
+	From(data).LastIndexOf(2.2).Result()           // ===> 1
+	From(data).LastIndexOf(3).Result()             // ===> -1 (because 3 is detected as int32, not float64)
+	From(data).LastIndexOf(float64(3)).Result()    // ===> 3
+	From(data).LastIndexOf(float64(3), 2).Result() // ===> 2
+	From(data).LastIndexOf(float64(3), 3).Result() // ===> 3
 }
 
 func ExampleChainable_LastIndexOf_lastIndexOf3() {
 	data := []interface{}{"jason", 24, true}
 
-	LastIndexOf(data, 24)     // ===> 1
-	LastIndexOf(data, 24, -1) // ===> 1
+	From(data).LastIndexOf(24).Result()     // ===> 1
+	From(data).LastIndexOf(24, -1).Result() // ===> 1
 }
 
 func ExampleChainable_Map_map1() {
@@ -1244,9 +1226,11 @@ func ExampleChainable_Map_map1() {
 		{EbookName: "detective comics", DailyDownloads: 11500},
 	}
 
-	result, err := Map(data, func(each Sample, i int) string {
-		return each.EbookName
-	})
+	result, err := From(data).
+		Map(func(each Sample, i int) string {
+			return each.EbookName
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1273,16 +1257,18 @@ func ExampleChainable_Map_map2() {
 		{EbookName: "detective comics", DailyDownloads: 11500, IsActive: true},
 	}
 
-	result, err := Map(data, func(each SampleOne, i int) SampleTwo {
-		ebook := each.EbookName
-		if !each.IsActive {
-			ebook = fmt.Sprintf("%s (inactive)", each.EbookName)
-		}
+	result, err := From(data).
+		Map(func(each SampleOne, i int) SampleTwo {
+			ebook := each.EbookName
+			if !each.IsActive {
+				ebook = fmt.Sprintf("%s (inactive)", each.EbookName)
+			}
 
-		downloadsInThousands := float32(each.DailyDownloads) / float32(1000)
+			downloadsInThousands := float32(each.DailyDownloads) / float32(1000)
 
-		return SampleTwo{Ebook: ebook, DownloadsInThousands: downloadsInThousands}
-	})
+			return SampleTwo{Ebook: ebook, DownloadsInThousands: downloadsInThousands}
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1302,21 +1288,14 @@ func ExampleChainable_Map_map2() {
 func ExampleChainable_Nth_nth1() {
 	data := []string{"grayson", "jason", "tim", "damian"}
 
-	Nth(data, 1)  // ===> "jason"
-	Nth(data, 2)  // ===> "tim"
-	Nth(data, -1) // ===> "damian"
+	From(data).Nth(1).Result()  // ===> "jason"
+	From(data).Nth(2).Result()  // ===> "tim"
+	From(data).Nth(-1).Result() // ===> "damian"
 }
 
 func ExampleChainable_Nth_nth2() {
 	data := []int{1, 2, 3, 4, 5}
-	result, err := Nth(data, 4)
-
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	fmt.Println(result)
-	// ===> 5
+	From(data).Nth(4).Result() // ===> 5
 }
 
 func ExampleChainable_OrderBy_orderBy1() {
@@ -1329,9 +1308,11 @@ func ExampleChainable_OrderBy_orderBy1() {
 		{"name": "jason", "hobby": "punching people"},
 	}
 
-	result, err := OrderBy(data, func(each HashMap) string {
-		return each["name"]
-	})
+	result, err := From(data).
+		OrderBy(func(each HashMap) string {
+			return each["name"]
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1357,9 +1338,11 @@ func ExampleChainable_OrderBy_orderBy2() {
 		{"name": "jason", "hobby": "punching people", "age": 22},
 	}
 
-	result, err := OrderBy(data, func(each HashMap) int {
-		return each["age"].(int)
-	})
+	result, err := From(data).
+		OrderBy(func(each HashMap) int {
+			return each["age"].(int)
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1385,9 +1368,11 @@ func ExampleChainable_OrderBy_orderBy3() {
 		{"name": "jason", "hobby": "punching people", "age": 22},
 	}
 
-	result, err := OrderBy(data, func(each HashMap) int {
-		return each["age"].(int)
-	}, false)
+	result, err := From(data).
+		OrderBy(func(each HashMap) int {
+			return each["age"].(int)
+		}, false).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1413,9 +1398,11 @@ func ExampleChainable_OrderBy_orderBy4() {
 		{"name": "jason", "hobby": "punching people", "age": 22},
 	}
 
-	result, err := OrderBy(data, func(each HashMap) int {
-		return each["age"].(int)
-	}, true, false)
+	result, err := From(data).
+		OrderBy(func(each HashMap) int {
+			return each["age"].(int)
+		}, true, false).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1445,9 +1432,11 @@ func ExampleChainable_Partition_partition() {
 		{"name": "duke", "isMale": true},
 	}
 
-	resultTruthy, resultFalsey, err := Partition(data, func(each HashMap) bool {
-		return each["isMale"].(bool)
-	})
+	resultTruthy, resultFalsey, err := From(data).
+		Partition(func(each HashMap) bool {
+			return each["isMale"].(bool)
+		}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1473,9 +1462,9 @@ func ExampleChainable_Partition_partition() {
 	*/
 }
 
-func ExampleChainable_Pull_pull1() {
+func ExampleChainable_Exclude_exclude1() {
 	data := []int{1, 2, 3, 4, 5, 6}
-	result, err := Pull(data, 3)
+	result, err := From(data).Exclude(3).ResultAndError()
 
 	if err != nil {
 		log.Fatal(err.Error())
@@ -1485,9 +1474,9 @@ func ExampleChainable_Pull_pull1() {
 	// ===> []int{ 1, 2, 4, 5, 6 }
 }
 
-func ExampleChainable_Pull_pull2() {
+func ExampleChainable_ExcludeMany_excludeMany1() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
-	result, err := Pull(data, 2.1, 3.2, 6.3)
+	result, err := From(data).ExcludeMany(2.1, 3.2, 6.3).ResultAndError()
 
 	if err != nil {
 		log.Fatal(err.Error())
@@ -1497,9 +1486,9 @@ func ExampleChainable_Pull_pull2() {
 	// ===> []float64{ 1.1, 4.2, 5.2 }
 }
 
-func ExampleChainable_Pull_pull3() {
+func ExampleChainable_ExcludeMany_excludeMany2() {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	result, err := Pull(data, "grayson", "tim")
+	result, err := From(data).ExcludeMany("grayson", "tim").ResultAndError()
 
 	if err != nil {
 		log.Fatal(err.Error())
@@ -1509,36 +1498,22 @@ func ExampleChainable_Pull_pull3() {
 	// ===> []string{ "damian", "cassandra", "jason", "stephanie" }
 }
 
-func ExampleChainable_PullAll_pullAll1() {
+func ExampleChainable_ExcludeAt_excludeAt() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
-	exclude := []float64{2.1, 3.2, 6.3}
 
-	result, err := PullAll(data, exclude)
+	result, err := From(data).ExcludeAt(1).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	fmt.Println(result)
-	// ===> []float64{ 1.1, 4.2, 5.2 }
+	// ===> []float64{ 2.1, 3.2, 4.2, 5.2, 6.3 }
 }
 
-func ExampleChainable_PullAll_pullAll2() {
-	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
-	exclude := []string{"grayson", "tim"}
-
-	result, err := PullAll(data, exclude)
-	if err != nil {
-		log.Fatal(err.Error())
-	}
-
-	fmt.Println(result)
-	// ===> []string{ "damian", "cassandra", "jason", "stephanie" }
-}
-
-func ExampleChainable_PullAt_pullAt() {
+func ExampleChainable_ExcludeAt_excludeAtMany() {
 	data := []float64{1.1, 2.1, 3.2, 4.2, 5.2, 6.3}
 
-	result, err := PullAt(data, 1, 3)
+	result, err := From(data).ExcludeAtMany(1, 3).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1556,15 +1531,17 @@ func ExampleChainable_Reduce_reduceMap1() {
 		"isMale": true,
 	}
 
-	result, err := Reduce(data, func(accumulator string, value interface{}, key string) string {
-		if accumulator == "" {
-			accumulator = fmt.Sprintf("%s: %v", key, value)
-		} else {
-			accumulator = fmt.Sprintf("%s, %s: %v", accumulator, key, value)
-		}
+	result, err := From(data).
+		Reduce(func(accumulator string, value interface{}, key string) string {
+			if accumulator == "" {
+				accumulator = fmt.Sprintf("%s: %v", key, value)
+			} else {
+				accumulator = fmt.Sprintf("%s, %s: %v", accumulator, key, value)
+			}
 
-		return accumulator
-	}, "")
+			return accumulator
+		}, "").
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1576,9 +1553,11 @@ func ExampleChainable_Reduce_reduceMap1() {
 func ExampleChainable_Reduce_reduceSlice1() {
 	data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-	result, err := Reduce(data, func(accumulator, each int) int {
-		return accumulator + each
-	}, 0)
+	result, err := From(data).
+		Reduce(func(accumulator, each int) int {
+			return accumulator + each
+		}, 0).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1596,10 +1575,12 @@ func ExampleChainable_Reduce_reduceSlice2() {
 		{"isMale", true},
 	}
 
-	result, err := Reduce(data, func(accumulator HashMap, each []interface{}, i int) HashMap {
-		accumulator[each[0].(string)] = each[1]
-		return accumulator
-	}, HashMap{})
+	result, err := From(data).
+		Reduce(func(accumulator HashMap, each []interface{}, i int) HashMap {
+			accumulator[each[0].(string)] = each[1]
+			return accumulator
+		}, HashMap{}).
+		ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -1621,9 +1602,9 @@ func ExampleChainable_Reject_rejectMap() {
 		"detective comics": 11500,
 	}
 
-	result, err := Reject(data, func(value int, key string) bool {
+	result, err := From(data).Reject(func(value int, key string) bool {
 		return value > 11000
-	})
+	}).ResultAndError()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
