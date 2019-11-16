@@ -531,21 +531,37 @@ func TestContainsSliceStringEmptyData(t *testing.T) {
 	assert.False(t, result)
 }
 
-func TestContainsSliceStringDifferentType(t *testing.T) {
-	data := []string{}
-
-	result, err := From(data).Contains(1).ResultAndError()
-	assert.NotNil(t, err)
-	assert.EqualError(t, err, "type of data should be same with type of search keyword")
-	assert.False(t, result)
-}
-
 func TestContainsSliceNilData(t *testing.T) {
 	data := ([]string)(nil)
 
 	result, err := From(data).Contains("my").ResultAndError()
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "data cannot be nil")
+	assert.False(t, result)
+}
+
+func TestContainsStringWrongData(t *testing.T) {
+	data := "asddf"
+
+	result, err := From(data).Contains(12).ResultAndError()
+	assert.Nil(t, err)
+	assert.False(t, result)
+}
+
+func TestContainsWithPrivitiveData(t *testing.T) {
+	data := 123123
+
+	result, err := From(data).Contains(12).ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data must be slice, map, or a string")
+	assert.False(t, result)
+}
+
+func TestContainsWithBiggerStartIndex(t *testing.T) {
+	data := map[string]int{"yes": 1}
+
+	result, err := From(data).Contains("no", 3).ResultAndError()
+	assert.Nil(t, err)
 	assert.False(t, result)
 }
 
@@ -605,6 +621,28 @@ func TestCountSlice(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.EqualValues(t, 3, result)
+}
+
+func TestCountWithNilData(t *testing.T) {
+	data := []string(nil)
+
+	result, err := From(data).Count().ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data cannot be nil")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountByWithNilData(t *testing.T) {
+	data := []string(nil)
+
+	result, err := From(data).
+		CountBy(func(each string) bool {
+			return strings.Contains(each, "d")
+		}).
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data cannot be nil")
+	assert.Equal(t, 0, result)
 }
 
 func TestCountBySliceWithPredicate(t *testing.T) {

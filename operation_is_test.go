@@ -1,22 +1,29 @@
 package gubrak
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
-// =========== IsArray
+// =========== IsArrayOrSlice
 
-func TestIsArray(t *testing.T) {
-	assert.True(t, IsArray(
+func TestIsArrayOrSlice(t *testing.T) {
+	assert.True(t, IsArrayOrSlice(
 		[]string{"a", "b", "c", "d"},
 	))
 }
 
-func TestIsArrayFail(t *testing.T) {
-	assert.False(t, IsArray(
+func TestIsArrayOrSliceFail(t *testing.T) {
+	assert.False(t, IsArrayOrSlice(
 		make(map[string]interface{}),
+	))
+}
+
+func TestIsArray(t *testing.T) {
+	assert.True(t, IsArray(
+		[4]string{"a", "b", "c", "d"},
 	))
 }
 
@@ -67,78 +74,78 @@ func TestIsDateFail(t *testing.T) {
 // =========== IsEmpty
 
 func TestIsEmptyTypeString(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		"",
 	))
 }
 
 func TestIsEmptyTypeInt(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		0,
 	))
 }
 
 func TestIsEmptyTypeInt8(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		int8(0),
 	))
 }
 
 func TestIsEmptyTypeInt16(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		int16(0),
 	))
 }
 
 func TestIsEmptyTypeInt32(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		int32(0),
 	))
 }
 
 func TestIsEmptyTypeInt64(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		int64(0),
 	))
 }
 
 func TestIsEmptyTypeUint(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		uint(0),
 	))
 }
 
 func TestIsEmptyTypeUint8(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		uint8(0),
 	))
 }
 
 func TestIsEmptyTypeUint16(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		uint16(0),
 	))
 }
 
 func TestIsEmptyTypeUint32(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		uint32(0),
 	))
 }
 
 func TestIsEmptyTypeUint64(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		uint64(0),
 	))
 }
 
 func TestIsEmptyTypeFloat32(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		float32(0),
 	))
 }
 func TestIsEmptyTypeFloat64(t *testing.T) {
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		float64(0),
 	))
 }
@@ -154,7 +161,7 @@ func TestIsEmptyNilSlice(t *testing.T) {
 func TestIsEmptySliceEmptyElements(t *testing.T) {
 	data := make([]string, 0)
 
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		data,
 	))
 }
@@ -162,7 +169,7 @@ func TestIsEmptySliceEmptyElements(t *testing.T) {
 func TestIsEmptyMapEmptyElements(t *testing.T) {
 	data := make(map[string]int)
 
-	assert.True(t, IsEmpty(
+	assert.True(t, IsZeroValue(
 		data,
 	))
 }

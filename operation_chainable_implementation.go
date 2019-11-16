@@ -510,29 +510,23 @@ func _countSlice(err *error, dataValue reflect.Value, dataValueType reflect.Type
 	var callbackType reflect.Type
 	var callbackTypeNumIn int
 
-	if callback != nil {
-		callbackValue, callbackType = inspectFunc(err, callback)
-		if *err != nil {
-			return 0
-		}
-
-		callbackTypeNumIn = validateFuncInputForSliceLoop(err, callbackType, dataValue)
-		if *err != nil {
-			return 0
-		}
-
-		validateFuncOutputOneVarBool(err, callbackType, true)
-		if *err != nil {
-			return 0
-		}
+	if callback == nil {
+		return dataValueLen
 	}
 
-	if dataValueLen == 0 {
+	callbackValue, callbackType = inspectFunc(err, callback)
+	if *err != nil {
 		return 0
 	}
 
-	if callback == nil {
-		return dataValueLen
+	callbackTypeNumIn = validateFuncInputForSliceLoop(err, callbackType, dataValue)
+	if *err != nil {
+		return 0
+	}
+
+	validateFuncOutputOneVarBool(err, callbackType, true)
+	if *err != nil {
+		return 0
 	}
 
 	resultCounter := 0
@@ -553,29 +547,23 @@ func _countCollection(err *error, dataValue reflect.Value, dataValueType reflect
 	var callbackType reflect.Type
 	var callbackTypeNumIn int
 
-	if callback != nil {
-		callbackValue, callbackType = inspectFunc(err, callback)
-		if *err != nil {
-			return 0
-		}
-
-		callbackTypeNumIn = validateFuncInputForCollectionLoop(err, callbackType, dataValue)
-		if *err != nil {
-			return 0
-		}
-
-		validateFuncOutputOneVarBool(err, callbackType, true)
-		if *err != nil {
-			return 0
-		}
+	if callback == nil {
+		return dataValueLen
 	}
 
-	if dataValueLen == 0 {
+	callbackValue, callbackType = inspectFunc(err, callback)
+	if *err != nil {
 		return 0
 	}
 
-	if callback == nil {
-		return dataValueLen
+	callbackTypeNumIn = validateFuncInputForCollectionLoop(err, callbackType, dataValue)
+	if *err != nil {
+		return 0
+	}
+
+	validateFuncOutputOneVarBool(err, callbackType, true)
+	if *err != nil {
+		return 0
 	}
 
 	resultCounter := 0

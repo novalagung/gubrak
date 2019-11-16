@@ -1,17 +1,38 @@
 package gubrak
 
 import (
+	"math"
 	"reflect"
 	"time"
 )
 
-// IsArray will return true when type of the data is array/slice
-func IsArray(data interface{}) bool {
-	return typeIs(data,
-		reflect.Array,
-		reflect.Slice,
-	)
+func typeIs(data interface{}, types ...reflect.Kind) bool {
+	valueOfData := reflect.ValueOf(data)
+	for _, tipe := range types {
+		if tipe == valueOfData.Kind() {
+			return true
+		}
+	}
+
+	return false
 }
+
+// IsSlice is alias of IsSlice()
+func IsSlice(data interface{}) bool {
+	return typeIs(data, reflect.Slice)
+}
+
+// IsArray is alias of IsArray()
+func IsArray(data interface{}) bool {
+	return typeIs(data, reflect.Array)
+}
+
+// IsSliceOrArray will return true when type of the data is array/slice
+func IsSliceOrArray(data interface{}) bool {
+	return IsSlice(data) || IsArray(data)
+}
+
+var IsArrayOrSlice = IsSliceOrArray
 
 // IsBool will return true when type of the data is boolean
 func IsBool(data interface{}) bool {
@@ -22,9 +43,7 @@ func IsBool(data interface{}) bool {
 
 // IsChannel will return true when type of the data is channel
 func IsChannel(data interface{}) bool {
-	return typeIs(data,
-		reflect.Chan,
-	)
+	return typeIs(data, reflect.Chan)
 }
 
 // IsDate will return true when type of the data is time.Time
@@ -36,45 +55,9 @@ func IsDate(data interface{}) bool {
 	return false
 }
 
-// IsEmpty will return false to any null-able data which value is nil (chan, func, interface, map, pointer, slice), will also return false when the value is default value of it's data type (false for bool, "" for string, 0 for numeric value), and will return false if the value is slice or map and the length is 0
-func IsEmpty(data interface{}) bool {
-	if data == nil {
-		return true
-	} else if value, ok := data.(string); ok {
-		return value == ""
-	} else if value, ok := data.(bool); ok {
-		return value == true
-	} else if value, ok := data.(float32); ok {
-		return value == 0
-	} else if value, ok := data.(float64); ok {
-		return value == 0
-	} else if value, ok := data.(int); ok {
-		return value == 0
-	} else if value, ok := data.(int8); ok {
-		return value == 0
-	} else if value, ok := data.(int16); ok {
-		return value == 0
-	} else if value, ok := data.(int32); ok {
-		return value == 0
-	} else if value, ok := data.(int64); ok {
-		return value == 0
-	} else if value, ok := data.(uint); ok {
-		return value == 0
-	} else if value, ok := data.(uint8); ok {
-		return value == 0
-	} else if value, ok := data.(uint16); ok {
-		return value == 0
-	} else if value, ok := data.(uint32); ok {
-		return value == 0
-	} else if value, ok := data.(uint64); ok {
-		return value == 0
-	} else if IsNil(data) {
-		return true
-	} else if IsMap(data) || IsArray(data) {
-		return valueOf(data).Len() == 0
-	}
-
-	return false
+// IsString will return true when type of the data is string
+func IsString(data interface{}) bool {
+	return typeIs(data, reflect.String)
 }
 
 // IsEmptyString will return true when type of the data is string and it's empty
@@ -100,9 +83,7 @@ func IsFloat(data interface{}) bool {
 
 // IsFunction will return true when type of the data is closure/function
 func IsFunction(data interface{}) bool {
-	return typeIs(data,
-		reflect.Func,
-	)
+	return typeIs(data, reflect.Func)
 }
 
 // IsInt will return true when type of the data is numeric integer
@@ -118,9 +99,7 @@ func IsInt(data interface{}) bool {
 
 // IsMap will return true when type of the data is hash map
 func IsMap(data interface{}) bool {
-	return typeIs(data,
-		reflect.Map,
-	)
+	return typeIs(data, reflect.Map)
 }
 
 // IsNil will return true when type of the data is nil
@@ -129,17 +108,13 @@ func IsNil(data interface{}) bool {
 		return true
 	}
 
-	isNillable := typeIs(data,
-		reflect.Chan,
-		reflect.Func,
-		reflect.Interface,
-		reflect.Map,
-		reflect.Ptr,
-		reflect.Slice,
-		reflect.Array,
-	)
-	if isNillable {
-		return valueOf(data).IsNil()
+	valueOfData := reflect.ValueOf(data)
+
+	switch valueOfData.Kind() {
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.UnsafePointer, reflect.Struct:
+		if valueOfData.IsNil() {
+			return true
+		}
 	}
 
 	return false
@@ -160,39 +135,24 @@ func IsNumeric(data interface{}) bool {
 		reflect.Uint16,
 		reflect.Uint32,
 		reflect.Uint64,
+		reflect.Uintptr,
 	)
 }
 
 // IsPointer will return true when type of the data is pointer
 func IsPointer(data interface{}) bool {
-	return typeIs(data,
-		reflect.Ptr,
-	)
-}
-
-// IsSlice is alias of IsArray()
-func IsSlice(data interface{}) bool {
-	return IsArray(data)
+	return typeIs(data, reflect.Ptr)
 }
 
 // IsStructObject will return true when type of the data is object from struct
 func IsStructObject(data interface{}) bool {
-	return typeIs(data,
-		reflect.Struct,
-	)
-}
-
-// IsString will return true when type of the data is string
-func IsString(data interface{}) bool {
-	return typeIs(data,
-		reflect.String,
-	)
+	return typeIs(data, reflect.Struct)
 }
 
 // IsTrue will return true when type of the data is bool, and the value is true
 func IsTrue(data interface{}) bool {
 	if data == nil {
-		return true
+		return false
 	}
 
 	if value, ok := data.(bool); ok {
@@ -210,6 +170,7 @@ func IsUint(data interface{}) bool {
 		reflect.Uint16,
 		reflect.Uint32,
 		reflect.Uint64,
+		reflect.Uintptr,
 	)
 }
 
@@ -257,6 +218,80 @@ func IsZeroNumber(data interface{}) bool {
 	if value, ok := data.(uint64); ok {
 		return value == 0
 	}
+	if value, ok := data.(uintptr); ok {
+		return value == 0
+	}
+
+	if value, ok := data.(complex64); ok {
+		value128 := complex128(value)
+		return math.Float64bits(real(value128)) == 0 && math.Float64bits(imag(value128)) == 0
+	}
+	if value, ok := data.(complex128); ok {
+		return math.Float64bits(real(value)) == 0 && math.Float64bits(imag(value)) == 0
+	}
 
 	return false
 }
+
+// IsZeroValue reports whether value is the zero value for its type.
+func IsZeroValue(data interface{}) bool {
+	if data == nil {
+		return true
+	} else if value, ok := data.(string); ok {
+		return value == ""
+	} else if value, ok := data.(bool); ok {
+		return value == false
+	} else if value, ok := data.(float32); ok {
+		return value == 0
+	} else if value, ok := data.(float64); ok {
+		return value == 0
+	} else if value, ok := data.(int); ok {
+		return value == 0
+	} else if value, ok := data.(int8); ok {
+		return value == 0
+	} else if value, ok := data.(int16); ok {
+		return value == 0
+	} else if value, ok := data.(int32); ok {
+		return value == 0
+	} else if value, ok := data.(int64); ok {
+		return value == 0
+	} else if value, ok := data.(uint); ok {
+		return value == 0
+	} else if value, ok := data.(uint8); ok {
+		return value == 0
+	} else if value, ok := data.(uint16); ok {
+		return value == 0
+	} else if value, ok := data.(uint32); ok {
+		return value == 0
+	} else if value, ok := data.(uint64); ok {
+		return value == 0
+	} else if value, ok := data.(uintptr); ok {
+		return value == 0
+	} else if value, ok := data.(complex64); ok {
+		value128 := complex128(value)
+		return math.Float64bits(real(value128)) == 0 && math.Float64bits(imag(value128)) == 0
+	} else if value, ok := data.(complex128); ok {
+		return math.Float64bits(real(value)) == 0 && math.Float64bits(imag(value)) == 0
+	} else {
+		if IsStructObject(data) {
+			if IsNil(data) {
+				return true
+			}
+
+			valueOfData := reflect.ValueOf(data)
+			for i := 0; i < valueOfData.NumField(); i++ {
+				if !IsZeroValue(valueOfData.Field(i).Interface()) {
+					return false
+				}
+			}
+		} else {
+			if IsNil(data) {
+				return true
+			}
+		}
+	}
+
+	return true
+}
+
+var IsEmpty = IsZeroValue
