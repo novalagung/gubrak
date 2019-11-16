@@ -851,7 +851,7 @@ func ExampleChainable_GroupBy_groupBy2() {
 	*/
 }
 
-func ExampleChainable_Contains_includesMap1() {
+func ExampleChainable_Contains_containsMap1() {
 	data := map[string]string{
 		"name":  "grayson",
 		"hobby": "helping people",
@@ -863,7 +863,7 @@ func ExampleChainable_Contains_includesMap1() {
 	// ===> true
 }
 
-func ExampleChainable_Contains_includesMap2() {
+func ExampleChainable_Contains_containsMap2() {
 	data := map[string]string{
 		"name":  "grayson",
 		"hobby": "helping people",
@@ -875,7 +875,7 @@ func ExampleChainable_Contains_includesMap2() {
 	// ===> false
 }
 
-func ExampleChainable_Contains_includesSlice1() {
+func ExampleChainable_Contains_containsSlice1() {
 	data := []string{"damian", "tim", "jason", "grayson"}
 
 	result := From(data).Contains("tim").Result()
@@ -884,7 +884,7 @@ func ExampleChainable_Contains_includesSlice1() {
 	// ===> true
 }
 
-func ExampleChainable_Contains_includesSlice2() {
+func ExampleChainable_Contains_containsSlice2() {
 	data := []string{"damian", "tim", "jason", "grayson"}
 
 	result := From(data).Contains("tim", 2).Result()
@@ -893,7 +893,7 @@ func ExampleChainable_Contains_includesSlice2() {
 	// ===> false
 }
 
-func ExampleChainable_Contains_includesSlice3() {
+func ExampleChainable_Contains_containsSlice3() {
 	data := []string{"damian", "tim", "jason", "grayson"}
 
 	result := From(data).Contains("cassandra").Result()
@@ -902,7 +902,7 @@ func ExampleChainable_Contains_includesSlice3() {
 	// ===> false
 }
 
-func ExampleChainable_Contains_includesSlice4() {
+func ExampleChainable_Contains_containsSlice4() {
 	data := []interface{}{"name", 12, true}
 
 	From(data).Contains("name").Result() // ===> true
@@ -910,7 +910,7 @@ func ExampleChainable_Contains_includesSlice4() {
 	From(data).Contains(true).Result()   // ===> true
 }
 
-func ExampleChainable_Contains_includesSlice5() {
+func ExampleChainable_Contains_containsSlice5() {
 	From("damian").Contains("an").Result() // ===> true
 }
 

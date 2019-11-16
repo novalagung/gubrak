@@ -53,7 +53,7 @@ func inspectData(data interface{}) (reflect.Value, reflect.Type, reflect.Kind, i
 			dataValue = dataValue.Elem()
 		}
 
-		if dataValueKind == reflect.Slice {
+		if dataValueKind == reflect.Slice || dataValueKind == reflect.Array {
 			dataValueLen = dataValue.Len()
 		} else if dataValueKind == reflect.Map {
 			dataValueLen = len(dataValue.MapKeys())
@@ -77,6 +77,13 @@ func makeSlice(valueType reflect.Type, args ...int) reflect.Value {
 		if len(args) > 1 {
 			sliceCap = args[1]
 		}
+	}
+
+	if valueType.Kind() == reflect.Array {
+		sliceUnaddresable := reflect.MakeSlice(reflect.SliceOf(valueType.Elem()), 0, 0)
+		sliceAddressable := reflect.New(sliceUnaddresable.Type())
+		sliceAddressable.Elem().Set(sliceUnaddresable)
+		return sliceAddressable.Elem()
 	}
 
 	return reflect.MakeSlice(valueType, sliceLen, sliceCap)
@@ -244,18 +251,18 @@ func isSlice(err *error, label string, dataValue ...reflect.Value) bool {
 		return false
 
 	} else if len(dataValue) == 1 {
-		if dataValue[0].Kind() == reflect.Slice {
+		if dataValue[0].Kind() == reflect.Slice || dataValue[0].Kind() == reflect.Array {
 			return true
 		}
 
 		*err = fmt.Errorf("%s must be slice", label)
 		return false
 	} else {
-		res := dataValue[0].Kind() == reflect.Slice
+		res := dataValue[0].Kind() == reflect.Slice || dataValue[0].Kind() == reflect.Array
 
 		for i, each := range dataValue {
 			if i > 0 {
-				res = res || (each.Kind() == reflect.Slice)
+				res = res || (each.Kind() == reflect.Slice) || (each.Kind() == reflect.Array)
 			}
 		}
 
@@ -306,7 +313,7 @@ func isLeftShouldBeGreaterOrEqualThanRight(err *error, labelLeft string, valueLe
 
 func isTypeEqual(err *error, labelLeft string, typeLeft reflect.Type, labelRight string, typeRight reflect.Type) bool {
 	if typeLeft != typeRight {
-		*err = fmt.Errorf("data type of %s should be same with %s", labelLeft, labelRight)
+		*err = fmt.Errorf("type of %s should be same with type of %s", labelLeft, labelRight)
 		return false
 	}
 

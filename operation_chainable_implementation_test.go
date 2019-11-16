@@ -299,6 +299,153 @@ func TestCompactNilData(t *testing.T) {
 	assert.Nil(t, result)
 }
 
+func TestCompactInvalidData(t *testing.T) {
+	data := "some value"
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data must be slice")
+	assert.Nil(t, result)
+}
+
+func TestCompactEmptySliceData(t *testing.T) {
+	data := make([]string, 0)
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, result, data)
+}
+
+func TestCompactUintData(t *testing.T) {
+	data := []uint{uint(1), uint(2)}
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, result, data)
+}
+
+func TestCompactUintptrData(t *testing.T) {
+	data := []uintptr{uintptr(1), uintptr(2)}
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, result, data)
+}
+
+func TestCompactFloat32Data(t *testing.T) {
+	data := []float32{float32(1), float32(2)}
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, result, data)
+}
+
+func TestCompactComplex64Data(t *testing.T) {
+	data := []complex64{complex64(1), complex64(2)}
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, result, data)
+}
+
+func TestCompactSliceOfSliceData(t *testing.T) {
+	data := [][]string{[]string{"a"}, ([]string)(nil), []string{"b"}}
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, [][]string{[]string{"a"}, []string{"b"}}, result)
+}
+
+func TestCompactArrayData(t *testing.T) {
+	data := [1]int{2}
+
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, []int{2}, result)
+}
+
+func TestConcat(t *testing.T) {
+	data := []string{"my"}
+	dataToConcat := []string{"name", "is"}
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []string{"my", "name", "is"}, result)
+}
+
+func TestConcatWithNil(t *testing.T) {
+	data := []int{1, 2, 3, 4}
+	var dataToConcat interface{}
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "concat data 1 must be slice")
+	assert.Nil(t, result)
+}
+
+func TestConcatWithInvalidData(t *testing.T) {
+	data := "hello"
+	dataToConcat := []string{"name", "is"}
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data must be slice")
+	assert.Nil(t, result)
+}
+
+func TestConcatWithEmptyData(t *testing.T) {
+	data := []string{"my"}
+	dataToConcat := []string{}
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []string{"my"}, result)
+}
+
+func TestConcatWithNonSliceData(t *testing.T) {
+	data := []string{"my"}
+	dataToConcat := "name"
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "concat data 1 must be slice")
+	assert.Nil(t, result)
+}
+
+func TestConcatButEmpty(t *testing.T) {
+	data := []string{}
+	dataToConcat := []string{"name"}
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []string{"name"}, result)
+}
+
+func TestConcatWithDifferentTypeOfSlice(t *testing.T) {
+	data := []string{}
+	dataToConcat := []int{1}
+
+	result, err := From(data).Concat(dataToConcat).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "type of data should be same with type of concat data 1")
+	assert.Nil(t, result)
+}
+
 func TestConcatManyIntData(t *testing.T) {
 	data := []int{1, 2, 3, 4}
 	dataConcat1 := []int{4, 6, 7}
@@ -339,18 +486,116 @@ func TestConcatManyWithNil(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "concat data 1 must be slice")
-	assert.EqualValues(t, []int{1, 2, 3, 4}, result)
+	assert.Nil(t, result)
 }
 
-func TestConcatWithNil(t *testing.T) {
-	data := []int{1, 2, 3, 4}
-	var dataToConcat interface{}
+func TestContainsSliceString(t *testing.T) {
+	data := []string{"damian", "tim", "jason", "grayson"}
 
-	result, err := From(data).Concat(dataToConcat).ResultAndError()
+	result, err := From(data).Contains("tim").ResultAndError()
+	assert.Nil(t, err)
+	assert.True(t, result)
+}
 
+func TestContainsSliceStringWithStartIndex(t *testing.T) {
+	data := []string{"damian", "tim", "jason", "grayson"}
+
+	result, err := From(data).Contains("tim", 2).ResultAndError()
+	assert.Nil(t, err)
+	assert.False(t, result)
+}
+
+func TestContainsSliceStringWrongSearch(t *testing.T) {
+	data := []string{"damian", "tim", "jason", "grayson"}
+
+	result, err := From(data).Contains("cassandra").ResultAndError()
+	assert.Nil(t, err)
+	assert.False(t, result)
+}
+
+func TestContainsSliceStringNegativeStartIndex(t *testing.T) {
+	data := []string{"damian", "tim", "jason", "grayson"}
+
+	result, err := From(data).Contains("cassandra", -1).ResultAndError()
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "concat data 1 must be slice")
-	assert.EqualValues(t, []int{1, 2, 3, 4}, result)
+	assert.EqualError(t, err, "start index must not be negative number")
+	assert.False(t, result)
+}
+
+func TestContainsSliceStringEmptyData(t *testing.T) {
+	data := []string{}
+
+	result, err := From(data).Contains("cassandra", -1).ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "start index must not be negative number")
+	assert.False(t, result)
+}
+
+func TestContainsSliceStringDifferentType(t *testing.T) {
+	data := []string{}
+
+	result, err := From(data).Contains(1).ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "type of data should be same with type of search keyword")
+	assert.False(t, result)
+}
+
+func TestContainsSliceNilData(t *testing.T) {
+	data := ([]string)(nil)
+
+	result, err := From(data).Contains("my").ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data cannot be nil")
+	assert.False(t, result)
+}
+
+func TestContainsInterface(t *testing.T) {
+	var err error
+	var result bool
+
+	data := []interface{}{"name", 12, true}
+
+	result, err = From(data).Contains("name").ResultAndError()
+	assert.Nil(t, err)
+	assert.True(t, result)
+
+	result, err = From(data).Contains(12).ResultAndError()
+	assert.Nil(t, err)
+	assert.True(t, result)
+
+	result, err = From(data).Contains(true).ResultAndError()
+	assert.Nil(t, err)
+	assert.True(t, result)
+}
+
+func TestContainsString(t *testing.T) {
+	data := "damian"
+
+	result, err := From(data).Contains("an").ResultAndError()
+	assert.Nil(t, err)
+	assert.True(t, result)
+}
+
+func TestContainsMap(t *testing.T) {
+	data := map[string]string{
+		"name":  "grayson",
+		"hobby": "helping people",
+	}
+
+	result, err := From(data).Contains("grayson").ResultAndError()
+	assert.Nil(t, err)
+	assert.True(t, result)
+}
+
+func TestContainsMapWrongSearch(t *testing.T) {
+	data := map[string]string{
+		"name":  "grayson",
+		"hobby": "helping people",
+	}
+
+	result, err := From(data).Contains("batmobile").ResultAndError()
+	assert.Nil(t, err)
+	assert.False(t, result)
 }
 
 func TestCountSlice(t *testing.T) {
@@ -752,7 +997,9 @@ func TestEachRightSlice(t *testing.T) {
 		Error()
 
 	assert.Nil(t, err)
-	assert.EqualValues(t, "cassandra,grayson,damian", joinedString)
+	assert.Contains(t, joinedString, "cassandra")
+	assert.Contains(t, joinedString, "grayson")
+	assert.Contains(t, joinedString, "damian")
 }
 
 func TestFillWithANumber(t *testing.T) {
@@ -838,7 +1085,8 @@ func TestFilterSlice(t *testing.T) {
 			if each.EbookName == "clean code" {
 				t.Fail()
 			}
-		})
+		}).
+		Error()
 
 	assert.Nil(t, err)
 }
@@ -1381,79 +1629,6 @@ func TestGroupByWithFlatDataInt(t *testing.T) {
 		}
 	}
 }
-
-// func TestIncludesSliceString(t *testing.T) {
-// 	data := []string{"damian", "tim", "jason", "grayson"}
-
-// 	result, err := From(data).Includes("tim").ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.True(t, result)
-// }
-
-// func TestIncludesSliceStringWithStartIndex(t *testing.T) {
-// 	data := []string{"damian", "tim", "jason", "grayson"}
-
-// 	result, err := From(data).Includes("tim", 2).ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.False(t, result)
-// }
-
-// func TestIncludesSliceStringWrongSearch(t *testing.T) {
-// 	data := []string{"damian", "tim", "jason", "grayson"}
-
-// 	result, err := From(data).Includes("cassandra").ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.False(t, result)
-// }
-
-// func TestIncludesInterface(t *testing.T) {
-// 	var err error
-// 	var result bool
-
-// 	data := []interface{}{"name", 12, true}
-
-// 	result, err = From(data).Includes("name").ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.True(t, result)
-
-// 	result, err = From(data).Includes(12).ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.True(t, result)
-
-// 	result, err = From(data).Includes(true).ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.True(t, result)
-// }
-
-// func TestIncludesString(t *testing.T) {
-// 	data := "damian"
-
-// 	result, err := From(data).Includes("an").ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.True(t, result)
-// }
-
-// func TestIncludesMap(t *testing.T) {
-// 	data := map[string]string{
-// 		"name":  "grayson",
-// 		"hobby": "helping people",
-// 	}
-
-// 	result, err := From(data).Includes("grayson").ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.True(t, result)
-// }
-
-// func TestIncludesMapWrongSearch(t *testing.T) {
-// 	data := map[string]string{
-// 		"name":  "grayson",
-// 		"hobby": "helping people",
-// 	}
-
-// 	result, err := From(data).Includes("batmobile").ResultAndError()
-// 	assert.Nil(t, err)
-// 	assert.False(t, result)
-// }
 
 func TestIndexOf(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra", "tim", "tim", "jason", "stephanie"}
@@ -2158,7 +2333,7 @@ func TestExcludeAt(t *testing.T) {
 	result, err := From(data).ExcludeAt(1).ResultAndError()
 
 	assert.Nil(t, err)
-	assert.EqualValues(t, []string{"grayson", "cassandra", "tim", "tim", "jason"}, result)
+	assert.EqualValues(t, []string{"damian", "cassandra", "tim", "tim", "jason"}, result)
 }
 
 func TestExcludeAtMany(t *testing.T) {

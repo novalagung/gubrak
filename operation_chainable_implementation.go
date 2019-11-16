@@ -153,11 +153,8 @@ func (g *chainable) Compact() IChainable {
 			case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 				ok = target.Int() != 0
 
-			case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+			case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 				ok = target.Uint() != 0
-
-			case reflect.Uintptr:
-				ok = target.Elem().Uint() != 0
 
 			case reflect.Float32, reflect.Float64:
 				ok = target.Float() != 0
@@ -165,15 +162,11 @@ func (g *chainable) Compact() IChainable {
 			case reflect.Complex64, reflect.Complex128:
 				ok = target.Complex() != 0
 
-			case reflect.Array:
-				ok = target.Len() > 0
-
 			case reflect.String:
 				ok = target.String() != ""
 
-			default:
-				// case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.Struct, reflect.UnsafePointer:
-				ok = target.Interface() != nil
+			default: // case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.Struct, reflect.UnsafePointer:
+				ok = !target.IsNil()
 			}
 
 			if ok {
@@ -274,10 +267,6 @@ func _concat(err *error, data interface{}, slicesToConcat ...interface{}) interf
 
 	result := makeSlice(dataType)
 
-	if dataValueLen == 0 {
-		return result.Interface()
-	}
-
 	forEachSlice(dataValue, dataValueLen, func(each reflect.Value, i int) {
 		result = reflect.Append(result, each)
 	})
@@ -287,14 +276,14 @@ func _concat(err *error, data interface{}, slicesToConcat ...interface{}) interf
 		eachValue, eachType, _, eachValueLen := inspectData(eachConcatenableData)
 
 		if !isSlice(err, eachLabel, eachValue) {
-			continue
+			return nil
 		}
 
-		if dataValueLen == 0 {
-			continue
+		if !isTypeEqual(err, "data", dataType.Elem(), eachLabel, eachType.Elem()) {
+			return nil
 		}
 
-		if !isTypeEqual(err, "data", dataType, eachLabel, eachType) {
+		if eachValueLen == 0 {
 			continue
 		}
 
@@ -357,10 +346,6 @@ func (g *chainable) Contains(search interface{}, args ...int) IChainableContains
 		}
 
 		if !isZeroOrPositiveNumber(err, "start index", startIndex) {
-			return false
-		}
-
-		if dataValueLen == 0 {
 			return false
 		}
 
@@ -3617,7 +3602,6 @@ func (g *chainable) SampleSize(take int) IChainable {
 
 		return result.Interface()
 	}(&err)
-
 	if err != nil {
 		return g.markError(result, err)
 	}
