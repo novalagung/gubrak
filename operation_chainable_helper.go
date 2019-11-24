@@ -6,22 +6,9 @@ import (
 	"reflect"
 )
 
-func valueOf(o interface{}) reflect.Value {
-	return reflect.ValueOf(o)
-}
-
-func typeOf(o interface{}) reflect.Type {
-	return reflect.TypeOf(o)
-}
-
 func inspectFunc(err *error, data interface{}) (reflect.Value, reflect.Type) {
 	var dataValue reflect.Value
 	var dataValueType reflect.Type
-
-	if data == nil {
-		*err = errors.New("callback should be function")
-		return dataValue, dataValueType
-	}
 
 	dataValue = reflect.ValueOf(data)
 
@@ -61,10 +48,6 @@ func inspectData(data interface{}) (reflect.Value, reflect.Type, reflect.Kind, i
 	}
 
 	return dataValue, dataValueType, dataValueKind, dataValueLen
-}
-
-func isZeroOfUnderlyingType(x interface{}) bool {
-	return reflect.DeepEqual(x, reflect.Zero(reflect.TypeOf(x)).Interface())
 }
 
 func makeSlice(valueType reflect.Type, args ...int) reflect.Value {

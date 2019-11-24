@@ -77,6 +77,9 @@ type IChainable interface {
 	Result() interface{}
 	Error() error
 	IsError() bool
+	LastSuccessOperation() Operation
+	LastErrorOperation() Operation
+	LastOperation() Operation
 }
 
 // IChainableOperation is interface for chainable functions declaration
@@ -85,14 +88,14 @@ type IChainableOperation interface {
 	Compact() IChainable
 	ConcatMany(...interface{}) IChainable
 	Concat(interface{}) IChainable
-	CountBy(interface{}) IChainableCountResult
-	Count() IChainableCountResult
+	CountBy(interface{}) IChainableNumberResult
+	Count() IChainableNumberResult
 	DifferenceMany(...interface{}) IChainable
 	Difference(interface{}) IChainable
 	Drop(int) IChainable
 	DropRight(int) IChainable
-	Each(interface{}) IChainableEachResult
-	EachRight(interface{}) IChainableEachResult
+	Each(interface{}) IChainableNoReturnValueResult
+	EachRight(interface{}) IChainableNoReturnValueResult
 	Exclude(interface{}) IChainable
 	ExcludeMany(...interface{}) IChainable
 	ExcludeAt(int) IChainable
@@ -106,19 +109,19 @@ type IChainableOperation interface {
 	First() IChainable
 	FromPairs() IChainable
 	GroupBy(interface{}) IChainable
-	Contains(interface{}, ...int) IChainableContainsResult
-	IndexOf(interface{}, ...int) IChainableIndexOfResult
+	Contains(interface{}, ...int) IChainableBoolResult
+	IndexOf(interface{}, ...int) IChainableNumberResult
 	Initial() IChainable
 	Intersection(interface{}) IChainable
 	IntersectionMany(data ...interface{}) IChainable
-	Join(string) IChainableJoinResult
+	Join(string) IChainableStringResult
 	KeyBy(interface{}) IChainable
 	Last() IChainable
-	LastIndexOf(interface{}, ...int) IChainableLastIndexOfResult
+	LastIndexOf(interface{}, ...int) IChainableNumberResult
 	Map(interface{}) IChainable
 	Nth(int) IChainable
 	OrderBy(interface{}, ...bool) IChainable
-	Partition(interface{}) IChainablePartitionResult
+	Partition(interface{}) IChainableTwoReturnValueResult
 	Reduce(interface{}, interface{}) IChainable
 	Reject(interface{}) IChainable
 	Reverse() IChainable
@@ -182,14 +185,17 @@ func (g *chainable) IsError() bool {
 	return g.Error() != nil
 }
 
-// func (g *chainable) LastSuccessOperation() Operation {
-// 	return g.lastSuccessOperation
-// }
+// LastSuccessOperation return last success operation
+func (g *chainable) LastSuccessOperation() Operation {
+	return g.lastSuccessOperation
+}
 
-// func (g *chainable) LastErrorOperation() Operation {
-// 	return g.lastErrorOperation
-// }
+// LastErrorOperation return last error operation
+func (g *chainable) LastErrorOperation() Operation {
+	return g.lastErrorOperation
+}
 
-// func (g *chainable) LastOperation() Operation {
-// 	return g.lastOperation
-// }
+// LastOperation return last operation
+func (g *chainable) LastOperation() Operation {
+	return g.lastOperation
+}

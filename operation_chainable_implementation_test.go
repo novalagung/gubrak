@@ -645,6 +645,55 @@ func TestCountByWithNilData(t *testing.T) {
 	assert.Equal(t, 0, result)
 }
 
+func TestCountByWithPointerCallback(t *testing.T) {
+	data := []string{"damian"}
+	callback := func(each string) bool {
+		return each == "wayne"
+	}
+
+	result, err := From(data).
+		CountBy(&callback).
+		ResultAndError()
+	assert.Nil(t, err)
+	assert.Equal(t, 0, result)
+}
+
+func TestCountWithPointerCallback(t *testing.T) {
+	data := []string{"damian"}
+
+	result, err := From(&data).
+		Count().
+		ResultAndError()
+	assert.Nil(t, err)
+	assert.Equal(t, 0, result)
+}
+
+func TestCountByWithInvalidCallback1(t *testing.T) {
+	data := []string{"damian"}
+
+	result, err := From(data).
+		CountBy(func() bool {
+			return false
+		}).
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback must only have one or two parameters")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountByWithInvalidCallback2(t *testing.T) {
+	data := []string{"damian"}
+
+	result, err := From(data).
+		CountBy(func(each, index string) bool {
+			return false
+		}).
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 2nd parameter's data type should be int")
+	assert.Equal(t, 0, result)
+}
+
 func TestCountByWithInvalidData(t *testing.T) {
 	data := "sample"
 
