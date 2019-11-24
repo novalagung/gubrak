@@ -19,7 +19,7 @@ The latest version of gubrak is v2. Here are the available method to get this li
 - Using `go get` from github, for **Go Mod**-based project:
 
     ```go
-    go get -u github.com/novalagung/gubrak@v2
+    go get -u github.com/novalagung/gubrak@v2.0.0
     ```
 
 For legacy version use `github.com/novalagung/gubrak@v1`.
