@@ -11,7 +11,7 @@ type IChainableBoolResult interface {
 }
 
 type resultBool struct {
-	chainable *chainable
+	chainable *Chainable
 	IChainableBoolResult
 }
 

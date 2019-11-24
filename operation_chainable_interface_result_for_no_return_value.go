@@ -6,7 +6,7 @@ type IChainableNoReturnValueResult interface {
 }
 
 type resultNoReturnValue struct {
-	chainable *chainable
+	chainable *Chainable
 	IChainableNoReturnValueResult
 }
 

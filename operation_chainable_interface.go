@@ -60,14 +60,6 @@ const (
 	OperationUnionMany        = "UnionMany()"
 )
 
-type chainable struct {
-	data                 interface{}
-	lastOperation        Operation
-	lastSuccessOperation Operation
-	lastErrorOperation   Operation
-	lastErrorCaught      error
-}
-
 // IChainable is the base interface for chainable functions
 // It is contain the `IChainableOperation` interface (embedded), and result-related methods
 type IChainable interface {
@@ -136,10 +128,19 @@ type IChainableOperation interface {
 	UnionMany(...interface{}) IChainable
 }
 
+// Chainable is base type of gubrak chainable operations
+type Chainable struct {
+	data                 interface{}
+	lastOperation        Operation
+	lastSuccessOperation Operation
+	lastErrorOperation   Operation
+	lastErrorCaught      error
+}
+
 // From is the initial function to use gubrak chainable operation.
 // This function requires one argument, the data that are going to be used in operations
 func From(data interface{}) IChainable {
-	g := new(chainable)
+	g := new(Chainable)
 	g.data = data
 	g.lastSuccessOperation = OperationNone
 	g.lastErrorOperation = OperationNone
@@ -148,54 +149,54 @@ func From(data interface{}) IChainable {
 	return g
 }
 
-func (g *chainable) markError(data interface{}, err error) *chainable {
+func (g *Chainable) markError(data interface{}, err error) *Chainable {
 	g.data = data
 	g.lastErrorCaught = err
 	g.lastErrorOperation = g.lastOperation
 	return g
 }
 
-func (g *chainable) markResult(data interface{}) *chainable {
+func (g *Chainable) markResult(data interface{}) *Chainable {
 	g.data = data
 	g.lastSuccessOperation = g.lastOperation
 	return g
 }
 
-func (g *chainable) shouldReturn() bool {
+func (g *Chainable) shouldReturn() bool {
 	return false
 }
 
 // ResultAndError returns the result after operation, and error object
-func (g *chainable) ResultAndError() (interface{}, error) {
+func (g *Chainable) ResultAndError() (interface{}, error) {
 	return g.Result(), g.Error()
 }
 
 // Result returns the result after operation
-func (g *chainable) Result() interface{} {
+func (g *Chainable) Result() interface{} {
 	return g.data
 }
 
 // Error returns the error object
-func (g *chainable) Error() error {
+func (g *Chainable) Error() error {
 	return g.lastErrorCaught
 }
 
 // IsError `true` on error, otherwise `false`
-func (g *chainable) IsError() bool {
+func (g *Chainable) IsError() bool {
 	return g.Error() != nil
 }
 
 // LastSuccessOperation return last success operation
-func (g *chainable) LastSuccessOperation() Operation {
+func (g *Chainable) LastSuccessOperation() Operation {
 	return g.lastSuccessOperation
 }
 
 // LastErrorOperation return last error operation
-func (g *chainable) LastErrorOperation() Operation {
+func (g *Chainable) LastErrorOperation() Operation {
 	return g.lastErrorOperation
 }
 
 // LastOperation return last operation
-func (g *chainable) LastOperation() Operation {
+func (g *Chainable) LastOperation() Operation {
 	return g.lastOperation
 }

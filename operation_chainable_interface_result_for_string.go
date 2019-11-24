@@ -8,7 +8,7 @@ type IChainableStringResult interface {
 }
 
 type resultString struct {
-	chainable *chainable
+	chainable *Chainable
 	IChainableStringResult
 }
 

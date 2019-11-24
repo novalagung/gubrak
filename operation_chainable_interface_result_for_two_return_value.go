@@ -9,7 +9,7 @@ type IChainableTwoReturnValueResult interface {
 }
 
 type resultTwoReturnValue struct {
-	chainable *chainable
+	chainable *Chainable
 	IChainableTwoReturnValueResult
 }
 

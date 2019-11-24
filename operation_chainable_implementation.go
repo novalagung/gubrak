@@ -28,7 +28,7 @@ import (
 // Examples
 //
 // List of examples available:
-func (g *chainable) Chunk(size int) IChainable {
+func (g *Chainable) Chunk(size int) IChainable {
 	g.lastOperation = OperationChunk
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -100,7 +100,7 @@ func (g *chainable) Chunk(size int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Compact() IChainable {
+func (g *Chainable) Compact() IChainable {
 	g.lastOperation = OperationCompact
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -201,7 +201,7 @@ func (g *chainable) Compact() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Concat(sliceToConcat interface{}) IChainable {
+func (g *Chainable) Concat(sliceToConcat interface{}) IChainable {
 	g.lastOperation = OperationConcat
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -237,7 +237,7 @@ func (g *chainable) Concat(sliceToConcat interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) ConcatMany(slicesToConcat ...interface{}) IChainable {
+func (g *Chainable) ConcatMany(slicesToConcat ...interface{}) IChainable {
 	g.lastOperation = OperationConcatMany
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -316,7 +316,7 @@ func _concat(err *error, data interface{}, slicesToConcat ...interface{}) interf
 // Examples
 //
 // List of examples available:
-func (g *chainable) Contains(search interface{}, args ...int) IChainableBoolResult {
+func (g *Chainable) Contains(search interface{}, args ...int) IChainableBoolResult {
 	g.lastOperation = OperationContains
 	if g.IsError() || g.shouldReturn() {
 		return &resultContains{chainable: g}
@@ -433,7 +433,7 @@ func _containsCollection(err *error, dataValue reflect.Value, search interface{}
 // Examples
 //
 // List of examples available:
-func (g *chainable) Count() IChainableNumberResult {
+func (g *Chainable) Count() IChainableNumberResult {
 	g.lastOperation = OperationCount
 	if g.IsError() || g.shouldReturn() {
 		return &resultCount{chainable: g}
@@ -468,7 +468,7 @@ func (g *chainable) Count() IChainableNumberResult {
 // Examples
 //
 // List of examples available:
-func (g *chainable) CountBy(iteratee interface{}) IChainableNumberResult {
+func (g *Chainable) CountBy(iteratee interface{}) IChainableNumberResult {
 	g.lastOperation = OperationCountBy
 	if g.IsError() || g.shouldReturn() {
 		return &resultCount{chainable: g}
@@ -597,7 +597,7 @@ func _countCollection(err *error, dataValue reflect.Value, dataValueType reflect
 // Examples
 //
 // List of examples available:
-func (g *chainable) Difference(dataToCompare interface{}) IChainable {
+func (g *Chainable) Difference(dataToCompare interface{}) IChainable {
 	g.lastOperation = OperationDifferenceMany
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -633,7 +633,7 @@ func (g *chainable) Difference(dataToCompare interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) DifferenceMany(datasToCompare ...interface{}) IChainable {
+func (g *Chainable) DifferenceMany(datasToCompare ...interface{}) IChainable {
 	g.lastOperation = OperationDifferenceMany
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -727,7 +727,7 @@ func _difference(err *error, data interface{}, dataToCompare ...interface{}) int
 // Examples
 //
 // List of examples available:
-func (g *chainable) Drop(size int) IChainable {
+func (g *Chainable) Drop(size int) IChainable {
 	g.lastOperation = OperationDrop
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -796,7 +796,7 @@ func (g *chainable) Drop(size int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) DropRight(size int) IChainable {
+func (g *Chainable) DropRight(size int) IChainable {
 	g.lastOperation = OperationDropRight
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -870,7 +870,7 @@ func (g *chainable) DropRight(size int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Each(iteratee interface{}) IChainableNoReturnValueResult {
+func (g *Chainable) Each(iteratee interface{}) IChainableNoReturnValueResult {
 	g.lastOperation = OperationEach
 	if g.IsError() || g.shouldReturn() {
 		return &resultEach{chainable: g}
@@ -910,7 +910,7 @@ func (g *chainable) Each(iteratee interface{}) IChainableNoReturnValueResult {
 // Examples
 //
 // List of examples available:
-func (g *chainable) EachRight(iteratee interface{}) IChainableNoReturnValueResult {
+func (g *Chainable) EachRight(iteratee interface{}) IChainableNoReturnValueResult {
 	g.lastOperation = OperationEachRight
 	if g.IsError() || g.shouldReturn() {
 		return &resultEach{chainable: g}
@@ -1042,7 +1042,7 @@ func _eachCollection(err *error, dataValue reflect.Value, dataValueType reflect.
 // Examples
 //
 // List of examples available:
-func (g *chainable) Exclude(itemToExclude interface{}) IChainable {
+func (g *Chainable) Exclude(itemToExclude interface{}) IChainable {
 	g.lastOperation = OperationExclude
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1078,7 +1078,7 @@ func (g *chainable) Exclude(itemToExclude interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) ExcludeMany(itemsToExclude ...interface{}) IChainable {
+func (g *Chainable) ExcludeMany(itemsToExclude ...interface{}) IChainable {
 	g.lastOperation = OperationExcludeMany
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1152,7 +1152,7 @@ func _exclude(err *error, data interface{}, items ...interface{}) interface{} {
 // Examples
 //
 // List of examples available:
-func (g *chainable) ExcludeAt(indexOfItemToExclude int) IChainable {
+func (g *Chainable) ExcludeAt(indexOfItemToExclude int) IChainable {
 	g.lastOperation = OperationExcludeAt
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1188,7 +1188,7 @@ func (g *chainable) ExcludeAt(indexOfItemToExclude int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) ExcludeAtMany(indexesOfItemToExclude ...int) IChainable {
+func (g *Chainable) ExcludeAtMany(indexesOfItemToExclude ...int) IChainable {
 	g.lastOperation = OperationExcludeAtMany
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1273,7 +1273,7 @@ func _excludeAt(err *error, data interface{}, indexes ...int) interface{} {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Fill(value interface{}, args ...int) IChainable {
+func (g *Chainable) Fill(value interface{}, args ...int) IChainable {
 	g.lastOperation = OperationFill
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1369,7 +1369,7 @@ func (g *chainable) Fill(value interface{}, args ...int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Filter(predicate interface{}) IChainable {
+func (g *Chainable) Filter(predicate interface{}) IChainable {
 	g.lastOperation = OperationFilter
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1494,7 +1494,7 @@ func _filterCollection(err *error, dataValue reflect.Value, dataValueType reflec
 // Examples
 //
 // List of examples available:
-func (g *chainable) Find(predicate interface{}, args ...int) IChainable {
+func (g *Chainable) Find(predicate interface{}, args ...int) IChainable {
 	g.lastOperation = OperationFind
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1600,7 +1600,7 @@ func (g *chainable) Find(predicate interface{}, args ...int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) FindIndex(predicate interface{}, args ...int) IChainable {
+func (g *Chainable) FindIndex(predicate interface{}, args ...int) IChainable {
 	g.lastOperation = OperationFindIndex
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1695,7 +1695,7 @@ func (g *chainable) FindIndex(predicate interface{}, args ...int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) FindLast(predicate interface{}, args ...int) IChainable {
+func (g *Chainable) FindLast(predicate interface{}, args ...int) IChainable {
 	g.lastOperation = OperationFindLast
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1802,7 +1802,7 @@ func (g *chainable) FindLast(predicate interface{}, args ...int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) FindLastIndex(predicate interface{}, args ...int) IChainable {
+func (g *Chainable) FindLastIndex(predicate interface{}, args ...int) IChainable {
 	g.lastOperation = OperationFindLastIndex
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1891,7 +1891,7 @@ func (g *chainable) FindLastIndex(predicate interface{}, args ...int) IChainable
 // Examples
 //
 // List of examples available:
-func (g *chainable) First() IChainable {
+func (g *Chainable) First() IChainable {
 	g.lastOperation = OperationFirst
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -1941,7 +1941,7 @@ func (g *chainable) First() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) FromPairs() IChainable {
+func (g *Chainable) FromPairs() IChainable {
 	g.lastOperation = OperationFromPairs
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2027,7 +2027,7 @@ func (g *chainable) FromPairs() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) GroupBy(predicate interface{}) IChainable {
+func (g *Chainable) GroupBy(predicate interface{}) IChainable {
 	g.lastOperation = OperationGroupBy
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2114,7 +2114,7 @@ func (g *chainable) GroupBy(predicate interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) IndexOf(search interface{}, args ...int) IChainableNumberResult {
+func (g *Chainable) IndexOf(search interface{}, args ...int) IChainableNumberResult {
 	g.lastOperation = OperationIndexOf
 	if g.IsError() || g.shouldReturn() {
 		return &resultIndexOf{chainable: g}
@@ -2202,7 +2202,7 @@ func (g *chainable) IndexOf(search interface{}, args ...int) IChainableNumberRes
 // Examples
 //
 // List of examples available:
-func (g *chainable) Initial() IChainable {
+func (g *Chainable) Initial() IChainable {
 	g.lastOperation = OperationInitial
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2253,7 +2253,7 @@ func (g *chainable) Initial() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Intersection(dataIntersect interface{}) IChainable {
+func (g *Chainable) Intersection(dataIntersect interface{}) IChainable {
 	g.lastOperation = OperationIntersection
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2289,7 +2289,7 @@ func (g *chainable) Intersection(dataIntersect interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) IntersectionMany(dataToIntersects ...interface{}) IChainable {
+func (g *Chainable) IntersectionMany(dataToIntersects ...interface{}) IChainable {
 	g.lastOperation = OperationIntersection
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2403,7 +2403,7 @@ func _intersection(err *error, data interface{}, dataIntersects ...interface{}) 
 // Examples
 //
 // List of examples available:
-func (g *chainable) Join(separator string) IChainableStringResult {
+func (g *Chainable) Join(separator string) IChainableStringResult {
 	g.lastOperation = OperationJoin
 	if g.IsError() || g.shouldReturn() {
 		return &resultJoin{chainable: g}
@@ -2486,7 +2486,7 @@ func (g *chainable) Join(separator string) IChainableStringResult {
 // Examples
 //
 // List of examples available:
-func (g *chainable) KeyBy(predicate interface{}) IChainable {
+func (g *Chainable) KeyBy(predicate interface{}) IChainable {
 	g.lastOperation = OperationKeyBy
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2559,7 +2559,7 @@ func (g *chainable) KeyBy(predicate interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Last() IChainable {
+func (g *Chainable) Last() IChainable {
 	g.lastOperation = OperationLast
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2613,7 +2613,7 @@ func (g *chainable) Last() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) LastIndexOf(search interface{}, args ...int) IChainableNumberResult {
+func (g *Chainable) LastIndexOf(search interface{}, args ...int) IChainableNumberResult {
 	g.lastOperation = OperationLast
 	if g.IsError() || g.shouldReturn() {
 		return &resultLastIndexOf{chainable: g}
@@ -2704,7 +2704,7 @@ func (g *chainable) LastIndexOf(search interface{}, args ...int) IChainableNumbe
 // Examples
 //
 // List of examples available:
-func (g *chainable) Map(callback interface{}) IChainable {
+func (g *Chainable) Map(callback interface{}) IChainable {
 	g.lastOperation = OperationMap
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2777,7 +2777,7 @@ func (g *chainable) Map(callback interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Nth(index int) IChainable {
+func (g *Chainable) Nth(index int) IChainable {
 	g.lastOperation = OperationNth
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -2848,7 +2848,7 @@ func (g *chainable) Nth(index int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) OrderBy(predicate interface{}, args ...bool) IChainable {
+func (g *Chainable) OrderBy(predicate interface{}, args ...bool) IChainable {
 	g.lastOperation = OperationOrderBy
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3114,7 +3114,7 @@ func _orderBy(err *error, data, callback interface{}, args ...bool) interface{} 
 // Examples
 //
 // List of examples available:
-func (g *chainable) Partition(callback interface{}) IChainableTwoReturnValueResult {
+func (g *Chainable) Partition(callback interface{}) IChainableTwoReturnValueResult {
 	g.lastOperation = OperationPartition
 	if g.IsError() || g.shouldReturn() {
 		return &resultPartition{chainable: g}
@@ -3200,7 +3200,7 @@ func (g *chainable) Partition(callback interface{}) IChainableTwoReturnValueResu
 // Examples
 //
 // List of examples available:
-func (g *chainable) Reduce(iteratee, initial interface{}) IChainable {
+func (g *Chainable) Reduce(iteratee, initial interface{}) IChainable {
 	g.lastOperation = OperationReduce
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3358,7 +3358,7 @@ func _reduceSlice(err *error, dataValue reflect.Value, dataValueType reflect.Typ
 // Examples
 //
 // List of examples available:
-func (g *chainable) Reject(predicate interface{}) IChainable {
+func (g *Chainable) Reject(predicate interface{}) IChainable {
 	g.lastOperation = OperationReject
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3432,7 +3432,7 @@ func (g *chainable) Reject(predicate interface{}) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Reverse() IChainable {
+func (g *Chainable) Reverse() IChainable {
 	g.lastOperation = OperationReverse
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3488,7 +3488,7 @@ func (g *chainable) Reverse() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Sample() IChainable {
+func (g *Chainable) Sample() IChainable {
 	g.lastOperation = OperationSample
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3539,7 +3539,7 @@ func (g *chainable) Sample() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) SampleSize(take int) IChainable {
+func (g *Chainable) SampleSize(take int) IChainable {
 	g.lastOperation = OperationSampleSize
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3610,7 +3610,7 @@ func (g *chainable) SampleSize(take int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Shuffle() IChainable {
+func (g *Chainable) Shuffle() IChainable {
 	g.lastOperation = OperationShuffle
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3667,7 +3667,7 @@ func (g *chainable) Shuffle() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Size() IChainable {
+func (g *Chainable) Size() IChainable {
 	g.lastOperation = OperationSize
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3721,7 +3721,7 @@ func (g *chainable) Size() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Tail() IChainable {
+func (g *Chainable) Tail() IChainable {
 	g.lastOperation = OperationTail
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3773,7 +3773,7 @@ func (g *chainable) Tail() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Take(size int) IChainable {
+func (g *Chainable) Take(size int) IChainable {
 	g.lastOperation = OperationTake
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3836,7 +3836,7 @@ func (g *chainable) Take(size int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) TakeRight(size int) IChainable {
+func (g *Chainable) TakeRight(size int) IChainable {
 	g.lastOperation = OperationTakeRight
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3898,7 +3898,7 @@ func (g *chainable) TakeRight(size int) IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) Uniq() IChainable {
+func (g *Chainable) Uniq() IChainable {
 	g.lastOperation = OperationUniq
 	if g.IsError() || g.shouldReturn() {
 		return g
@@ -3934,7 +3934,7 @@ func (g *chainable) Uniq() IChainable {
 // Examples
 //
 // List of examples available:
-func (g *chainable) UnionMany(sliceToUnion ...interface{}) IChainable {
+func (g *Chainable) UnionMany(sliceToUnion ...interface{}) IChainable {
 	g.lastOperation = OperationUnionMany
 	if g.IsError() || g.shouldReturn() {
 		return g
