@@ -1,4 +1,4 @@
-module github.com/novalagung/gubrak
+module github.com/novalagung/gubrak/v2
 
 require (
 	github.com/DefinitelyMod/gocsv v0.0.0-20181205141819-acfa5f112b45
