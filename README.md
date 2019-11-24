@@ -30,39 +30,7 @@ For legacy version use `github.com/novalagung/gubrak@v1`.
 
 ## Hello World Example
 
-```go
-package main
-
-import (
-	"fmt"
-	"github.com/novalagung/gubrak"
-)
-
-type Sample struct {
-	EbookName      string
-	DailyDownloads int
-}
-
-func main() {
-	data := []Sample{
-		{EbookName: "clean code", DailyDownloads: 10000},
-		{EbookName: "rework", DailyDownloads: 12000},
-		{EbookName: "detective comics", DailyDownloads: 11500},
-	}
-
-	result := gubrak.From(data).
-		Filter(func(each Sample) bool {
-			return each.DailyDownloads > 11000
-		}).
-		Map(func(each Sample) string {
-			return each.EbookName
-		}).
-		Join(", ").
-		Result()
-
-	fmt.Printf("%#v \n", result) // rework, detective comics
-}
-```
+![example](https://i.imgur.com/4ZHVf7a.png)
 
 ## APIs
 
