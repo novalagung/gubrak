@@ -1,4 +1,4 @@
-# GUBRAK
+# Gubrak v2
 
 Golang utility library with syntactic sugar. It's like lodash, but for golang.
 
@@ -6,12 +6,32 @@ Golang utility library with syntactic sugar. It's like lodash, but for golang.
 [![Build Status](https://travis-ci.org/novalagung/gubrak.svg?branch=master)](https://travis-ci.org/novalagung/gubrak)
 [![Coverage Status](https://coveralls.io/repos/github/novalagung/gubrak/badge.svg?branch=master)](https://coveralls.io/github/novalagung/gubrak?branch=master)
 
-Gubrak is yet another utility library for Golang, inspired from lodash. Currently we have around 73 reusable functions available, we'll definitely adding more!
-
 ## Installation
 
+The latest version of gubrak, v2, can be downloaded in three ways.
+
+- Using `go get` from github, for `$GOPATH`-based project:
+
+    ```go
+    go get -u github.com/novalagung/gubrak
+    ```
+
+- Using `go get` from github, for **Go Mod**-based project:
+
+    ```go
+    go get -u github.com/novalagung/gubrak@v2
+    ```
+
+- Using `go get` from gopkg.in:
+
+    ```go
+    go get -u gopkg.in/novalagung/gubrak.v2
+    ```
+
+For legacy version, v1, use this:
+
 ```go
-go get -u github.com/novalagung/gubrak
+go get -u gopkg.in/novalagung/gubrak.v1
 ```
 
 ## Documentation
@@ -24,39 +44,33 @@ go get -u github.com/novalagung/gubrak
 package main
 
 import (
-    "github.com/novalagung/gubrak"
-    "fmt"
+	"fmt"
+	"github.com/novalagung/gubrak"
 )
 
 type Sample struct {
-    EbookName      string
-    DailyDownloads int
+	EbookName      string
+	DailyDownloads int
 }
 
 func main() {
-    data := []Sample{
-        { EbookName: "clean code", DailyDownloads: 10000 },
-        { EbookName: "rework", DailyDownloads: 12000 },
-        { EbookName: "detective comics", DailyDownloads: 11500 },
-    }
+	data := []Sample{
+		{EbookName: "clean code", DailyDownloads: 10000},
+		{EbookName: "rework", DailyDownloads: 12000},
+		{EbookName: "detective comics", DailyDownloads: 11500},
+	}
 
-    result, err := gubrak.Filter(data, func(each Sample) bool {
-        return each.DailyDownloads > 11000
-    })
+	result := gubrak.From(data).
+		Filter(func(each Sample) bool {
+			return each.DailyDownloads > 11000
+		}).
+		Map(func(each Sample) string {
+			return each.EbookName
+		}).
+		Join(", ").
+		Result()
 
-    if err != nil {
-        fmt.Println("Error!", err.Error)
-        return
-    }
-
-    fmt.Printf("%#v \n", result.([]Sample))
-
-    /*
-    []Sample{
-        { EbookName: "rework", DailyDownloads: 12000 },
-        { EbookName: "detective comics", DailyDownloads: 11500 },
-    }
-    */
+	fmt.Printf("%#v \n", result) // rework, detective comics
 }
 ```
 
