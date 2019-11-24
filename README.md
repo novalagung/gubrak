@@ -8,7 +8,7 @@ Golang utility library with syntactic sugar. It's like lodash, but for golang.
 
 ## Installation
 
-The latest version of gubrak, v1, can be downloaded in three ways.
+The latest version of gubrak is v1. Here are the available method to get this library.
 
 - Using `go get` from github, for `$GOPATH`-based project:
 
@@ -22,17 +22,7 @@ The latest version of gubrak, v1, can be downloaded in three ways.
     go get -u github.com/novalagung/gubrak@v1
     ```
 
-- Using `go get` from gopkg.in:
-
-    ```go
-    go get -u gopkg.in/novalagung/gubrak.v1
-    ```
-
-For legacy version, v0, use this:
-
-```go
-go get -u gopkg.in/novalagung/gubrak.v0
-```
+For legacy version use `github.com/novalagung/gubrak@v0`.
 
 ## Documentation
 
