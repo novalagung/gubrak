@@ -677,15 +677,11 @@ func _difference(err *error, data interface{}, dataToCompare ...interface{}) int
 		eachValue, eachType, _, eachValueLen := inspectData(each)
 
 		if !isSlice(err, eachLabel, eachValue) {
-			continue
-		}
-
-		if dataValueLen == 0 {
-			continue
+			return nil
 		}
 
 		if !isTypeEqual(err, "data", dataType, eachLabel, eachType) {
-			continue
+			return nil
 		}
 
 		dataToCompareMap[eachValue] = eachValueLen

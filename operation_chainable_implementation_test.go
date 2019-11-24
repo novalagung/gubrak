@@ -645,6 +645,91 @@ func TestCountByWithNilData(t *testing.T) {
 	assert.Equal(t, 0, result)
 }
 
+func TestCountByWithInvalidData(t *testing.T) {
+	data := "sample"
+
+	result, err := From(data).
+		Count().
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data must be slice")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountBySliceWithInvalidPredicate1(t *testing.T) {
+	data := []string{"damian", "grayson", "cassandra"}
+
+	result, err := From(data).
+		CountBy("string").
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback should be function")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountBySliceWithInvalidPredicate2(t *testing.T) {
+	data := []string{"damian", "grayson", "cassandra"}
+
+	result, err := From(data).
+		CountBy(func(each int) {
+
+		}).
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 1st parameter's data type should be same with slice element data type")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountBySliceWithInvalidPredicate3(t *testing.T) {
+	data := []string{"damian", "grayson", "cassandra"}
+
+	result, err := From(data).
+		CountBy(func(each string) {
+
+		}).
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback return value should be one variable with bool type")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountBySliceWithInvalidPredicate4(t *testing.T) {
+	data := map[string]bool{"damian": true}
+
+	result, err := From(data).
+		CountBy("string").
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback should be function")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountBySliceWithInvalidPredicate5(t *testing.T) {
+	data := map[string]bool{"damian": true}
+
+	result, err := From(data).
+		CountBy(func(each int) {
+
+		}).
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 1st parameter's data type should be same with map value data type")
+	assert.Equal(t, 0, result)
+}
+
+func TestCountBySliceWithInvalidPredicate6(t *testing.T) {
+	data := map[string]bool{"damian": true}
+
+	result, err := From(data).
+		CountBy(func(value bool, key string) {
+
+		}).
+		ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback return value should be one variable with bool type")
+	assert.Equal(t, 0, result)
+}
+
 func TestCountBySliceWithPredicate(t *testing.T) {
 	data := []string{"damian", "grayson", "cassandra"}
 
@@ -721,6 +806,56 @@ func TestDifferenceOneMultipleData(t *testing.T) {
 	assert.EqualValues(t, []int{6}, result)
 }
 
+func TestDifferenceManyWithNoDiff(t *testing.T) {
+	data := []int{1, 2, 3, 4, 4, 6, 7}
+
+	result, err := From(data).DifferenceMany().ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data to compare cannot be empty")
+	assert.Nil(t, result)
+}
+
+func TestDifferenceManyWithInvalidData(t *testing.T) {
+	data := "hello"
+	diff := []int{1, 2, 3, 4, 4, 6, 7}
+
+	result, err := From(data).DifferenceMany(diff).ResultAndError()
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data must be slice")
+	assert.Nil(t, result)
+}
+
+func TestDifferenceManyWithEmptyData(t *testing.T) {
+	data := []int{}
+	diff := []int{}
+
+	result, err := From(data).DifferenceMany(diff).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []int{}, result)
+}
+
+func TestDifferenceManyWithEmptyDiffData(t *testing.T) {
+	data := []int{1}
+	diff := []int{}
+
+	result, err := From(data).DifferenceMany(diff).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []int{1}, result)
+}
+
+func TestDifferenceManyWithDifferentDiffDataType(t *testing.T) {
+	data := []int{1}
+	diff := []string{"damian"}
+
+	result, err := From(data).DifferenceMany(diff).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "type of data should be same with type of difference data 1")
+	assert.Nil(t, result)
+}
+
 func TestDifferenceStringData(t *testing.T) {
 	data := []string{"a", "b", "b", "c", "d", "e", "f", "g", "h"}
 	dataDiff1 := []string{"b", "d"}
@@ -762,7 +897,7 @@ func TestDifferenceWithNilDiffData(t *testing.T) {
 
 	assert.NotNil(t, err)
 	assert.EqualError(t, err, "difference data 1 must be slice")
-	assert.EqualValues(t, []int{2, 7}, result)
+	assert.Nil(t, result)
 }
 
 func TestDropZeroSize(t *testing.T) {
