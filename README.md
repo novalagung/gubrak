@@ -1,6 +1,6 @@
 # Gubrak v2
 
-Golang utility library with syntactic sugar. It's like lodash, but for golang.
+Golang utility library with syntactic sugar. It's like lodash, but for Go Programming Language.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/novalagung/gubrak?nocache=1)](https://goreportcard.com/report/github.com/novalagung/gubrak?nocache=1)
 [![Build Status](https://travis-ci.org/novalagung/gubrak.svg?branch=master)](https://travis-ci.org/novalagung/gubrak)
@@ -19,10 +19,8 @@ The latest version of gubrak is v2. Here are the available method to get this li
 - Using `go get` from github, for **Go Mod**-based project:
 
     ```go
-    go get -u github.com/novalagung/gubrak@v2.0.0
+    go get -u github.com/novalagung/gubrak/v2
     ```
-
-For legacy version use `github.com/novalagung/gubrak@v1`.
 
 ## Documentation
 
@@ -30,7 +28,7 @@ For legacy version use `github.com/novalagung/gubrak@v1`.
 
 ## Hello World Example
 
-![example](https://i.imgur.com/4ZHVf7a.png)
+![Lodash for Golang](https://i.imgur.com/bvT1gVM.jpg)
 
 ## APIs
 
@@ -41,8 +39,6 @@ Below are the list of available functions on gubrak:
 ## Test
 
 ```bash
-go get -u github.com/novalagung/gubrak
-dep ensure
 go test -cover -race -v ./... 
 ```
 
