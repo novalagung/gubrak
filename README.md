@@ -29,13 +29,13 @@ Since this library is developed as go module, the versioning system used is the 
 - For `$GOPATH`-based project:
 
     ```go
-    import github.com/novalagung/gubrak
+    import "github.com/novalagung/gubrak"
     ```
 
 - For **Go Mod**-based project:
 
     ```go
-    import gubrak github.com/novalagung/gubrak/v2
+    import gubrak "github.com/novalagung/gubrak/v2"
     ```
 
 ## Documentation
