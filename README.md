@@ -12,16 +12,30 @@ The latest version of gubrak is v2. Here are the available method to get this li
 
 - Using `go get` from github, for `$GOPATH`-based project:
 
-    ```go
+    ```bash
     go get -u github.com/novalagung/gubrak
-    // usage in code: import github.com/novalagung/gubrak
     ```
 
 - Using `go get` from github, for **Go Mod**-based project:
 
-    ```go
+    ```bash
     go get -u github.com/novalagung/gubrak/v2
-    // usage in code: import github.com/novalagung/gubrak/v2
+    ```
+
+## Usage
+
+Since this library is developed as go module, the versioning system used is the one from Go.
+
+- For `$GOPATH`-based project:
+
+    ```go
+    import github.com/novalagung/gubrak
+    ```
+
+- For **Go Mod**-based project:
+
+    ```go
+    import gubrak github.com/novalagung/gubrak/v2
     ```
 
 ## Documentation
