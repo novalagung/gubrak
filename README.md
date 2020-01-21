@@ -14,12 +14,14 @@ The latest version of gubrak is v2. Here are the available method to get this li
 
     ```go
     go get -u github.com/novalagung/gubrak
+    // usage in code: import github.com/novalagung/gubrak
     ```
 
 - Using `go get` from github, for **Go Mod**-based project:
 
     ```go
     go get -u github.com/novalagung/gubrak/v2
+    // usage in code: import github.com/novalagung/gubrak/v2
     ```
 
 ## Documentation
