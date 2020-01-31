@@ -6,37 +6,27 @@ Golang utility library with syntactic sugar. It's like lodash, but for Go Progra
 [![Build Status](https://travis-ci.org/novalagung/gubrak.svg?branch=master)](https://travis-ci.org/novalagung/gubrak)
 [![Coverage Status](https://coveralls.io/repos/github/novalagung/gubrak/badge.svg?branch=master)](https://coveralls.io/github/novalagung/gubrak?branch=master)
 
-## Installation
+## Installation & Usage
 
-The latest version of gubrak is v2. Here are the available method to get this library.
+The latest version of gubrak is v2. Below is step to download the library.
 
-- Using `go get` from github, for `$GOPATH`-based project:
-
-    ```bash
-    go get -u github.com/novalagung/gubrak
-    ```
-
-- Using `go get` from github, for **Go Mod**-based project:
+- For **Go Mod**-based project:
 
     ```bash
     go get -u github.com/novalagung/gubrak/v2
     ```
 
-## Usage
-
-Since this library is developed as go module, the versioning system used is the one from Go.
-
 - For `$GOPATH`-based project:
 
-    ```go
-    import "github.com/novalagung/gubrak"
+    ```bash
+    go get -u github.com/novalagung/gubrak
     ```
 
-- For **Go Mod**-based project:
+After download operation success, use below go syntax to import the library.
 
-    ```go
-    import gubrak "github.com/novalagung/gubrak/v2"
-    ```
+```go
+import gubrak "github.com/novalagung/gubrak/v2"
+```
 
 ## Documentation
 
