@@ -10,32 +10,32 @@ Golang utility library with syntactic sugar. It's like lodash, but for Go Progra
 
 The latest version of gubrak is v2. Here are the available method to get this library.
 
-- Using `go get` from github, for `$GOPATH`-based project:
-
-    ```bash
-    go get -u github.com/novalagung/gubrak
-    ```
-
 - Using `go get` from github, for **Go Mod**-based project:
 
     ```bash
     go get -u github.com/novalagung/gubrak/v2
     ```
 
+- Using `go get` from github, for `$GOPATH`-based project:
+
+    ```bash
+    go get -u github.com/novalagung/gubrak
+    ```
+
 ## Usage
 
 Since this library is developed as go module, the versioning system used is the one from Go.
-
-- For `$GOPATH`-based project:
-
-    ```go
-    import "github.com/novalagung/gubrak"
-    ```
 
 - For **Go Mod**-based project:
 
     ```go
     import gubrak "github.com/novalagung/gubrak/v2"
+    ```
+
+- For `$GOPATH`-based project:
+
+    ```go
+    import "github.com/novalagung/gubrak"
     ```
 
 ## Documentation
