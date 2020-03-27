@@ -40,7 +40,7 @@ Since this library is developed as go module, the versioning system used is the 
 
 ## Documentation
 
- - [Pkg Dev](https://pkg.go.dev/github.com/novalagung/gubrak)
+ - [Pkg Dev](https://pkg.go.dev/github.com/novalagung/gubrak/v2)
  - [Godoc](https://godoc.org/github.com/novalagung/gubrak)
 
 ## Hello World Example
