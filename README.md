@@ -1,6 +1,6 @@
 # Gubrak v2
 
-Golang utility library with syntactic sugar. It's like lodash, but for Go Programming Language.
+Gubrak is golang utility library with syntactic sugar. It's functional programming. It's like lodash, but for Go Programming Language.
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/novalagung/gubrak?nocache=1)](https://goreportcard.com/report/github.com/novalagung/gubrak?nocache=1)
 [![Build Status](https://travis-ci.org/novalagung/gubrak.svg?branch=master)](https://travis-ci.org/novalagung/gubrak)
