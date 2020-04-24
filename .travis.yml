@@ -2,13 +2,9 @@ language: go
 os:
   - linux
 go:
-  - go1.11
-  - go1.12
   - go1.13
   - go1.14
 go_import_path: github.com/novalagung/gubrak
-env:
-  - GO111MODULE=on
 before_install:
   - go get github.com/mattn/goveralls
 install:
