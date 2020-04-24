@@ -2,18 +2,17 @@ language: go
 os:
   - linux
 go:
-  - go1.8
-  - go1.9
-  - go1.10
   - go1.11
+  - go1.12
+  - go1.13
+  - go1.14
 go_import_path: github.com/novalagung/gubrak
 before_install:
   - go get github.com/mattn/goveralls
-  - go get github.com/golang/dep/cmd/dep
 install:
-  - $GOPATH/bin/dep ensure
+  - go mod tidy
 before_script:
   - wget http://downloads.majestic.com/majestic_million.csv
 script:
   - go test -cover -race -v ./...
-  - $GOPATH/bin/goveralls -service=travis-ci
+  - goveralls -service=travis-ci
