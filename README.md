@@ -46,6 +46,7 @@ Since this library is developed as go module, the versioning system used is the 
 ## Hello World Example
 
 ![Lodash for Golang](https://i.imgur.com/bvT1gVM.jpg)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnovalagung%2Fgubrak.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnovalagung%2Fgubrak?ref=badge_shield)
 
 ## APIs
 
@@ -66,3 +67,6 @@ Fork ➜ Create branch ➜ Commit ➜ Push ➜ Pull Requests
 ## License
 
 MIT License
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fnovalagung%2Fgubrak.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fnovalagung%2Fgubrak?ref=badge_large)
