@@ -2618,6 +2618,21 @@ func TestReduceSlice(t *testing.T) {
 	}, result)
 }
 
+func TestReduceSliceEmptyData(t *testing.T) {
+	type HashMap map[string]interface{}
+
+	data := make([]interface{}, 0)
+	result, err := From(data).
+		Reduce(func(current HashMap, each []interface{}, i int) HashMap {
+			current[each[0].(string)] = each[1]
+			return current
+		}, HashMap{}).
+		ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, HashMap{}, result)
+}
+
 func TestReduceCollection(t *testing.T) {
 	type HashMap map[string]interface{}
 

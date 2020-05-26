@@ -3215,6 +3215,9 @@ func (g *Chainable) Reduce(iteratee, initial interface{}) IChainable {
 		}
 
 		dataValue, dataValueType, dataValueKind, dataValueLen := inspectData(g.data)
+		if dataValueLen == 0 {
+			return initial
+		}
 
 		if !isSlice(err, "data", dataValue) {
 			if dataValueKind == reflect.Map {
