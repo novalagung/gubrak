@@ -3,7 +3,7 @@ os:
   - linux
 go:
   - go1.13
-  - go1.14
+  - go1.25
 go_import_path: github.com/novalagung/gubrak
 before_install:
   - go get github.com/mattn/goveralls

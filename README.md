@@ -1,47 +1,22 @@
 # Gubrak v2
 
-Gubrak is Go functional utility library with syntactic sugar. It's like lodash, but for Go Programming language.
+Gubrak is Go functional utility library with syntactic sugar. It is similar to lodash, but for Go language.
 
+![GitHub Tag](https://img.shields.io/github/v/tag/novalagung/gubrak)
 [![Go Report Card](https://goreportcard.com/badge/github.com/novalagung/gubrak?nocache=1)](https://goreportcard.com/report/github.com/novalagung/gubrak?nocache=1)
-[![Build Status](https://travis-ci.org/novalagung/gubrak.svg?branch=master)](https://travis-ci.org/novalagung/gubrak)
 [![Coverage Status](https://coveralls.io/repos/github/novalagung/gubrak/badge.svg?branch=master)](https://coveralls.io/github/novalagung/gubrak?branch=master)
 
 ## Installation
 
-The latest version of gubrak is v2. Here are the available method to get this library.
+The latest version of gubrak is v2. Use the following command to install it to your project.
 
-- Using `go get` from github, for **Go Mod**-based project:
-
-    ```bash
-    go get -u github.com/novalagung/gubrak/v2
-    ```
-
-- Using `go get` from github, for `$GOPATH`-based project:
-
-    ```bash
-    go get -u github.com/novalagung/gubrak
-    ```
-
-## Usage
-
-Since this library is developed as go module, the versioning system used is the one from Go.
-
-- For **Go Mod**-based project:
-
-    ```go
-    import gubrak "github.com/novalagung/gubrak/v2"
-    ```
-
-- For `$GOPATH`-based project:
-
-    ```go
-    import "github.com/novalagung/gubrak"
-    ```
+```bash
+go get -u github.com/novalagung/gubrak/v2
+```
 
 ## Documentation
 
  - [Pkg Dev](https://pkg.go.dev/github.com/novalagung/gubrak/v2)
- - [Godoc](https://godoc.org/github.com/novalagung/gubrak)
 
 ## Hello World Example
 
