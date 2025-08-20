@@ -12,7 +12,7 @@ type IChainableNumberResult interface {
 
 type resultNumber struct {
 	chainable *Chainable
-	IChainableBoolResult
+	IChainableNumberResult
 }
 
 type resultCount = resultNumber
