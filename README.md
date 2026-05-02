@@ -2,9 +2,11 @@
 
 Gubrak is Go functional utility library with syntactic sugar. It is similar to lodash, but for Go language.
 
-![GitHub Tag](https://img.shields.io/github/v/tag/novalagung/gubrak)
-[![Go Report Card](https://goreportcard.com/badge/github.com/novalagung/gubrak?nocache=1)](https://goreportcard.com/report/github.com/novalagung/gubrak?nocache=1)
-[![Coverage Status](https://coveralls.io/repos/github/novalagung/gubrak/badge.svg?branch=master)](https://coveralls.io/github/novalagung/gubrak?branch=master)
+<p align="center">
+  <a href="https://github.com/novalagung/gubrak/releases/latest"><img src="https://img.shields.io/github/v/release/novalagung/gubrak"></a>
+  <a href="#"><img src="https://img.shields.io/github/actions/workflow/status/novalagung/gubrak/test.yml"></a>
+  <a href="#"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/novalagung/gubrak/master/coverage.json"></a>
+</p>
 
 ## Installation
 

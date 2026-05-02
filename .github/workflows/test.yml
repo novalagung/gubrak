@@ -1,0 +1,29 @@
+name: test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      - name: Run tests
+        run: go test -count=1 -race -coverprofile=coverage.out -run "^Test" -skip "TestLoadData" .
+      - name: Update coverage badge
+        if: github.ref == 'refs/heads/master'
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep total | awk '{print $3}')
+          echo "{\"schemaVersion\":1,\"label\":\"coverage\",\"message\":\"$COVERAGE\",\"color\":\"brightgreen\"}" > coverage.json
+      - name: Commit coverage badge
+        if: github.ref == 'refs/heads/master'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update coverage badge"
+          file_pattern: coverage.json
