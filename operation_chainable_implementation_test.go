@@ -2753,7 +2753,6 @@ func TestSampleSize(t *testing.T) {
 		case "clean code":
 		case "rework":
 		case "detective comics":
-			break
 		default:
 			t.Fail()
 		}
@@ -2783,7 +2782,6 @@ func TestShuffle(t *testing.T) {
 		case "clean code":
 		case "rework":
 		case "detective comics":
-			break
 		default:
 			t.Fail()
 		}

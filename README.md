@@ -1,16 +1,14 @@
 # Gubrak v2
 
-Gubrak is Go functional utility library with syntactic sugar. It is similar to lodash, but for Go language.
+A lodash-inspired functional utility library for Go.
 
 <p align="center">
-  <a href="https://github.com/novalagung/gubrak/releases/latest"><img src="https://img.shields.io/github/v/release/novalagung/gubrak"></a>
-  <a href="#"><img src="https://img.shields.io/github/actions/workflow/status/novalagung/gubrak/test.yml"></a>
-  <a href="#"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/novalagung/gubrak/master/coverage.json"></a>
+  <a href="https://github.com/novalagung/gubrak/releases/latest"><img alt="latest release" src="https://img.shields.io/github/v/release/novalagung/gubrak"></a>
+  <a href="#"><img alt="build status" src="https://img.shields.io/github/actions/workflow/status/novalagung/gubrak/test.yml"></a>
+  <a href="#"><img alt="coverage" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/novalagung/gubrak/master/coverage.json"></a>
 </p>
 
 ## Installation
-
-The latest version of gubrak is v2. Use the following command to install it to your project.
 
 ```bash
 go get -u github.com/novalagung/gubrak/v2
@@ -18,7 +16,7 @@ go get -u github.com/novalagung/gubrak/v2
 
 ## Documentation
 
- - [Pkg Dev](https://pkg.go.dev/github.com/novalagung/gubrak/v2)
+- [Documentation at pkg.go.dev](https://pkg.go.dev/github.com/novalagung/gubrak/v2)
 
 ## Hello World Example
 
@@ -33,7 +31,7 @@ Below are the list of available functions on gubrak:
 ## Test
 
 ```bash
-go test -cover -race -v ./... 
+go test -count=1 -race -run "^Test" -skip "TestLoadData" . -v --cover
 ```
 
 ## Contribution
