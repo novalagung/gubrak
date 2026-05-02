@@ -1760,7 +1760,7 @@ func TestFromPairsWithInvalidType(t *testing.T) {
 	result, err := From(data).FromPairs().ResultAndError()
 
 	assert.NotNil(t, err)
-	assert.EqualError(t, err, "supported type only []interface{}")
+	assert.EqualError(t, err, "supported type only []any")
 	assert.Nil(t, result)
 }
 
@@ -2885,3 +2885,651 @@ func TestUniq(t *testing.T) {
 // 	assert.Nil(t, err)
 // 	assert.EqualValues(t, []string{"damian", "jason"}, result)
 // }
+
+// =========== Chainable operation tracking
+
+func TestChainableLastOperationAfterSuccess(t *testing.T) {
+	c := From([]int{1, 2, 3}).Chunk(2)
+	assert.Equal(t, Operation(OperationChunk), c.LastOperation())
+	assert.Equal(t, Operation(OperationChunk), c.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationNone), c.LastErrorOperation())
+}
+
+func TestChainableLastOperationAfterError(t *testing.T) {
+	c := From(nil).Chunk(2)
+	assert.Equal(t, Operation(OperationChunk), c.LastOperation())
+	assert.Equal(t, Operation(OperationNone), c.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationChunk), c.LastErrorOperation())
+}
+
+func TestChainableLastOperationChained(t *testing.T) {
+	c := From([]int{1, 2, 3}).Reverse().Compact()
+	assert.Equal(t, Operation(OperationCompact), c.LastOperation())
+	assert.Equal(t, Operation(OperationCompact), c.LastSuccessOperation())
+}
+
+// =========== resultBool metadata methods
+
+func TestResultBoolIsErrorTrue(t *testing.T) {
+	r := From(nil).Contains("x")
+	assert.True(t, r.IsError())
+	assert.Equal(t, Operation(OperationContains), r.LastOperation())
+	assert.Equal(t, Operation(OperationContains), r.LastErrorOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastSuccessOperation())
+}
+
+func TestResultBoolIsErrorFalse(t *testing.T) {
+	r := From([]string{"a", "b"}).Contains("a")
+	assert.False(t, r.IsError())
+	assert.Equal(t, Operation(OperationContains), r.LastOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastErrorOperation())
+	assert.Equal(t, Operation(OperationContains), r.LastSuccessOperation())
+}
+
+// =========== resultNumber metadata methods
+
+func TestResultNumberIsErrorTrue(t *testing.T) {
+	r := From(nil).Count()
+	assert.True(t, r.IsError())
+	assert.Equal(t, Operation(OperationCount), r.LastOperation())
+	assert.Equal(t, Operation(OperationCount), r.LastErrorOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastSuccessOperation())
+}
+
+func TestResultNumberIsErrorFalse(t *testing.T) {
+	r := From([]int{1, 2, 3}).Count()
+	assert.False(t, r.IsError())
+	assert.Equal(t, Operation(OperationCount), r.LastOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastErrorOperation())
+	assert.Equal(t, Operation(OperationCount), r.LastSuccessOperation())
+}
+
+func TestResultIndexOfIsErrorTrue(t *testing.T) {
+	r := From(nil).IndexOf("x")
+	assert.True(t, r.IsError())
+	assert.Equal(t, Operation(OperationIndexOf), r.LastOperation())
+	assert.Equal(t, Operation(OperationIndexOf), r.LastErrorOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastSuccessOperation())
+}
+
+func TestResultLastIndexOfIsErrorTrue(t *testing.T) {
+	r := From(nil).LastIndexOf("x")
+	assert.True(t, r.IsError())
+	assert.Equal(t, Operation(OperationLastIndexOf), r.LastOperation())
+	assert.Equal(t, Operation(OperationLastIndexOf), r.LastErrorOperation())
+}
+
+// =========== resultString metadata methods
+
+func TestResultStringIsErrorTrue(t *testing.T) {
+	r := From(nil).Join(",")
+	assert.True(t, r.IsError())
+}
+
+func TestResultStringIsErrorFalse(t *testing.T) {
+	r := From([]string{"a", "b"}).Join(",")
+	assert.False(t, r.IsError())
+}
+
+func TestResultStringMetadata(t *testing.T) {
+	r := From([]string{"a", "b"}).Join(",").(*resultJoin)
+	assert.Equal(t, Operation(OperationJoin), r.LastOperation())
+	assert.Equal(t, Operation(OperationJoin), r.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastErrorOperation())
+}
+
+func TestResultStringMetadataError(t *testing.T) {
+	r := From(nil).Join(",").(*resultJoin)
+	assert.Equal(t, Operation(OperationJoin), r.LastOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationJoin), r.LastErrorOperation())
+}
+
+// =========== resultNoReturnValue metadata methods
+
+func TestResultNoReturnValueIsErrorTrue(t *testing.T) {
+	r := From(nil).Each(func(v int) {})
+	assert.True(t, r.IsError())
+}
+
+func TestResultNoReturnValueIsErrorFalse(t *testing.T) {
+	r := From([]int{1, 2}).Each(func(v int) {})
+	assert.False(t, r.IsError())
+}
+
+func TestResultNoReturnValueMetadata(t *testing.T) {
+	r := From([]int{1, 2}).Each(func(v int) {}).(*resultEach)
+	assert.Equal(t, Operation(OperationEach), r.LastOperation())
+	assert.Equal(t, Operation(OperationEach), r.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastErrorOperation())
+}
+
+func TestResultNoReturnValueMetadataError(t *testing.T) {
+	r := From(nil).Each(func(v int) {}).(*resultEach)
+	assert.Equal(t, Operation(OperationEach), r.LastOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationEach), r.LastErrorOperation())
+}
+
+// =========== resultTwoReturnValue metadata methods
+
+func TestResultTwoReturnValueIsErrorTrue(t *testing.T) {
+	r := From(nil).Partition(func(v int) bool { return v > 1 })
+	assert.True(t, r.IsError())
+}
+
+func TestResultTwoReturnValueIsErrorFalse(t *testing.T) {
+	r := From([]int{1, 2, 3}).Partition(func(v int) bool { return v > 1 })
+	assert.False(t, r.IsError())
+}
+
+func TestResultTwoReturnValueMetadata(t *testing.T) {
+	r := From([]int{1, 2, 3}).Partition(func(v int) bool { return v > 1 }).(*resultPartition)
+	assert.Equal(t, Operation(OperationPartition), r.LastOperation())
+	assert.Equal(t, Operation(OperationPartition), r.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastErrorOperation())
+}
+
+func TestResultTwoReturnValueMetadataError(t *testing.T) {
+	r := From(nil).Partition(func(v int) bool { return v > 1 }).(*resultPartition)
+	assert.Equal(t, Operation(OperationPartition), r.LastOperation())
+	assert.Equal(t, Operation(OperationNone), r.LastSuccessOperation())
+	assert.Equal(t, Operation(OperationPartition), r.LastErrorOperation())
+}
+
+func TestResultTwoReturnValueResultTruthyNil(t *testing.T) {
+	r := From(nil).Partition(func(v int) bool { return v > 1 })
+	assert.Nil(t, r.ResultTruthy())
+	assert.Nil(t, r.ResultFalsey())
+}
+
+// =========== EachRight order correctness and map support
+
+func TestEachRightSliceOrder(t *testing.T) {
+	data := []int{1, 2, 3, 4, 5}
+	got := make([]int, 0)
+
+	From(data).EachRight(func(v int) {
+		got = append(got, v)
+	})
+
+	assert.Equal(t, []int{5, 4, 3, 2, 1}, got)
+}
+
+func TestEachRightCollection(t *testing.T) {
+	data := map[string]int{"a": 1, "b": 2, "c": 3}
+	seen := make(map[string]int)
+
+	err := From(data).EachRight(func(value int, key string) {
+		seen[key] = value
+	}).Error()
+
+	assert.Nil(t, err)
+	assert.Equal(t, data, seen)
+}
+
+func TestEachRightCollectionOneParam(t *testing.T) {
+	data := map[string]int{"x": 10, "y": 20}
+	sum := 0
+
+	err := From(data).EachRight(func(value int) {
+		sum += value
+	}).Error()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 30, sum)
+}
+
+func TestEachRightCollectionCallbackWithReturn(t *testing.T) {
+	data := map[string]int{"a": 1}
+	err := From(data).EachRight(func(value int, key string) bool {
+		return true
+	}).Error()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback should not have return value")
+}
+
+func TestEachRightCollectionWrongKeyType(t *testing.T) {
+	data := map[string]int{"a": 1}
+	err := From(data).EachRight(func(value int, key int) {}).Error()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 2nd parameter's data type should be same with map key type")
+}
+
+func TestEachCollectionOneParam(t *testing.T) {
+	data := map[string]int{"x": 10, "y": 20}
+	sum := 0
+
+	err := From(data).Each(func(value int) {
+		sum += value
+	}).Error()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 30, sum)
+}
+
+// =========== Reduce map error paths
+
+func TestReduceCollectionTwoParam(t *testing.T) {
+	data := map[string]int{"a": 1, "b": 2, "c": 3}
+	result, err := From(data).Reduce(func(acc, v int) int {
+		return acc + v
+	}, 0).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 6, result)
+}
+
+func TestReduceCollectionWrongParamCount(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).Reduce(func(acc int) int { return acc }, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback must only have two or three parameters")
+}
+
+func TestReduceCollectionWrongFirstParamType(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).Reduce(func(acc string, v int) string { return acc }, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 1st parameter's data type should be same with initial value's data type")
+}
+
+func TestReduceCollectionWrongSecondParamType(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).Reduce(func(acc, v string) string { return acc }, "init").ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 2nd parameter's data type should be same with map value data type")
+}
+
+func TestReduceCollectionWrongKeyParamType(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).Reduce(func(acc int, v int, k int) int { return acc + v }, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 3rd parameter's data type should be same with map key type")
+}
+
+func TestReduceCollectionNoReturn(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).Reduce(func(acc, v int) {}, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback return value should only be 1 variable")
+}
+
+// =========== Reduce slice error paths
+
+func TestReduceSliceWrongFirstParamType(t *testing.T) {
+	_, err := From([]int{1, 2, 3}).Reduce(func(acc string, v int) string { return acc }, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 1st parameter's data type should be same with initial value's data type")
+}
+
+func TestReduceSliceWrongSecondParamType(t *testing.T) {
+	_, err := From([]int{1, 2, 3}).Reduce(func(acc int, v string) int { return acc }, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 2nd parameter's data type should be same with slice element data type")
+}
+
+func TestReduceSliceWrongThirdParamType(t *testing.T) {
+	_, err := From([]int{1, 2, 3}).Reduce(func(acc, v int, idx float64) int { return acc + v }, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 3rd parameter's data type should be int")
+}
+
+func TestReduceSliceWrongParamCount(t *testing.T) {
+	_, err := From([]int{1, 2, 3}).Reduce(func(acc int) int { return acc }, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback must only have two or three parameters")
+}
+
+func TestReduceSliceNoReturn(t *testing.T) {
+	_, err := From([]int{1, 2, 3}).Reduce(func(acc, v int) {}, 0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback return value should only be 1 variable")
+}
+
+func TestReduceSliceWithIndex(t *testing.T) {
+	result, err := From([]int{1, 2, 3, 4}).Reduce(func(acc, v, i int) int {
+		return acc + v
+	}, 0).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 10, result)
+}
+
+// =========== OrderBy error paths and async
+
+func TestOrderByAsync(t *testing.T) {
+	data := []int{3, 1, 4, 1, 5, 9, 2, 6}
+	result, err := From(data).OrderBy(func(v int) int { return v }, true, true).ResultAndError()
+
+	assert.Nil(t, err)
+	parsed := result.([]int)
+	for i := 1; i < len(parsed); i++ {
+		assert.LessOrEqual(t, parsed[i-1], parsed[i])
+	}
+}
+
+func TestOrderByWrongCallbackParamCount(t *testing.T) {
+	data := []int{1, 2, 3}
+	_, err := From(data).OrderBy(func(a, b int) int { return a + b }).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback must only have one parameters")
+}
+
+func TestOrderByWrongCallbackParamType(t *testing.T) {
+	data := []int{1, 2, 3}
+	_, err := From(data).OrderBy(func(v string) string { return v }).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback parameter's data type should be same with slice data type")
+}
+
+func TestOrderByNoReturnValue(t *testing.T) {
+	data := []int{1, 2, 3}
+	_, err := From(data).OrderBy(func(v int) {}).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback return value should only be 1 variable")
+}
+
+func TestOrderByUnsortableType(t *testing.T) {
+	data := []string{"c", "a", "b"}
+	result, err := From(data).OrderBy(func(v string) bool { return v > "b" }).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.NotNil(t, result)
+}
+
+// =========== Fill error: start index > end index
+
+func TestFillStartGreaterThanEnd(t *testing.T) {
+	data := []int{1, 2, 3, 4, 5}
+	_, err := From(data).Fill(9, 4, 2).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "last index should be greater than start index")
+}
+
+// =========== SampleSize with zero and negative size
+
+func TestSampleSizeZero(t *testing.T) {
+	data := []int{1, 2, 3}
+	_, err := From(data).SampleSize(0).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "size must be positive number")
+}
+
+func TestSampleSizeNegative(t *testing.T) {
+	data := []int{1, 2, 3}
+	_, err := From(data).SampleSize(-1).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "size must be positive number")
+}
+
+// =========== Shuffle does not mutate original
+
+func TestShuffleDoesNotMutateOriginal(t *testing.T) {
+	original := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	before := make([]int, len(original))
+	copy(before, original)
+
+	result, err := From(original).Shuffle().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, before, original, "original slice must not be mutated")
+	assert.NotNil(t, result)
+	assert.Equal(t, len(before), len(result.([]int)))
+}
+
+// =========== GroupBy with nil data (error path)
+
+func TestGroupByNilData(t *testing.T) {
+	result, err := From(nil).GroupBy(func(v int) int { return v % 2 }).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.Nil(t, result)
+}
+
+// =========== Filter with map data
+
+func TestFilterCollectionMap(t *testing.T) {
+	data := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
+	result, err := From(data).Filter(func(v int) bool { return v%2 == 0 }).ResultAndError()
+
+	assert.Nil(t, err)
+	parsed := result.(map[string]int)
+	assert.Equal(t, 2, len(parsed))
+	assert.Equal(t, 2, parsed["b"])
+	assert.Equal(t, 4, parsed["d"])
+}
+
+func TestFilterCollectionWrongCallback(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).Filter(func(v int, k int) bool { return true }).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 2nd parameter's data type should be same with map key type")
+}
+
+func TestFilterCollectionNoReturn(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).Filter(func(v int) {}).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback return value should be one variable with bool type")
+}
+
+// =========== CountBy with map
+
+func TestCountByCollection(t *testing.T) {
+	data := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
+	result, err := From(data).CountBy(func(v int) bool { return v > 2 }).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 2, result)
+}
+
+func TestCountByCollectionWrongKeyType(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).CountBy(func(v int, k int) bool { return true }).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "callback 2nd parameter's data type should be same with map key type")
+}
+
+// =========== Join with non-string elements
+
+func TestJoinIntSlice(t *testing.T) {
+	data := []int{1, 2, 3}
+	result, err := From(data).Join("-").ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, "1-2-3", result)
+}
+
+func TestJoinInterfaceSlice(t *testing.T) {
+	data := []interface{}{"a", 1, true}
+	result, err := From(data).Join(", ").ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, "a, 1, true", result)
+}
+
+// =========== Compact with nil pointer element
+
+func TestCompactWithNilPointer(t *testing.T) {
+	var s *string
+	data := []*string{s, nil}
+	result, err := From(data).Compact().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(result.([]*string)))
+}
+
+// =========== IntersectionMany with empty slice param
+
+func TestIntersectionManyEmptyParam(t *testing.T) {
+	data := []int{1, 2, 3}
+	_, err := From(data).IntersectionMany().ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data intersects cannot be nil")
+}
+
+// =========== Sample on empty slice
+
+func TestSampleEmptySlice(t *testing.T) {
+	data := []int{}
+	result, err := From(data).Sample().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, []int{}, result)
+}
+
+// =========== Uniq with duplicates
+
+func TestUniqWithDuplicates(t *testing.T) {
+	data := []int{1, 2, 2, 3, 3, 3}
+	result, err := From(data).Uniq().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []int{1, 2, 3}, result)
+}
+
+// =========== Size on string and map
+
+func TestSizeString(t *testing.T) {
+	result, err := From("hello").Size().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 5, result)
+}
+
+func TestSizeMap(t *testing.T) {
+	data := map[string]int{"a": 1, "b": 2, "c": 3}
+	result, err := From(data).Size().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 3, result)
+}
+
+// =========== KeyBy with non-slice data
+
+func TestKeyByNonSlice(t *testing.T) {
+	data := map[string]int{"a": 1}
+	_, err := From(data).KeyBy(func(v int) string { return "k" }).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data must be slice")
+}
+
+// =========== FromPairs with empty slice
+
+func TestFromPairsEmpty(t *testing.T) {
+	data := []interface{}{}
+	result, err := From(data).FromPairs().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, map[interface{}]interface{}{}, result)
+}
+
+// =========== Nth with negative index
+
+func TestNthNegativeIndexCoverage(t *testing.T) {
+	data := []string{"a", "b", "c", "d"}
+	result, err := From(data).Nth(-1).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, "d", result)
+}
+
+func TestNthNegativeIndexOutOfBound(t *testing.T) {
+	data := []string{"a", "b"}
+	result, err := From(data).Nth(-10).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.Nil(t, result)
+}
+
+// =========== Tail on empty slice
+
+func TestTailEmpty(t *testing.T) {
+	data := []int{}
+	result, err := From(data).Tail().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []int{}, result)
+}
+
+// =========== Reject with map data
+
+func TestRejectCollection(t *testing.T) {
+	data := map[string]int{"a": 1, "b": 2, "c": 3, "d": 4}
+	_, err := From(data).Reject(func(v int) bool { return v%2 == 0 }).ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data must be slice")
+}
+
+// =========== ExcludeMany/ExcludeAtMany with empty items
+
+func TestExcludeManyWithNoItems(t *testing.T) {
+	data := []int{1, 2, 3}
+	result, err := From(data).ExcludeMany().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []int{1, 2, 3}, result)
+}
+
+func TestExcludeAtManyWithNoIndexes(t *testing.T) {
+	data := []int{1, 2, 3}
+	result, err := From(data).ExcludeAtMany().ResultAndError()
+
+	assert.Nil(t, err)
+	assert.EqualValues(t, []int{1, 2, 3}, result)
+}
+
+// =========== DifferenceMany with zero comparison slices
+
+func TestDifferenceManyNoArgs(t *testing.T) {
+	data := []int{1, 2, 3}
+	_, err := From(data).DifferenceMany().ResultAndError()
+
+	assert.NotNil(t, err)
+	assert.EqualError(t, err, "data to compare cannot be empty")
+}
+
+// =========== Find with fromIndex
+
+func TestFindWithFromIndexCoverage(t *testing.T) {
+	data := []int{1, 2, 3, 2, 5}
+	result, err := From(data).Find(func(v int) bool { return v == 2 }, 2).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 2, result)
+}
+
+// =========== FindLast with fromIndex
+
+func TestFindLastWithFromIndex(t *testing.T) {
+	data := []int{1, 2, 3, 2, 5}
+	result, err := From(data).FindLast(func(v int) bool { return v == 2 }, 2).ResultAndError()
+
+	assert.Nil(t, err)
+	assert.Equal(t, 2, result)
+}

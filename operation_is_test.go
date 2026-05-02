@@ -511,3 +511,81 @@ func TestIsZeroNumberFloat64(t *testing.T) {
 		float64(0),
 	))
 }
+
+func TestIsZeroNumberUintptr(t *testing.T) {
+	assert.True(t, IsZeroNumber(uintptr(0)))
+}
+
+func TestIsZeroNumberUintptrNonZero(t *testing.T) {
+	assert.False(t, IsZeroNumber(uintptr(1)))
+}
+
+func TestIsZeroNumberComplex64(t *testing.T) {
+	assert.True(t, IsZeroNumber(complex64(0)))
+}
+
+func TestIsZeroNumberComplex128(t *testing.T) {
+	assert.True(t, IsZeroNumber(complex128(0)))
+}
+
+func TestIsZeroNumberNonNumericType(t *testing.T) {
+	assert.False(t, IsZeroNumber("zero"))
+}
+
+func TestIsZeroNumberNil(t *testing.T) {
+	assert.True(t, IsZeroNumber(nil))
+}
+
+// =========== IsEmptyString edge cases
+
+func TestIsEmptyStringNil(t *testing.T) {
+	assert.True(t, IsEmptyString(nil))
+}
+
+func TestIsEmptyStringNonStringType(t *testing.T) {
+	assert.False(t, IsEmptyString(42))
+}
+
+// =========== IsTrue edge cases
+
+func TestIsTrueNil(t *testing.T) {
+	assert.False(t, IsTrue(nil))
+}
+
+func TestIsTrueNonBoolType(t *testing.T) {
+	assert.False(t, IsTrue("true"))
+}
+
+// =========== IsZeroValue struct and complex paths
+
+func TestIsZeroValueStructZero(t *testing.T) {
+	type Person struct {
+		Name string
+		Age  int
+	}
+	assert.True(t, IsZeroValue(Person{}))
+}
+
+func TestIsZeroValueStructNonZero(t *testing.T) {
+	type Person struct {
+		Name string
+		Age  int
+	}
+	assert.False(t, IsZeroValue(Person{Name: "damian"}))
+}
+
+func TestIsZeroValueComplex64(t *testing.T) {
+	assert.True(t, IsZeroValue(complex64(0)))
+}
+
+func TestIsZeroValueComplex128(t *testing.T) {
+	assert.True(t, IsZeroValue(complex128(0)))
+}
+
+func TestIsZeroValueUintptr(t *testing.T) {
+	assert.True(t, IsZeroValue(uintptr(0)))
+}
+
+func TestIsZeroValueBoolFalse(t *testing.T) {
+	assert.True(t, IsZeroValue(false))
+}

@@ -1,9 +1,9 @@
 package gubrak
 
 type IChainableTwoReturnValueResult interface {
-	ResultAndError() (interface{}, interface{}, error)
-	ResultTruthy() interface{}
-	ResultFalsey() interface{}
+	ResultAndError() (any, any, error)
+	ResultTruthy() any
+	ResultFalsey() any
 	Error() error
 	IsError() bool
 }
@@ -15,20 +15,20 @@ type resultTwoReturnValue struct {
 
 type resultPartition = resultTwoReturnValue
 
-func (g *resultTwoReturnValue) ResultAndError() (interface{}, interface{}, error) {
+func (g *resultTwoReturnValue) ResultAndError() (any, any, error) {
 	return g.ResultTruthy(), g.ResultFalsey(), g.Error()
 }
 
-func (g *resultTwoReturnValue) ResultTruthy() interface{} {
-	if v, _ := g.chainable.data.([]interface{}); len(v) > 0 {
+func (g *resultTwoReturnValue) ResultTruthy() any {
+	if v, _ := g.chainable.data.([]any); len(v) > 0 {
 		return v[0]
 	}
 
 	return nil
 }
 
-func (g *resultTwoReturnValue) ResultFalsey() interface{} {
-	if v, _ := g.chainable.data.([]interface{}); len(v) > 1 {
+func (g *resultTwoReturnValue) ResultFalsey() any {
+	if v, _ := g.chainable.data.([]any); len(v) > 1 {
 		return v[1]
 	}
 

@@ -1,14 +1,10 @@
 package gubrak
 
 import (
-	randMath "math/rand"
+	"crypto/rand"
+	"math/big"
 	"regexp"
-	"time"
 )
-
-func init() {
-	randMath.Seed(time.Now().UnixNano())
-}
 
 // RandomString function generate random alphabet string in defined length
 func RandomString(length int) string {
@@ -16,7 +12,8 @@ func RandomString(length int) string {
 
 	b := make([]rune, length)
 	for i := range b {
-		b[i] = letters[randMath.Intn(len(letters))]
+		n, _ := rand.Int(rand.Reader, big.NewInt(int64(len(letters))))
+		b[i] = letters[n.Int64()]
 	}
 
 	return string(b)

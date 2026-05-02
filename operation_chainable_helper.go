@@ -6,7 +6,7 @@ import (
 	"reflect"
 )
 
-func inspectFunc(err *error, data interface{}) (reflect.Value, reflect.Type) {
+func inspectFunc(err *error, data any) (reflect.Value, reflect.Type) {
 	var dataValue reflect.Value
 	var dataValueType reflect.Type
 
@@ -25,7 +25,7 @@ func inspectFunc(err *error, data interface{}) (reflect.Value, reflect.Type) {
 	return dataValue, dataValueType
 }
 
-func inspectData(data interface{}) (reflect.Value, reflect.Type, reflect.Kind, int) {
+func inspectData(data any) (reflect.Value, reflect.Type, reflect.Kind, int) {
 	var dataValue reflect.Value
 	var dataValueType reflect.Type
 	var dataValueKind reflect.Kind
@@ -253,7 +253,7 @@ func isSlice(err *error, label string, dataValue ...reflect.Value) bool {
 	}
 }
 
-func isNonNilData(err *error, label string, data interface{}) bool {
+func isNonNilData(err *error, label string, data any) bool {
 	if data == nil {
 		*err = fmt.Errorf("%s cannot be nil", label)
 		return false
@@ -262,7 +262,7 @@ func isNonNilData(err *error, label string, data interface{}) bool {
 	valueOfData := reflect.ValueOf(data)
 
 	switch valueOfData.Kind() {
-	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.UnsafePointer, reflect.Struct:
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.UnsafePointer:
 		if valueOfData.IsNil() {
 			*err = fmt.Errorf("%s cannot be nil", label)
 			return false

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func typeIs(data interface{}, types ...reflect.Kind) bool {
+func typeIs(data any, types ...reflect.Kind) bool {
 	valueOfData := reflect.ValueOf(data)
 	for _, tipe := range types {
 		if tipe == valueOfData.Kind() {
@@ -18,36 +18,36 @@ func typeIs(data interface{}, types ...reflect.Kind) bool {
 }
 
 // IsSlice is alias of IsSlice()
-func IsSlice(data interface{}) bool {
+func IsSlice(data any) bool {
 	return typeIs(data, reflect.Slice)
 }
 
 // IsArray is alias of IsArray()
-func IsArray(data interface{}) bool {
+func IsArray(data any) bool {
 	return typeIs(data, reflect.Array)
 }
 
 // IsSliceOrArray will return true when type of the data is array/slice
-func IsSliceOrArray(data interface{}) bool {
+func IsSliceOrArray(data any) bool {
 	return IsSlice(data) || IsArray(data)
 }
 
 var IsArrayOrSlice = IsSliceOrArray
 
 // IsBool will return true when type of the data is boolean
-func IsBool(data interface{}) bool {
+func IsBool(data any) bool {
 	return typeIs(data,
 		reflect.Bool,
 	)
 }
 
 // IsChannel will return true when type of the data is channel
-func IsChannel(data interface{}) bool {
+func IsChannel(data any) bool {
 	return typeIs(data, reflect.Chan)
 }
 
 // IsDate will return true when type of the data is time.Time
-func IsDate(data interface{}) bool {
+func IsDate(data any) bool {
 	if _, ok := data.(time.Time); ok {
 		return true
 	}
@@ -56,12 +56,12 @@ func IsDate(data interface{}) bool {
 }
 
 // IsString will return true when type of the data is string
-func IsString(data interface{}) bool {
+func IsString(data any) bool {
 	return typeIs(data, reflect.String)
 }
 
 // IsEmptyString will return true when type of the data is string and it's empty
-func IsEmptyString(data interface{}) bool {
+func IsEmptyString(data any) bool {
 	if data == nil {
 		return true
 	}
@@ -74,7 +74,7 @@ func IsEmptyString(data interface{}) bool {
 }
 
 // IsFloat will return true when type of the data is floating number
-func IsFloat(data interface{}) bool {
+func IsFloat(data any) bool {
 	return typeIs(data,
 		reflect.Float32,
 		reflect.Float64,
@@ -82,12 +82,12 @@ func IsFloat(data interface{}) bool {
 }
 
 // IsFunction will return true when type of the data is closure/function
-func IsFunction(data interface{}) bool {
+func IsFunction(data any) bool {
 	return typeIs(data, reflect.Func)
 }
 
 // IsInt will return true when type of the data is numeric integer
-func IsInt(data interface{}) bool {
+func IsInt(data any) bool {
 	return typeIs(data,
 		reflect.Int,
 		reflect.Int8,
@@ -98,12 +98,12 @@ func IsInt(data interface{}) bool {
 }
 
 // IsMap will return true when type of the data is hash map
-func IsMap(data interface{}) bool {
+func IsMap(data any) bool {
 	return typeIs(data, reflect.Map)
 }
 
 // IsNil will return true when type of the data is nil
-func IsNil(data interface{}) bool {
+func IsNil(data any) bool {
 	if data == nil {
 		return true
 	}
@@ -111,7 +111,7 @@ func IsNil(data interface{}) bool {
 	valueOfData := reflect.ValueOf(data)
 
 	switch valueOfData.Kind() {
-	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.UnsafePointer, reflect.Struct:
+	case reflect.Chan, reflect.Func, reflect.Interface, reflect.Map, reflect.Ptr, reflect.Slice, reflect.UnsafePointer:
 		if valueOfData.IsNil() {
 			return true
 		}
@@ -121,7 +121,7 @@ func IsNil(data interface{}) bool {
 }
 
 // IsNumeric will return true when type of the data is numeric (float, uint, int)
-func IsNumeric(data interface{}) bool {
+func IsNumeric(data any) bool {
 	return typeIs(data,
 		reflect.Int,
 		reflect.Int8,
@@ -140,17 +140,17 @@ func IsNumeric(data interface{}) bool {
 }
 
 // IsPointer will return true when type of the data is pointer
-func IsPointer(data interface{}) bool {
+func IsPointer(data any) bool {
 	return typeIs(data, reflect.Ptr)
 }
 
 // IsStructObject will return true when type of the data is object from struct
-func IsStructObject(data interface{}) bool {
+func IsStructObject(data any) bool {
 	return typeIs(data, reflect.Struct)
 }
 
 // IsTrue will return true when type of the data is bool, and the value is true
-func IsTrue(data interface{}) bool {
+func IsTrue(data any) bool {
 	if data == nil {
 		return false
 	}
@@ -163,7 +163,7 @@ func IsTrue(data interface{}) bool {
 }
 
 // IsUint will return true when type of the data is uint
-func IsUint(data interface{}) bool {
+func IsUint(data any) bool {
 	return typeIs(data,
 		reflect.Uint,
 		reflect.Uint8,
@@ -175,7 +175,7 @@ func IsUint(data interface{}) bool {
 }
 
 // IsZeroNumber will return true when type of the data is numeric and it's has 0 value
-func IsZeroNumber(data interface{}) bool {
+func IsZeroNumber(data any) bool {
 	if data == nil {
 		return true
 	}
@@ -234,7 +234,7 @@ func IsZeroNumber(data interface{}) bool {
 }
 
 // IsZeroValue reports whether value is the zero value for its type.
-func IsZeroValue(data interface{}) bool {
+func IsZeroValue(data any) bool {
 	if data == nil {
 		return true
 	} else if value, ok := data.(string); ok {

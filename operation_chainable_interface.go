@@ -65,8 +65,8 @@ const (
 type IChainable interface {
 	IChainableOperation
 
-	ResultAndError() (interface{}, error)
-	Result() interface{}
+	ResultAndError() (any, error)
+	Result() any
 	Error() error
 	IsError() bool
 	LastSuccessOperation() Operation
@@ -78,44 +78,44 @@ type IChainable interface {
 type IChainableOperation interface {
 	Chunk(int) IChainable
 	Compact() IChainable
-	ConcatMany(...interface{}) IChainable
-	Concat(interface{}) IChainable
-	CountBy(interface{}) IChainableNumberResult
+	ConcatMany(...any) IChainable
+	Concat(any) IChainable
+	CountBy(any) IChainableNumberResult
 	Count() IChainableNumberResult
-	DifferenceMany(...interface{}) IChainable
-	Difference(interface{}) IChainable
+	DifferenceMany(...any) IChainable
+	Difference(any) IChainable
 	Drop(int) IChainable
 	DropRight(int) IChainable
-	Each(interface{}) IChainableNoReturnValueResult
-	EachRight(interface{}) IChainableNoReturnValueResult
-	Exclude(interface{}) IChainable
-	ExcludeMany(...interface{}) IChainable
+	Each(any) IChainableNoReturnValueResult
+	EachRight(any) IChainableNoReturnValueResult
+	Exclude(any) IChainable
+	ExcludeMany(...any) IChainable
 	ExcludeAt(int) IChainable
 	ExcludeAtMany(...int) IChainable
-	Fill(interface{}, ...int) IChainable
-	Filter(interface{}) IChainable
-	Find(interface{}, ...int) IChainable
-	FindIndex(interface{}, ...int) IChainable
-	FindLast(interface{}, ...int) IChainable
-	FindLastIndex(interface{}, ...int) IChainable
+	Fill(any, ...int) IChainable
+	Filter(any) IChainable
+	Find(any, ...int) IChainable
+	FindIndex(any, ...int) IChainable
+	FindLast(any, ...int) IChainable
+	FindLastIndex(any, ...int) IChainable
 	First() IChainable
 	FromPairs() IChainable
-	GroupBy(interface{}) IChainable
-	Contains(interface{}, ...int) IChainableBoolResult
-	IndexOf(interface{}, ...int) IChainableNumberResult
+	GroupBy(any) IChainable
+	Contains(any, ...int) IChainableBoolResult
+	IndexOf(any, ...int) IChainableNumberResult
 	Initial() IChainable
-	Intersection(interface{}) IChainable
-	IntersectionMany(data ...interface{}) IChainable
+	Intersection(any) IChainable
+	IntersectionMany(data ...any) IChainable
 	Join(string) IChainableStringResult
-	KeyBy(interface{}) IChainable
+	KeyBy(any) IChainable
 	Last() IChainable
-	LastIndexOf(interface{}, ...int) IChainableNumberResult
-	Map(interface{}) IChainable
+	LastIndexOf(any, ...int) IChainableNumberResult
+	Map(any) IChainable
 	Nth(int) IChainable
-	OrderBy(interface{}, ...bool) IChainable
-	Partition(interface{}) IChainableTwoReturnValueResult
-	Reduce(interface{}, interface{}) IChainable
-	Reject(interface{}) IChainable
+	OrderBy(any, ...bool) IChainable
+	Partition(any) IChainableTwoReturnValueResult
+	Reduce(any, any) IChainable
+	Reject(any) IChainable
 	Reverse() IChainable
 	Sample() IChainable
 	SampleSize(int) IChainable
@@ -125,12 +125,12 @@ type IChainableOperation interface {
 	Take(int) IChainable
 	TakeRight(int) IChainable
 	Uniq() IChainable
-	UnionMany(...interface{}) IChainable
+	UnionMany(...any) IChainable
 }
 
 // Chainable is base type of gubrak chainable operations
 type Chainable struct {
-	data                 interface{}
+	data                 any
 	lastOperation        Operation
 	lastSuccessOperation Operation
 	lastErrorOperation   Operation
@@ -139,7 +139,7 @@ type Chainable struct {
 
 // From is the initial function to use gubrak chainable operation.
 // This function requires one argument, the data that are going to be used in operations
-func From(data interface{}) IChainable {
+func From(data any) IChainable {
 	g := new(Chainable)
 	g.data = data
 	g.lastSuccessOperation = OperationNone
@@ -149,14 +149,14 @@ func From(data interface{}) IChainable {
 	return g
 }
 
-func (g *Chainable) markError(data interface{}, err error) *Chainable {
+func (g *Chainable) markError(data any, err error) *Chainable {
 	g.data = data
 	g.lastErrorCaught = err
 	g.lastErrorOperation = g.lastOperation
 	return g
 }
 
-func (g *Chainable) markResult(data interface{}) *Chainable {
+func (g *Chainable) markResult(data any) *Chainable {
 	g.data = data
 	g.lastSuccessOperation = g.lastOperation
 	return g
@@ -167,12 +167,12 @@ func (g *Chainable) shouldReturn() bool {
 }
 
 // ResultAndError returns the result after operation, and error object
-func (g *Chainable) ResultAndError() (interface{}, error) {
+func (g *Chainable) ResultAndError() (any, error) {
 	return g.Result(), g.Error()
 }
 
 // Result returns the result after operation
-func (g *Chainable) Result() interface{} {
+func (g *Chainable) Result() any {
 	return g.data
 }
 
